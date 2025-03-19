@@ -1,3 +1,5 @@
-backend/venv
-env
-**.idea
+*.idea
+*.pyc
+*.env
+backend/venv/
+.vscode/
