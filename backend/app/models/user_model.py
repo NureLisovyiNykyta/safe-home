@@ -26,6 +26,7 @@ class User(db.Model, UserMixin):
     google_refresh_token = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     email_confirmed = db.Column(db.Boolean, default=False)
+    subscription_plan_name = db.Column(db.String(100))
 
     role = db.relationship('Role', back_populates='users')
 
@@ -200,14 +201,37 @@ class User(db.Model, UserMixin):
                     "email": user.email,
                     "role": user.role.role_name if user.role else None,
                     "created_at": user.created_at.isoformat(),
-                    "email_confirmed": user.email_confirmed
-                } for user in users
+                    "email_confirmed": user.email_confirmed,
+                    "subscription_plan_name": user.subscription_plan_name
+                } for user in users if user.role.role_name == "user"
             ]
             return jsonify({"users": users_list}), 200
         except Exception as e:
             return ErrorHandler.handle_error(
                 e,
                 message="Database error while retrieving all users",
+                status_code=500
+            )
+
+    @classmethod
+    def get_all_admins(cls):
+        try:
+            users = cls.query.all()
+            users_list = [
+                {
+                    "user_id": str(user.user_id),
+                    "name": user.name,
+                    "email": user.email,
+                    "role": user.role.role_name if user.role else None,
+                    "created_at": user.created_at.isoformat(),
+                    "email_confirmed": user.email_confirmed,
+                } for user in users if user.role.role_name == "admin"
+            ]
+            return jsonify({"admins": users_list}), 200
+        except Exception as e:
+            return ErrorHandler.handle_error(
+                e,
+                message="Database error while retrieving all admins",
                 status_code=500
             )
 
@@ -231,7 +255,8 @@ class User(db.Model, UserMixin):
                 "email": user.email,
                 "role": user.role.role_name if user.role else None,
                 "created_at": user.created_at.isoformat(),
-                "email_confirmed": user.email_confirmed
+                "email_confirmed": user.email_confirmed,
+                "subscription_plan_name": user.subscription_plan_name
             }
             return jsonify({"user": user_data}), 200
         except ValueError as ve:

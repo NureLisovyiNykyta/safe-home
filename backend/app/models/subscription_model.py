@@ -4,6 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from flask import jsonify
 from app.models.subscription_plan_model import SubscriptionPlan
+from app.models.user_model import User
 from app.utils import ErrorHandler
 
 
@@ -68,7 +69,11 @@ class Subscription(db.Model):
     @classmethod
     def get_user_subscriptions(cls, user_id):
         try:
-            user_subscriptions = cls.query.filter_by(user_id=user_id).all()
+            user_subscriptions = (
+                cls.query.filter_by(user_id=user_id)
+                .order_by(cls.start_date.desc())
+                .all()
+            )
 
             if not user_subscriptions:
                 raise ValueError("No subscriptions found for the user.")
@@ -153,6 +158,9 @@ class Subscription(db.Model):
                 is_active=True
             )
 
+            user = User.query.filter_by(user_id=user_id).first()
+            user.subscription_plan_name = plan.name
+
             db.session.add(new_subscription)
             db.session.commit()
 
@@ -208,6 +216,8 @@ class Subscription(db.Model):
                 end_date=datetime.now(timezone.utc) + timedelta(days=plan.duration_days),
                 is_active=True,
             )
+            user = User.query.filter_by(user_id=user_id).first()
+            user.subscription_plan_name = plan.name
 
             db.session.add(new_subscription)
             db.session.commit()
