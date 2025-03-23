@@ -38,7 +38,7 @@ def reset_password_request(data):
 def reset_password_confirmation(user):
     try:
         token = s.dumps(user.email, salt='reset_password-confirm-salt')
-        confirmation_url = url_for('.confirm_reset_password', token=token, _external=True)
+        confirmation_url = url_for('user_profile.confirm_reset_password', token=token, _external=True)
 
         with open("templates/reset_password_confirmation.html", "r") as html_file:
             html_template = html_file.read()
