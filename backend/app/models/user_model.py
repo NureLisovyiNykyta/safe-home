@@ -26,6 +26,7 @@ class User(db.Model, UserMixin):
     google_refresh_token = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     email_confirmed = db.Column(db.Boolean, default=False)
+    subscription_plan_name = db.Column(db.String(100))
 
     role = db.relationship('Role', back_populates='users')
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.services.password_reset_service import send_password_reset_email
+from app.services import password_reset_service
 from app.models import User
 from app.utils.auth_decorator import auth_required
 
@@ -32,4 +32,8 @@ def update_password():
 @user_profile_bp.route('/reset_password', methods=['POST'])
 def reset_password_request():
     data = request.get_json()
-    return send_password_reset_email(data)
+    return password_reset_service.reset_password_request(data)
+
+@user_profile_bp.route('/confirm_reset_password/<token>', methods=['GET'])
+def confirm_reset_password(token):
+    return password_reset_service.verify_reset_password_token(token)
