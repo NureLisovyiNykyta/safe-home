@@ -35,5 +35,5 @@ def reset_password_request():
     return password_reset_service.reset_password_request(data)
 
 @user_profile_bp.route('/confirm_reset_password/<token>', methods=['GET'])
-def confirm_email(token):
+def confirm_reset_password(token):
     return password_reset_service.verify_reset_password_token(token)

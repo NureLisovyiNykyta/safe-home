@@ -1,9 +1,9 @@
 from flask_mail import Message
 from app import mail, db
+from app.config import Config
 from app.models import User
 import random
 import string
-from app.config import Config
 from itsdangerous import URLSafeTimedSerializer
 from flask import url_for, render_template_string, jsonify
 from app.utils import ErrorHandler
@@ -24,21 +24,10 @@ def reset_password_request(data):
                 status_code=404
             )
 
-        reset_password_confirmation(user)
-
-    except ValueError as ve:
-        return ErrorHandler.handle_validation_error(str(ve))
-    except Exception as e:
-        return ErrorHandler.handle_error(
-            e,
-            message="Internal server error while sending the password reset email.",
-            status_code=500
-        )
-
-def reset_password_confirmation(user):
-    try:
-        token = s.dumps(user.email, salt='reset_password-confirm-salt')
+        token = s.dumps(user.email, salt='reset-password-confirm-salt')
         confirmation_url = url_for('user_profile.confirm_reset_password', token=token, _external=True)
+
+        print(confirmation_url)
 
         with open("templates/reset_password_confirmation.html", "r") as html_file:
             html_template = html_file.read()
@@ -52,24 +41,26 @@ def reset_password_confirmation(user):
         msg = Message(
             "Reset password confirmation",
             recipients=[user.email],
-            body=f"To confirm your email address, "
+            body=f"To confirm your password resetting, "
                  f"visit the following link: {confirmation_url}",
             html=html_body)
 
         mail.send(msg)
         return jsonify({'message': 'The confirmation was sent successfully.'}), 200
 
+    except ValueError as ve:
+        return ErrorHandler.handle_validation_error(str(ve))
     except Exception as e:
         return ErrorHandler.handle_error(
             e,
-            message="Internal server error while sending the email confirmation.",
+            message="Internal server error while sending the password reset email.",
             status_code=500
         )
 
 
 def verify_reset_password_token(token):
     try:
-        email = s.loads(token, salt='reset_password-confirm-salt', max_age=3600)
+        email = s.loads(token, salt='reset-password-confirm-salt', max_age=3600)
         user = User.query.filter_by(email=email).first()
 
         if user is None:
@@ -77,7 +68,7 @@ def verify_reset_password_token(token):
 
         send_password_reset_email(user)
 
-        with open("templates/email_confirmation_success.html", "r") as html_file:
+        with open("templates/reset_password_confirmation_success.html", "r") as html_file:
             success_html_template = html_file.read()
 
         success_html_body = render_template_string(
@@ -88,7 +79,7 @@ def verify_reset_password_token(token):
         return success_html_body
 
     except PermissionError as pe:
-        with open("templates/email_confirmation_error.html", "r") as html_file:
+        with open("templates/reset_password_confirmation_error.html", "r") as html_file:
             error_html_template = html_file.read()
 
         error_html_body = render_template_string(
@@ -99,7 +90,7 @@ def verify_reset_password_token(token):
         return error_html_body
 
     except RuntimeError as re:
-        with open("templates/email_confirmation_error.html", "r") as html_file:
+        with open("templates/reset_password_confirmation_error.html", "r") as html_file:
             error_html_template = html_file.read()
 
         error_html_body = render_template_string(
@@ -109,14 +100,15 @@ def verify_reset_password_token(token):
         return error_html_body
 
     except Exception as e:
-        with open("templates/email_confirmation_error.html", "r") as html_file:
+        with open("templates/reset_password_confirmation_error.html", "r") as html_file:
             error_html_template = html_file.read()
 
         error_html_body = render_template_string(
             error_html_template,
-            error_message=f"Internal server error during email confirmation. {str(e)}"
+            error_message=f"Internal server error during reset password confirmation. {str(e)}"
         )
         return error_html_body
+
 
 def send_password_reset_email(user):
     try:
@@ -148,11 +140,7 @@ def send_password_reset_email(user):
     except ValueError as ve:
         return ErrorHandler.handle_validation_error(str(ve))
     except Exception as e:
-        return ErrorHandler.handle_error(
-            e,
-            message="Internal server error while sending the password reset email.",
-            status_code=500
-        )
+        raise RuntimeError("Internal server error while sending the password reset email.") from e
 
 
 def generate_random_password(length=8):
