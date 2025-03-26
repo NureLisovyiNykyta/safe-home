@@ -10,6 +10,10 @@ const Navigation = () => {
         <span>safe home</span>
       </div>
       <div className='user-panel'>
+        <button className='user'>
+          <p className='name'>Oleg</p>
+          <p className='email'>oleg.kivirenko@safe.home</p>
+        </button>
         <button className='logout'>
           <MdLogout className='icon' />
           <span>logout</span>
