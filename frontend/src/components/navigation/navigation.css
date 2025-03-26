@@ -1,0 +1,25 @@
+.navigation {
+  background: white;
+  margin: 2rem;
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.navigation .logo {
+  display: flex;
+  justify-content: center;
+  font-family: Kreon;
+  font-size: 32px;
+}
+
+.navigation .logo img {
+  width: 48px;
+  height: 40px;
+  padding-right: 1rem;
+}
+
+.navigation .logo span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
