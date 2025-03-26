@@ -8,11 +8,17 @@ import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
 const Navigation = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activeLink, setActiveLink] = useState('customers');
+  const [lang, setLang] = useState(i18n.language);
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
+  };
+
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language);
+    setLang(language);
   };
 
   return (
@@ -48,6 +54,20 @@ const Navigation = () => {
         </Link>
       </div>
       <div className='user-panel'>
+        <div className="switcher">
+          <button
+            className={`button ${lang === "en" ? "active" : ""}`}
+            onClick={() => changeLanguage('en')}
+          >
+            ENG
+          </button>
+          <button
+            className={`button ${lang === "ua" ? "active" : ""}`}
+            onClick={() => changeLanguage('ua')}
+          >
+            UA
+          </button>
+        </div>
         <button className='user'>
           <p className='name'>Oleg</p>
           <p className='email'>oleg.kivirenko@safe.home</p>

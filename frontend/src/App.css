@@ -17,6 +17,10 @@ a {
   color: inherit;
 }
 
+button, a {
+  user-select: none;
+}
+
 .page {
   height: stretch;
   background: white;
