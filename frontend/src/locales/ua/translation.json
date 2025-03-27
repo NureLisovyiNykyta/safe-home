@@ -1,0 +1,11 @@
+{
+  "navigation": {
+    "customers": "клієнти",
+    "admins": "адміністратори",
+    "subscriptions": "підписки",
+    "logout": "вийти"
+  },
+  "notFound": {
+    "title": "404 Сторінку не знайдено"
+  }
+}

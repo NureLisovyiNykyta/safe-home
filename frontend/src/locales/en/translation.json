@@ -1,0 +1,11 @@
+{
+  "navigation": {
+    "customers": "customers",
+    "admins": "admins",
+    "subscriptions": "subscriptions",
+    "logout": "logout"
+  },
+  "notFound": {
+    "title": "404 Page not found"
+  }
+}
