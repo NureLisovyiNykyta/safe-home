@@ -4,6 +4,7 @@
   background: #C7DBFF;
   display: grid;
   grid-template-columns: 1fr 4fr;
+  overflow: hidden;
 }
 
 button {
@@ -22,7 +23,6 @@ button, a {
 }
 
 .page {
-  height: stretch;
   background: white;
   margin: 2rem;
   margin-left: 0;
@@ -33,4 +33,5 @@ button, a {
   padding: 2rem;
   flex-wrap: wrap;
   overflow-y: auto;
+  grid-column: 2;
 }

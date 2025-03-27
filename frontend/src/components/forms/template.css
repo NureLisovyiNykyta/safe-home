@@ -61,7 +61,7 @@
 
 .form-template .form .form-group .icon {
   position: absolute;
-  top: 50%;
+  top: 1.7rem;
   transform: translateY(-50%);
   right: 1rem;
   z-index: 1001;
@@ -114,7 +114,7 @@
 }
 
 .form-template .form .additional .remember label {
-  margin: calc(-0.3rem) 0 0 0.5rem; 
+  margin: calc(-0.2rem) 0 0 0.5rem; 
 }
 
 .form-template .form .additional .forgot {

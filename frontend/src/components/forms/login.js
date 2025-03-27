@@ -12,5 +12,6 @@ export const LoginForm = () => (
       name: 'password', type: 'password', placeholder: 'password',
       validation: { required: "password is required", minLength: { value: 8, message: "password must be at least 8 characters" } }
     }]}
+    isLogin={true}
   />
 );

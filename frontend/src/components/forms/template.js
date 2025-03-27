@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useState } from 'react';
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-const FormTemplate = ({ title, status, statusType, fields, onSubmit, buttonText }) => {
+const FormTemplate = ({ title, status, statusType, fields, onSubmit, buttonText, isLogin=false }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,6 +31,15 @@ const FormTemplate = ({ title, status, statusType, fields, onSubmit, buttonText 
             )}
           </div>
         ))}
+        {isLogin && (
+          <div className='additional'>
+            <div className='remember'>
+              <input type='checkbox' id='remember-me' />
+              <label htmlFor='remember-me'>remember me?</label>
+            </div>
+            <span className='forgot'>forgot password?</span>
+          </div>
+        )}
         <button type='submit'>{buttonText}</button>
       </form>
     </div>
