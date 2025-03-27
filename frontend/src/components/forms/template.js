@@ -20,7 +20,7 @@ const FormTemplate = ({ title, status, statusType, fields, onSubmit, buttonText,
           <div className='form-group' key={name}>
             <input 
               placeholder={placeholder} 
-              type={name === "password" && !showPassword ? 'password' : type} 
+              type={name === "password" && showPassword ? 'text' : type} 
               {...register(name, validation)} 
             />
             {errors[name] && <p className='error'>{errors[name].message}</p>}
