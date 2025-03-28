@@ -13,7 +13,7 @@ const Subscriptions = () => {
     { field: "maxSensors", headerName: "Max sensors" },
     { field: "price", headerName: "Price" },
     { field: "duration", headerName: "Duration days" },
-    {
+    { 
       field: "edit",
       headerName: "",
       cellRenderer: () => <button className="edit-btn">Edit</button>,

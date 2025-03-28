@@ -103,7 +103,7 @@ const Customers = () => {
     },
   ]);
 
-  return <TablePage rowData={rowData} columnDefs={columnDefs} pagination={true} paginationPageSize={7} />;
+  return <TablePage rowData={rowData} columnDefs={columnDefs} />;
 };
 
 export default Customers;
