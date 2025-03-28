@@ -1,7 +1,9 @@
 import './App.css';
 import Navigation from './components/navigation/navigation';
 import NotFound from './pages/notFound/notFound';
-import Customers from './pages/customers/customers';
+import Customers from './pages/customers';
+import Admins from './pages/admins';
+import Subscriptions from './pages/subscriptions';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
@@ -26,6 +28,8 @@ function App() {
         <Navigation changeLanguage={changeLanguage} />
         <Routes>
           <Route path='/' element={<Customers />} />
+          <Route path='/admins' element={<Admins />} />
+          <Route path='/subscriptions' element={<Subscriptions />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </div>

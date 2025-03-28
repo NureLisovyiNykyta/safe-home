@@ -27,9 +27,6 @@ button, a {
   margin: 2rem;
   margin-left: 0;
   border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 2rem;
   flex-wrap: wrap;
   overflow-y: auto;
