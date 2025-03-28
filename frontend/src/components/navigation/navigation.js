@@ -3,23 +3,32 @@ import logo from './logo.png';
 import { MdLogout, MdPayment } from "react-icons/md";
 import { FiUsers } from "react-icons/fi";
 import { GrUserAdmin } from "react-icons/gr";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
-const Navigation = () => {
+const Navigation = ({ changeLanguage }) => {
   const { t, i18n } = useTranslation();
   const [activeLink, setActiveLink] = useState('customers');
-  const [lang, setLang] = useState(i18n.language);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (i18n.isInitialized) {
+      setLoading(false);
+    } else {
+      const handleInitialized = () => setLoading(false);
+      i18n.on('initialized', handleInitialized);
+      return () => i18n.off('initialized', handleInitialized);
+    }
+  }, [i18n]);
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
   };
 
-  const changeLanguage = (language) => {
-    i18n.changeLanguage(language);
-    setLang(language);
-  };
+  if (loading) {
+    return null;
+  }
 
   return (
     <div className='navigation'>
@@ -56,13 +65,13 @@ const Navigation = () => {
       <div className='user-panel'>
         <div className="switcher">
           <button
-            className={`button ${lang === "en" ? "active" : ""}`}
+            className={`button ${i18n.language === "en" ? "active" : ""}`}
             onClick={() => changeLanguage('en')}
           >
             ENG
           </button>
           <button
-            className={`button ${lang === "ua" ? "active" : ""}`}
+            className={`button ${i18n.language === "ua" ? "active" : ""}`}
             onClick={() => changeLanguage('ua')}
           >
             UA
