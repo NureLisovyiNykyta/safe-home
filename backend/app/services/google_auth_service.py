@@ -11,11 +11,7 @@ google = oauth.register(
     client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
     access_token_url='https://oauth2.googleapis.com/token',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
-    jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
-    client_kwargs={
-        'scope': 'openid email profile https://www.googleapis.com/auth/user.birthday.read'
-    }
-
+    jwks_uri='https://www.googleapis.com/oauth2/v3/certs'
 )
 
 
@@ -45,22 +41,17 @@ def handle_google_callback():
         if not user_info:
             raise PermissionError('Failed to fetch user info.')
 
-        birthday = GoogleUtils.fetch_google_birthday(token.get('access_token'))
         existing_user = User.get_user_by_email(user_info['email'])
 
         if existing_user:
             if not existing_user.google_id:
                 existing_user.add_google_data(user_info['sub'], token.get('refresh_token'))
                 existing_user.verify_email()
-            if not existing_user.birthday:
-                existing_user.update_profile({"birthday": birthday})
-
             flask_login.login_user(existing_user)
         else:
             data = {
                 'name': user_info.get('given_name'),
                 'email': user_info['email'],
-                'birthday': birthday,
                 'google_id': user_info['sub'],
                 'refresh_token': token.get('refresh_token'),
             }
