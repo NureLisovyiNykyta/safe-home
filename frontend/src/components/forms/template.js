@@ -4,7 +4,16 @@ import { useForm } from "react-hook-form";
 import { useState } from 'react';
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-const FormTemplate = ({ title, fields, onSubmit, buttonText, isLogin = false, className }) => {
+const FormTemplate = ({
+  title,
+  fields,
+  onSubmit,
+  buttonText,
+  isLogin = false,
+  className,
+  onForgotPassword,
+  onBack
+}) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState({ message: null, type: null });
@@ -23,7 +32,7 @@ const FormTemplate = ({ title, fields, onSubmit, buttonText, isLogin = false, cl
   return (
     <div className={`form-template ${className}`}>
       <div className='header'>
-        <IoArrowBackOutline className='icon' />
+        <IoArrowBackOutline className='icon' onClick={onBack} />
         <span>{title}</span>
       </div>
       {status.message && <div className={`status ${status.type}`}>{status.message}</div>}
@@ -49,7 +58,7 @@ const FormTemplate = ({ title, fields, onSubmit, buttonText, isLogin = false, cl
               <input type='checkbox' id='remember-me' />
               <label htmlFor='remember-me'>remember me?</label>
             </div>
-            <span className='forgot'>forgot password?</span>
+            <span className='forgot' onClick={onForgotPassword}>forgot password?</span>
           </div>
         )}
         <button type='submit'>{buttonText}</button>

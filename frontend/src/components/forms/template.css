@@ -3,6 +3,7 @@
   border-radius: 2rem;
   min-width: 400px;
   padding: 2rem;
+  padding-top: 1rem;
   margin: 1rem;
 }
 
@@ -133,7 +134,8 @@
   color: rgb(92, 148, 254);
 }
 
-.login-form {
+.login-form,
+.reset-password-form {
   position: absolute;
   top: 40%;
   left: 50%;

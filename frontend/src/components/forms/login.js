@@ -1,9 +1,12 @@
+import { useState } from "react";
 import FormTemplate from "./template";
+import { ResetPasswordForm } from "./resetPassword";
 import api from "../../apiConfig";
 import { useAuth } from "../../authContext";
 
 export const LoginForm = () => {
   const { login } = useAuth();
+  const [isResetPassword, setIsResetPassword] = useState(false);
 
   const handleLogin = async (data, setStatus) => {
     try {
@@ -22,7 +25,9 @@ export const LoginForm = () => {
     }
   };
 
-  return (
+  return isResetPassword ? (
+    <ResetPasswordForm onBack={() => setIsResetPassword(false)} />
+  ) : (
     <FormTemplate
       title="Connect a system"
       buttonText="log in"
@@ -46,6 +51,7 @@ export const LoginForm = () => {
       ]}
       isLogin={true}
       className={"login-form"}
+      onForgotPassword={() => setIsResetPassword(true)}
     />
   );
 };
