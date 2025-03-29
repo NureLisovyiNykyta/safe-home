@@ -8,86 +8,124 @@ from app.utils import ErrorHandler
 
 s = URLSafeTimedSerializer(Config.SECRET_KEY)
 
+class EmailConfirmService:
 
-def send_email_confirmation(user):
-    try:
-        token = s.dumps(user.email, salt='email-confirm-salt')
-        confirmation_url = url_for('auth.confirm_email', token=token, _external=True)
+    @staticmethod
+    def send_email_confirmation(user):
+        try:
+            token = s.dumps(user.email, salt='email-confirm-salt')
+            confirmation_url = url_for('auth.confirm_email', token=token, _external=True)
 
-        with open("templates/email_confirmation.html", "r") as html_file:
-            html_template = html_file.read()
+            with open("templates/email_confirmation.html", "r") as html_file:
+                html_template = html_file.read()
 
-        html_body = render_template_string(
-            html_template,
-            name=user.name,
-            confirmation_url=confirmation_url
-        )
+            html_body = render_template_string(
+                html_template,
+                name=user.name,
+                confirmation_url=confirmation_url
+            )
 
-        msg = Message(
-            "Email Confirmation",
-            recipients=[user.email],
-            body=f"To confirm your email address, "
-                 f"visit the following link: {confirmation_url}",
-            html=html_body)
+            msg = Message(
+                "Email Confirmation",
+                recipients=[user.email],
+                body=f"To confirm your email address, "
+                     f"visit the following link: {confirmation_url}",
+                html=html_body)
 
-        mail.send(msg)
-        return jsonify({'message': 'The email confirmation was sent successfully.'}), 200
+            mail.send(msg)
+            return jsonify({'message': 'The email confirmation was sent successfully.'}), 200
 
-    except Exception as e:
-        return ErrorHandler.handle_error(
-            e,
-            message="Internal server error while sending the email confirmation.",
-            status_code=500
-        )
+        except Exception as e:
+            return ErrorHandler.handle_error(
+                e,
+                message="Internal server error while sending the email confirmation.",
+                status_code=500
+            )
 
+    @staticmethod
+    def send_user_registered_email(user, password):
+        try:
+            token = s.dumps(user.email, salt='email-confirm-salt')
+            confirmation_url = url_for('auth.confirm_email', token=token, _external=True)
 
-def verify_email_token(token):
-    try:
-        email = s.loads(token, salt='email-confirm-salt', max_age=3600)
-        user = User.query.filter_by(email=email).first()
+            with open("templates/user_registered_notification.html", "r") as html_file:
+                html_template = html_file.read()
 
-        if user is None:
-            raise PermissionError('The token is invalid or expired.')
+            html_body = render_template_string(
+                html_template,
+                name=user.name,
+                email=user.email,
+                role=user.role.role_name,
+                password=password,
+                confirmation_url=confirmation_url
+            )
 
-        user.verify_email()
+            msg = Message(
+                "User Registration Notification",
+                recipients=[user.email],
+                body=f"You was registrate as {user.role.role_name} with password: {password}!"
+                     f"To confirm your email address, "
+                     f"visit the following link: {confirmation_url}",
+                html=html_body)
 
-        with open("templates/email_confirmation_success.html", "r") as html_file:
-            success_html_template = html_file.read()
+            mail.send(msg)
+            return jsonify({'message': 'User registered notification was sent successfully.'}), 200
 
-        success_html_body = render_template_string(
-            success_html_template,
-            user=user
-        )
+        except Exception as e:
+            return ErrorHandler.handle_error(
+                e,
+                message="Internal server error while sending the user registered notification.",
+                status_code=500
+            )
 
-        return success_html_body
+    @staticmethod
+    def verify_email_token(token):
+        try:
+            email = s.loads(token, salt='email-confirm-salt', max_age=3600)
+            user = User.query.filter_by(email=email).first()
 
-    except PermissionError as pe:
-        with open("templates/email_confirmation_error.html", "r") as html_file:
-            error_html_template = html_file.read()
+            if user is None:
+                raise PermissionError('The token is invalid or expired.')
 
-        error_html_body = render_template_string(
-            error_html_template,
-            error_message=str(pe)
-        )
+            user.verify_email()
 
-        return error_html_body
+            with open("templates/email_confirmation_success.html", "r") as html_file:
+                success_html_template = html_file.read()
 
-    except RuntimeError as re:
-        with open("templates/email_confirmation_error.html", "r") as html_file:
-            error_html_template = html_file.read()
+            success_html_body = render_template_string(
+                success_html_template,
+                user=user
+            )
 
-        error_html_body = render_template_string(
-            error_html_template,
-            error_message=str(re)
-        )
-        return error_html_body
+            return success_html_body
 
-    except Exception as e:
-        with open("templates/email_confirmation_error.html", "r") as html_file:
-            error_html_template = html_file.read()
+        except PermissionError as pe:
+            with open("templates/email_confirmation_error.html", "r") as html_file:
+                error_html_template = html_file.read()
 
-        error_html_body = render_template_string(
-            error_html_template,
-            error_message=f"Internal server error during email confirmation. {str(e)}"
-        )
-        return error_html_body
+            error_html_body = render_template_string(
+                error_html_template,
+                error_message=str(pe)
+            )
+
+            return error_html_body
+
+        except RuntimeError as re:
+            with open("templates/email_confirmation_error.html", "r") as html_file:
+                error_html_template = html_file.read()
+
+            error_html_body = render_template_string(
+                error_html_template,
+                error_message=str(re)
+            )
+            return error_html_body
+
+        except Exception as e:
+            with open("templates/email_confirmation_error.html", "r") as html_file:
+                error_html_template = html_file.read()
+
+            error_html_body = render_template_string(
+                error_html_template,
+                error_message=f"Internal server error during email confirmation. {str(e)}"
+            )
+            return error_html_body
