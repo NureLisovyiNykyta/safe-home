@@ -7,5 +7,29 @@
   },
   "notFound": {
     "title": "404 Page not found"
+  },
+  "login": {
+    "title": "Connect a system",
+    "buttonText": "Log in",
+    "emailPlaceholder": "email",
+    "emailRequired": "Email is required",
+    "passwordPlaceholder": "password",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 8 characters",
+    "success": "Login successful. Redirecting...",
+    "failed": "Login failed",
+    "rememberMe": "Remember me?",
+    "forgotPassword": "Forgot password?"
+  },
+  "error": {
+    "generic": "An error occurred. Please try again"
+  },
+  "resetPassword": {
+    "title": "Reset password",
+    "buttonText": "Send a request",
+    "emailPlaceholder": "email",
+    "emailRequired": "Email is required",
+    "success": "Password reset request sent successfully. Redirecting...",
+    "failed": "Failed to send reset password request"
   }
 }
