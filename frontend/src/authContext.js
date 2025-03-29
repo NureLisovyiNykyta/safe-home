@@ -1,39 +1,56 @@
-import { createContext, useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
+import { createContext, useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from './apiConfig';
 
 export const AuthContext = createContext();
 
+export const useAuth = () => useContext(AuthContext);
+
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [cookies] = useCookies(['authToken']);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuthStatus = async () => {
       try {
-        if (cookies.authToken) {
-          const response = await api.get('/profile');
-          if (response.status === 200) {
-            setIsAuthenticated(true);
-          } else {
-            setIsAuthenticated(false);
-          }
-        } else {
-          setIsAuthenticated(false);
+        const response = await api.get('/profile');
+        if (response.status === 200) {
+          setIsAuthenticated(true);
+          setUserData(response.data);
         }
       } catch (error) {
+        console.error("Authentication check failed:", error.message);
         setIsAuthenticated(false);
+        setUserData(null);
       } finally {
         setLoading(false);
       }
     };
 
-    checkAuth();
-  }, [cookies.authToken]);
+    checkAuthStatus();
+  }, []);
+
+  const login = () => {
+    setIsAuthenticated(true);
+    navigate('/customers');
+  };
+
+  const logout = async () => {
+    try {
+      await api.post('/logout');
+    } catch (error) {
+      console.error("Logout failed:", error.message);
+    } finally {
+      setIsAuthenticated(false);
+      setUserData(null);
+      navigate('/');
+    }
+  };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+    <AuthContext.Provider value={{ isAuthenticated, userData, login, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );

@@ -6,9 +6,11 @@ import { GrUserAdmin } from "react-icons/gr";
 import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../authContext';
 
 const Navigation = ({ changeLanguage }) => {
   const { t, i18n } = useTranslation();
+  const { logout } = useAuth();
   const [activeLink, setActiveLink] = useState('customers');
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +28,10 @@ const Navigation = ({ changeLanguage }) => {
     setActiveLink(link);
   };
 
+  const handleLogout = () => {
+    logout();
+  }
+
   if (loading) {
     return null;
   }
@@ -38,7 +44,7 @@ const Navigation = ({ changeLanguage }) => {
       </div>
       <div className='links'>
         <Link
-          to="/"
+          to="/customers"
           className={`link ${activeLink === 'customers' ? 'active' : ''}`}
           onClick={() => handleLinkClick('customers')}
         >
@@ -81,7 +87,7 @@ const Navigation = ({ changeLanguage }) => {
           <p className='name'>Oleg</p>
           <p className='email'>oleg.kivirenko@safe.home</p>
         </button>
-        <button className='logout'>
+        <button className='logout' onClick={handleLogout}>
           <MdLogout className='icon' />
           <span>{t('navigation.logout')}</span>
         </button>

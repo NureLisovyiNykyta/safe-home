@@ -4,9 +4,21 @@ import { useForm } from "react-hook-form";
 import { useState } from 'react';
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-const FormTemplate = ({ title, status, statusType, fields, onSubmit, buttonText, isLogin = false, className }) => {
+const FormTemplate = ({ title, fields, onSubmit, buttonText, isLogin = false, className }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState(false);
+  const [status, setStatus] = useState({ message: null, type: null });
+
+  const handleFormSubmit = async (data) => {
+    try {
+      await onSubmit(data, setStatus);
+    } catch (error) {
+      setStatus({
+        message: error.response?.data?.message || "An error occurred.",
+        type: "error",
+      });
+    }
+  };
 
   return (
     <div className={`form-template ${className}`}>
@@ -14,8 +26,8 @@ const FormTemplate = ({ title, status, statusType, fields, onSubmit, buttonText,
         <IoArrowBackOutline className='icon' />
         <span>{title}</span>
       </div>
-      {status && <div className={`status ${statusType}`}>{status}</div>}
-      <form className='form' onSubmit={handleSubmit(onSubmit)}>
+      {status.message && <div className={`status ${status.type}`}>{status.message}</div>}
+      <form className='form' onSubmit={handleSubmit(handleFormSubmit)}>
         {fields.map(({ name, type, placeholder, validation }) => (
           <div className='form-group' key={name}>
             <input

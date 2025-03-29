@@ -4,12 +4,13 @@ import NotFound from './pages/notFound/notFound';
 import Customers from './pages/customers';
 import Admins from './pages/admins';
 import Subscriptions from './pages/subscriptions';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import i18n from './i18n';
 import { AuthContext } from './authContext';
 import { LoginForm } from './components/forms/login';
+import { AuthProvider } from './authContext';
 
 function App() {
   const [cookies, setCookie] = useCookies(['language']);
@@ -26,18 +27,16 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="app">
-        {isAuthenticated && <Navigation changeLanguage={changeLanguage} />}
-        <Routes>
-          <Route path='/' element={<LoginForm />} />
-          <Route path='/customers' element={<Customers />} />
-          <Route path='/admins' element={<Admins />} />
-          <Route path='/subscriptions' element={<Subscriptions />} />
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className="app">
+      {isAuthenticated && <Navigation changeLanguage={changeLanguage} />}
+      <Routes>
+        <Route path='/' element={<LoginForm />} />
+        <Route path='/customers' element={<Customers />} />
+        <Route path='/admins' element={<Admins />} />
+        <Route path='/subscriptions' element={<Subscriptions />} />
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+    </div>
   );
 }
 
