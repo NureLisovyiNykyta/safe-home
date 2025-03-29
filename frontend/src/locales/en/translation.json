@@ -23,5 +23,13 @@
   },
   "error": {
     "generic": "An error occurred. Please try again"
-  }  
+  },
+  "resetPassword": {
+    "title": "Reset password",
+    "buttonText": "Send a request",
+    "emailPlaceholder": "email",
+    "emailRequired": "Email is required",
+    "success": "Password reset request sent successfully. Redirecting...",
+    "failed": "Failed to send reset password request"
+  }
 }
