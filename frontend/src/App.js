@@ -10,7 +10,6 @@ import { useCookies } from 'react-cookie';
 import i18n from './i18n';
 import { AuthContext } from './authContext';
 import { LoginForm } from './components/forms/login';
-import { AuthProvider } from './authContext';
 
 function App() {
   const [cookies, setCookie] = useCookies(['language']);
