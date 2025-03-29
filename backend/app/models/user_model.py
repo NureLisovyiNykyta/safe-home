@@ -87,8 +87,8 @@ class User(db.Model, UserMixin):
             email = data.get('email')
             password = data.get('password')
 
-            if not name or not email:
-                raise ValueError("Name and email are required for registration.")
+            if not name or not email or not password:
+                raise ValueError("Name, email and password are required for registration.")
 
             user_role = Role.query.filter_by(role_name=role).first()
 
@@ -142,7 +142,8 @@ class User(db.Model, UserMixin):
             user = cls(
                 name=name,
                 email=email,
-                google_id=google_id
+                google_id=google_id,
+                role_id = user_role.role_id
             )
             db.session.add(user)
             db.session.commit()
@@ -295,41 +296,6 @@ class User(db.Model, UserMixin):
                 message="Database error while deleting user",
                 status_code=500
             )
-
-    @classmethod
-    def register_admin(cls, data):
-        try:
-            name = data.get('name')
-            email = data.get('email')
-            password = data.get('password')
-
-            if not name or not email:
-                raise ValueError("Name and email are required for registration.")
-
-            existing_user = cls.query.filter_by(email=email).first()
-            if existing_user:
-                raise ValueError("Email is already registered.")
-
-            user_role = Role.query.filter_by(role_name="admin").first()
-
-            admin = cls(name=name, email=email, role_id=user_role.role_id)
-
-            if password:
-                admin.set_password(password)
-
-            db.session.add(admin)
-            db.session.commit()
-
-            from app.services.email_confirm_service import send_email_confirmation
-            send_email_confirmation(admin)
-
-            return jsonify({"message": "Admin registered successfully."}), 201
-
-        except ValueError as ve:
-            return ErrorHandler.handle_validation_error(str(ve))
-        except Exception as e:
-            db.session.rollback()
-            raise RuntimeError("Database error while user register") from e
 
     @classmethod
     def update_user_profile(cls, user_id, data):

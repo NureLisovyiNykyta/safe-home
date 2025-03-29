@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import User, Subscription, SubscriptionPlan, GeneralUserNotification
 from app.utils.auth_decorator import role_required
+from app.services import auth_service
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -28,13 +29,11 @@ def delete_user():
 def get_admins():
     return User.get_all_admins()
 
-
 @admin_bp.route('/register_admin', methods=['Post'])
-@role_required(['admin']) 
+@role_required(['admin'])
 def register_admin():
     data = request.get_json()
-    return User.register_admin(data)
-
+    return auth_service.register_admin(data)
 
 @admin_bp.route('/create_subscription_plan', methods=['Post'])
 @role_required(['admin']) 
