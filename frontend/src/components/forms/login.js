@@ -5,7 +5,7 @@ import { ResetPasswordForm } from "./resetPassword";
 import api from "../../apiConfig";
 import { useAuth } from "../../authContext";
 
-export const LoginForm = () => {
+export const LoginForm = ({ changeLanguage }) => {
   const { login } = useAuth();
   const [isResetPassword, setIsResetPassword] = useState(false);
   const { t } = useTranslation();
@@ -54,6 +54,7 @@ export const LoginForm = () => {
       isLogin={true}
       className={"login-form"}
       onForgotPassword={() => setIsResetPassword(true)}
+      changeLanguage={changeLanguage}
     />
   );
 };

@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../authContext';
+import LanguageSwitcher from '../languageSwitcher';
 
 const Navigation = ({ changeLanguage }) => {
   const { t, i18n } = useTranslation();
@@ -69,20 +70,7 @@ const Navigation = ({ changeLanguage }) => {
         </Link>
       </div>
       <div className='user-panel'>
-        <div className="switcher">
-          <button
-            className={`button ${i18n.language === "en" ? "active" : ""}`}
-            onClick={() => changeLanguage('en')}
-          >
-            ENG
-          </button>
-          <button
-            className={`button ${i18n.language === "ua" ? "active" : ""}`}
-            onClick={() => changeLanguage('ua')}
-          >
-            UA
-          </button>
-        </div>
+        <LanguageSwitcher changeLanguage={changeLanguage} />
         <button className='user'>
           <p className='name'>Oleg</p>
           <p className='email'>oleg.kivirenko@safe.home</p>

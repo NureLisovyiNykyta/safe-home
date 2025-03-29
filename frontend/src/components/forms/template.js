@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import LanguageSwitcher from "../languageSwitcher";
 
 const FormTemplate = ({
   title,
@@ -13,7 +14,8 @@ const FormTemplate = ({
   isLogin = false,
   className,
   onForgotPassword,
-  onBack
+  onBack,
+  changeLanguage
 }) => {
   const { t } = useTranslation();
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -36,6 +38,7 @@ const FormTemplate = ({
       <div className='header'>
         <IoArrowBackOutline className='icon' onClick={onBack} />
         <span>{title}</span>
+        <LanguageSwitcher changeLanguage={changeLanguage} />
       </div>
       {status.message && <div className={`status ${status.type}`}>{status.message}</div>}
       <form className='form' onSubmit={handleSubmit(handleFormSubmit)}>

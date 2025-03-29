@@ -29,7 +29,7 @@ function App() {
     <div className="app">
       {isAuthenticated && <Navigation changeLanguage={changeLanguage} />}
       <Routes>
-        <Route path='/' element={<LoginForm />} />
+        <Route path='/' element={<LoginForm changeLanguage={changeLanguage} />} />
         <Route path='/customers' element={<Customers />} />
         <Route path='/admins' element={<Admins />} />
         <Route path='/subscriptions' element={<Subscriptions />} />

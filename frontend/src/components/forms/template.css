@@ -9,7 +9,7 @@
 
 .form-template .header {
   position: relative;
-  min-height: 5rem;
+  min-height: 7rem;
 }
 
 .form-template .header .icon,
@@ -147,4 +147,12 @@
 
 .login-form .header .icon {
   display: none;
+}
+
+.form-template .language-switcher {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 4rem;
+  transform: translate(-50%, -50%);
 }
