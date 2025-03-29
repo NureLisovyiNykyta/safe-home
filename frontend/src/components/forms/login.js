@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import FormTemplate from "./template";
 import { ResetPasswordForm } from "./resetPassword";
 import api from "../../apiConfig";
@@ -7,19 +8,20 @@ import { useAuth } from "../../authContext";
 export const LoginForm = () => {
   const { login } = useAuth();
   const [isResetPassword, setIsResetPassword] = useState(false);
+  const { t } = useTranslation();
 
   const handleLogin = async (data, setStatus) => {
     try {
       const response = await api.post("/login", data);
       if (response.status === 200) {
-        setStatus({ message: "Login successful. Redirecting...", type: "success" });
+        setStatus({ message: t("login.success"), type: "success" });
         setTimeout(() => {
           login();
         }, 2000);
       }
     } catch (error) {
       setStatus({
-        message: error.response?.data?.message || "Login failed.",
+        message: error.response?.data?.message || t("login.failed"),
         type: "error",
       });
     }
@@ -29,23 +31,23 @@ export const LoginForm = () => {
     <ResetPasswordForm onBack={() => setIsResetPassword(false)} />
   ) : (
     <FormTemplate
-      title="Connect a system"
-      buttonText="log in"
+      title={t("login.title")}
+      buttonText={t("login.buttonText")}
       onSubmit={handleLogin}
       fields={[
         {
           name: "email",
           type: "email",
-          placeholder: "email",
-          validation: { required: "email is required" },
+          placeholder: t("login.emailPlaceholder"),
+          validation: { required: t("login.emailRequired") },
         },
         {
           name: "password",
           type: "password",
-          placeholder: "password",
+          placeholder: t("login.passwordPlaceholder"),
           validation: {
-            required: "password is required",
-            minLength: { value: 8, message: "password must be at least 8 characters" },
+            required: t("login.passwordRequired"),
+            minLength: { value: 8, message: t("login.passwordMinLength") },
           },
         },
       ]}

@@ -2,6 +2,7 @@ import './template.css';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { useState } from 'react';
+import { useTranslation } from "react-i18next";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const FormTemplate = ({
@@ -14,6 +15,7 @@ const FormTemplate = ({
   onForgotPassword,
   onBack
 }) => {
+  const { t } = useTranslation();
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState({ message: null, type: null });
@@ -23,7 +25,7 @@ const FormTemplate = ({
       await onSubmit(data, setStatus);
     } catch (error) {
       setStatus({
-        message: error.response?.data?.message || "An error occurred.",
+        message: error.response?.data?.message || t("error.generic"),
         type: "error",
       });
     }
@@ -56,9 +58,9 @@ const FormTemplate = ({
           <div className='additional'>
             <div className='remember'>
               <input type='checkbox' id='remember-me' />
-              <label htmlFor='remember-me'>remember me?</label>
+              <label htmlFor='remember-me'>{t("login.rememberMe")}</label>
             </div>
-            <span className='forgot' onClick={onForgotPassword}>forgot password?</span>
+            <span className='forgot' onClick={onForgotPassword}>{t("login.forgotPassword")}</span>
           </div>
         )}
         <button type='submit'>{buttonText}</button>
