@@ -13,5 +13,6 @@ export const LoginForm = () => (
       validation: { required: "password is required", minLength: { value: 8, message: "password must be at least 8 characters" } }
     }]}
     isLogin={true}
+    className={'login-form'}
   />
 );

@@ -134,3 +134,14 @@
   cursor: pointer;
   color: rgb(92, 148, 254);
 }
+
+.login-form {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login-form .header .icon {
+  display: none;
+}

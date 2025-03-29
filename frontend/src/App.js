@@ -5,12 +5,15 @@ import Customers from './pages/customers';
 import Admins from './pages/admins';
 import Subscriptions from './pages/subscriptions';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import i18n from './i18n';
+import { AuthContext } from './authContext';
+import { LoginForm } from './components/forms/login';
 
 function App() {
   const [cookies, setCookie] = useCookies(['language']);
+  const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     const currentLanguage = cookies.language || 'en';
@@ -25,9 +28,10 @@ function App() {
   return (
     <Router>
       <div className="app">
-        <Navigation changeLanguage={changeLanguage} />
+        {isAuthenticated && <Navigation changeLanguage={changeLanguage} />}
         <Routes>
-          <Route path='/' element={<Customers />} />
+          <Route path='/' element={<LoginForm />} />
+          <Route path='/customers' element={<Customers />} />
           <Route path='/admins' element={<Admins />} />
           <Route path='/subscriptions' element={<Subscriptions />} />
           <Route path='*' element={<NotFound />} />

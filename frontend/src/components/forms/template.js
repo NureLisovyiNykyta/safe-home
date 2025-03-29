@@ -4,12 +4,12 @@ import { useForm } from "react-hook-form";
 import { useState } from 'react';
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-const FormTemplate = ({ title, status, statusType, fields, onSubmit, buttonText, isLogin=false }) => {
+const FormTemplate = ({ title, status, statusType, fields, onSubmit, buttonText, isLogin = false, className }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className='form-template'>
+    <div className={`form-template ${className}`}>
       <div className='header'>
         <IoArrowBackOutline className='icon' />
         <span>{title}</span>
@@ -18,10 +18,10 @@ const FormTemplate = ({ title, status, statusType, fields, onSubmit, buttonText,
       <form className='form' onSubmit={handleSubmit(onSubmit)}>
         {fields.map(({ name, type, placeholder, validation }) => (
           <div className='form-group' key={name}>
-            <input 
-              placeholder={placeholder} 
-              type={name === "password" && showPassword ? 'text' : type} 
-              {...register(name, validation)} 
+            <input
+              placeholder={placeholder}
+              type={name === "password" && showPassword ? 'text' : type}
+              {...register(name, validation)}
             />
             {errors[name] && <p className='error'>{errors[name].message}</p>}
             {name === "password" && (
