@@ -25,8 +25,7 @@ const Customers = () => {
   return <TablePage
     apiEndpoint="/admin/users"
     columnDefs={columnDefs}
-    transformData={transformData}
-  />;
+    transformData={transformData} />;
 };
 
 export default Customers;
