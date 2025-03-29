@@ -6,10 +6,9 @@ admin_bp = Blueprint('admin', __name__)
 
 
 @admin_bp.route('/users', methods=['Get'])
-@role_required(['admin']) 
+@role_required(['admin'])
 def get_users():
     return User.get_all_users()
-
 
 @admin_bp.route('/user/user', methods=['Get'])
 @role_required(['admin']) 
@@ -24,6 +23,11 @@ def delete_user():
     user_id = request.args.get('user')
     return User.delete_user(user_id)
 
+@admin_bp.route('/admins', methods=['Get'])
+@role_required(['admin'])
+def get_admins():
+    return User.get_all_admins()
+
 
 @admin_bp.route('/register_admin', methods=['Post'])
 @role_required(['admin']) 
@@ -37,6 +41,13 @@ def register_admin():
 def create_subscription_plan():
     data = request.get_json()
     return SubscriptionPlan.create_subscription_plan(data)
+
+@admin_bp.route('/update_subscription_plan/plan', methods=['Put'])
+@role_required(['admin'])
+def update_subscription_plan():
+    plan_id = request.args.get('plan')
+    data = request.get_json()
+    return SubscriptionPlan.update_subscription_plan(plan_id, data)
 
 
 @admin_bp.route('/user_subscriptions/user', methods=['Get'])

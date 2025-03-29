@@ -42,30 +42,29 @@ class SubscriptionPlan(db.Model):
     @classmethod
     def create_subscription_plan(cls, data):
         try:
-            required_fields = ['name', 'max_homes', 'max_sensors', 'price', 'duration_days']
+            required_fields = ["name", "max_homes", "max_sensors", "price", "duration_days"]
+
             for field in required_fields:
-                if field not in data:
+                value = data.get(field)
+
+                if value is None:
                     raise ValueError(f"'{field}' is a required field.")
 
-            if not isinstance(data['max_homes'], int) or data['max_homes'] <= 0:
-                raise ValueError("'max_homes' must be a positive integer.")
+                if field in ["max_homes", "max_sensors", "duration_days"] and (
+                        not isinstance(value, int) or value <= 0):
+                    raise ValueError(f"'{field}' must be a positive integer.")
 
-            if not isinstance(data['max_sensors'], int) or data['max_sensors'] <= 0:
-                raise ValueError("'max_sensors' must be a positive integer.")
-
-            if not isinstance(data['price'], (float, int)) or data['price'] <= 0:
-                raise ValueError("'price' must be a positive number.")
-
-            if not isinstance(data['duration_days'], int) or data['duration_days'] <= 0:
-                raise ValueError("'duration_days' must be a positive integer.")
+                if field == "price" and (not isinstance(value, (float, int)) or value <= 0):
+                    raise ValueError(f"'{field}' must be a positive number.")
 
             new_plan = cls(
-                name=data['name'],
-                max_homes=data['max_homes'],
-                max_sensors=data['max_sensors'],
-                price=float(data['price']),
-                duration_days=data['duration_days']
+                name=data["name"],
+                max_homes=int(data["max_homes"]),
+                max_sensors=int(data["max_sensors"]),
+                price=float(data["price"]),
+                duration_days=int(data["duration_days"])
             )
+
             db.session.add(new_plan)
             db.session.commit()
 
@@ -78,5 +77,40 @@ class SubscriptionPlan(db.Model):
             return ErrorHandler.handle_error(
                 e,
                 message="Database error while creating subscription plan",
+                status_code=500
+            )
+
+    @classmethod
+    def update_subscription_plan(cls, plan_id, data):
+        try:
+            subscription_plan = cls.query.get(plan_id)
+            if not subscription_plan:
+                raise ValueError("Subscription plan not found.")
+
+            updatable_fields = ["name", "max_homes", "max_sensors", "price", "duration_days"]
+
+            for field in updatable_fields:
+                value = data.get(field)
+
+                if value is not None and value != "":
+                    if field in ["max_homes", "max_sensors", "duration_days"] and (
+                            not isinstance(value, int) or value <= 0):
+                        raise ValueError(f"'{field}' must be a positive integer.")
+
+                    if field == "price" and (not isinstance(value, (float, int)) or value <= 0):
+                        raise ValueError(f"'{field}' must be a positive number.")
+
+                    setattr(subscription_plan, field, value)
+
+            db.session.commit()
+            return jsonify({"message": "Subscription plan updated successfully."}), 200
+
+        except ValueError as ve:
+            return ErrorHandler.handle_validation_error(str(ve))
+        except Exception as e:
+            db.session.rollback()
+            return ErrorHandler.handle_error(
+                e,
+                message="Database error while updating subscription plan",
                 status_code=500
             )
