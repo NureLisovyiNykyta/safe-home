@@ -28,7 +28,7 @@ export const LoginForm = ({ changeLanguage }) => {
   };
 
   return isResetPassword ? (
-    <ResetPasswordForm onBack={() => setIsResetPassword(false)} />
+    <ResetPasswordForm changeLanguage={changeLanguage} onBack={() => setIsResetPassword(false)} />
   ) : (
     <FormTemplate
       title={t("login.title")}

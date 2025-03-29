@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import FormTemplate from "./template";
 import api from "../../apiConfig";
 
-export const ResetPasswordForm = ({ onBack }) => {
+export const ResetPasswordForm = ({ onBack, changeLanguage }) => {
   const { t } = useTranslation();
 
   const handleResetPassword = async (data, setStatus) => {
@@ -40,6 +40,7 @@ export const ResetPasswordForm = ({ onBack }) => {
       ]}
       onBack={onBack}
       className={"reset-password-form"}
+      changeLanguage={changeLanguage}
     />
   );
 };

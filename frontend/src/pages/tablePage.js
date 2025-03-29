@@ -1,13 +1,44 @@
+import { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import api from "../apiConfig";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const TablePage = ({ rowData, columnDefs, }) => {
+const TablePage = ({ apiEndpoint, columnDefs, transformData }) => {
+  const [rowData, setRowData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const defaultColDef = {
     filter: true,
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get(apiEndpoint);
+        const data = transformData ? transformData(response.data) : response.data;
+        setRowData(data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Failed to load data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [apiEndpoint, transformData]);
+
+  if (loading) {
+    return <div className="page">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="page">{error}</div>;
+  }
 
   return (
     <div className="page">
