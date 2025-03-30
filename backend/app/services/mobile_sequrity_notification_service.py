@@ -5,7 +5,7 @@ from app.utils import send_notification
 def send_security_mode_change_notification(user_id, home, new_mode):
     try:
         title = "Security Mode Change Notice"
-        body = f"Your home '{home.name}' security mode has been changed to {new_mode.mode_name}."
+        body = f"Your home '{home.name}' security mode has been changed to {new_mode.mode_name}, {new_mode.description}."
         data = {
             'title': title,
             'new_mode_name': f'{new_mode.mode_name}',
@@ -40,8 +40,9 @@ def send_security_mode_change_notification(user_id, home, new_mode):
 def send_sensor_activity_change_notification(user_id, sensor, new_activity, new_mode_name):
     try:
         title = "Sensor Activity Change Notice"
-        body = (f"The activity of your sensor '{sensor.name}'in home '{sensor.home.name}' has been changed to {new_activity}. "
+        body = (f"Sensor '{sensor.name}' in home '{sensor.home.name}' was turn {'on' if new_activity else 'off'}. "
                 f"Default security mode is set to {new_mode_name}.")
+
         data = {
             'title': title,
             'sensor_id': f'{sensor.sensor_id}',
@@ -79,7 +80,8 @@ def send_sensor_activity_change_notification(user_id, sensor, new_activity, new_
 def send_active_sensor_status_changed_notification(user_id, sensor):
     try:
         title = "Sensor Status Change Notice"
-        body = (f"The status of your active sensor '{sensor.name}'in home '{sensor.home.name}' has been changed to {sensor.is_closed}.")
+        body = (f"The {sensor.type} '{sensor.name}'in home '{sensor.home.name}' "
+                f"was {'closed' if sensor.is_closed else 'opened'}.")
         data = {
             'title': title,
             'sensor_id': f'{sensor.sensor_id}',
