@@ -37,17 +37,19 @@ def send_security_mode_change_notification(user_id, home, new_mode):
         )
 
 
-def send_sensor_activity_change_notification(user_id, sensor, new_activity):
+def send_sensor_activity_change_notification(user_id, sensor, new_activity, new_mode_name):
     try:
         title = "Sensor Activity Change Notice"
-        body = f"The activity of your sensor '{sensor.name}'in home '{sensor.home.name}' has been changed to {new_activity}."
+        body = (f"The activity of your sensor '{sensor.name}'in home '{sensor.home.name}' has been changed to {new_activity}. "
+                f"Default security mode is set to {new_mode_name}.")
         data = {
             'title': title,
             'sensor_id': f'{sensor.sensor_id}',
             'sensor_name': f'{sensor.name}',
             'home_id': f'{sensor.home_id}',
             'home_name': f'{sensor.home.name}',
-            'new_activity': f'{new_activity}'
+            'new_activity': f'{new_activity}',
+            'new_mode_name': f'{new_mode_name}'
         }
 
         SecurityUserNotification.create_notification(

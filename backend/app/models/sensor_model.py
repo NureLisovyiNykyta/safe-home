@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from flask import jsonify
 from app.models.subscription_model import Subscription
-from app.models.home_model import Home
+from app.models.home_model import Home, DefaultSecurityMode
 from app.services.mobile_sequrity_notification_service import send_sensor_activity_change_notification
 from app.services.mobile_sequrity_notification_service import send_sensor_security_breached_notification
 from app.utils import ErrorHandler
@@ -122,35 +122,33 @@ class Sensor(db.Model):
             )
 
     @classmethod
-    def set_sensor_activity(cls, user_id, data):
+    def set_sensor_activity(cls, user_id, sensor_id, is_active):
         try:
-            sensor_id = data.get('sensor_id')
-            new_activity = data.get('new_activity')
-
-            if not sensor_id or not new_activity:
-                raise ValueError("Sensor id, new activity are required.")
-
-            bool_new_activity = new_activity.lower() in ['true', '1']
-            if not isinstance(bool_new_activity, bool):
-                raise ValueError("New activity must be a boolean value.")
-
             sensor = cls.query.filter_by(user_id=user_id, sensor_id=sensor_id, is_archived=False).first()
             if not sensor:
                 raise ValueError("Sensor not found for the specified user.")
 
-            if bool_new_activity:
-                if not sensor.is_closed or sensor.is_security_breached:
-                    raise ValueError("Sensor cant be set as active.")
-            else:
-                sensor.is_closed = False
-                sensor.is_security_breached = False
+            if is_active and not sensor.is_closed:
+                raise ValueError("Sensor can't be set as active. Close device connected to sensor.")
 
-            sensor.is_active = bool_new_activity
+            sensor.is_active = is_active
+
+            home = sensor.home
+            all_sensors_status = all(s.is_active == is_active for s in home.sensors if not s.is_archived)
+
+            if all_sensors_status:
+                mode_name = "armed" if is_active else "disarmed"
+                default_mode = DefaultSecurityMode.get_security_mode(mode_name)
+            else:
+                default_mode = DefaultSecurityMode.get_security_mode("custom")
+
+            home.default_mode_id = default_mode.mode_id
+
             db.session.commit()
 
-            send_sensor_activity_change_notification(user_id, sensor, bool_new_activity)
+            send_sensor_activity_change_notification(user_id, sensor, is_active, default_mode.mode_name)
 
-            return jsonify({"message": f"Sensor activity was set as {new_activity}."}), 200
+            return jsonify({"message": f"Sensor was turned {'on' if is_active else 'off'} successfully."}), 200
 
         except ValueError as ve:
             return ErrorHandler.handle_validation_error(str(ve))
@@ -183,7 +181,7 @@ class Sensor(db.Model):
             db.session.commit()
 
             if sensor.is_active:
-                if not sensor.is_security_breached and  new_status:
+                if not sensor.is_security_breached and new_status:
                     sensor.is_security_breached = True
                     db.session.commit()
                     send_sensor_security_breached_notification(user_id, sensor)
@@ -241,7 +239,6 @@ class Sensor(db.Model):
             sensor.is_closed = False
             sensor.is_active = False
             sensor.is_security_breached = False
-
             db.session.commit()
 
             return jsonify({"message": "Sensor archived successfully."}), 200

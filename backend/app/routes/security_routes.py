@@ -51,12 +51,20 @@ def delete_home_sensor():
     return Sensor.delete_sensor(user.user_id, sensor_id)
 
 
-@security_bp.route('/set_home_sensor_activity', methods=['Put'])
+@security_bp.route('/turn_on_sensor/sensor', methods=['Put'])
 @role_required(['user']) 
-def set_home_sensor_activity():
+def turn_on_sensor():
     user = request.current_user
-    data = request.get_json()
-    return Sensor.set_sensor_activity(user.user_id, data)
+    sensor_id = request.args.get('sensor')
+    return Sensor.set_sensor_activity(user.user_id, sensor_id, True)
+
+
+@security_bp.route('/turn_off_sensor/sensor', methods=['Put'])
+@role_required(['user'])
+def turn_off_sensor():
+    user = request.current_user
+    sensor_id = request.args.get('sensor')
+    return Sensor.set_sensor_activity(user.user_id, sensor_id, False)
 
 
 @security_bp.route('/default_security_modes', methods=['Get'])
@@ -65,12 +73,20 @@ def get_default_security_modes():
     return DefaultSecurityMode.get_all_default_modes()
 
 
-@security_bp.route('/set_default_security_mode', methods=['Put'])
-@role_required(['user']) 
-def set_default_security_mode():
+@security_bp.route('/set_disarmed_security_mode/home', methods=['Put'])
+@role_required(['user'])
+def set_disarmed_security_mode():
     user = request.current_user
-    data = request.get_json()
-    return Home.set_default_security_mode(user.user_id, data)
+    home_id = request.args.get('home')
+    return Home.set_disarmed_security_mode(user.user_id, home_id)
+
+
+@security_bp.route('/set_armed_security_mode/home', methods=['Put'])
+@role_required(['user'])
+def set_armed_security_mode():
+    user = request.current_user
+    home_id = request.args.get('home')
+    return Home.set_armed_security_mode(user.user_id, home_id)
 
 
 @security_bp.route('/archive_home_sensors/home', methods=['Put'])
