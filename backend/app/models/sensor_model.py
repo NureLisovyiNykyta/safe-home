@@ -208,7 +208,7 @@ class Sensor(db.Model):
                     home.default_mode_id = default_mode.mode_id
                     db.session.commit()
                     send_sensor_security_breached_notification(user_id, sensor)
-                else :
+                else:
                     send_active_sensor_status_changed_notification(user_id, sensor)
 
             return jsonify({"message": f"Sensor status 'is_closed' was set as {bool_is_closed}."}), 200
