@@ -6,7 +6,7 @@ import api from "../apiConfig";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const TablePage = ({ apiEndpoint, columnDefs, transformData }) => {
+const TablePage = ({ apiEndpoint, columnDefs, transformData, onRowClicked=null }) => {
   const [rowData, setRowData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,6 +51,7 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData }) => {
           paginationPageSize={20}
           paginationPageSizeSelector={[10, 20, 30, 40]}
           defaultColDef={defaultColDef}
+          onRowClicked={onRowClicked}
         />
       </div>
     </div>

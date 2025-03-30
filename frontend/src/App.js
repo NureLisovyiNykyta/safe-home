@@ -4,6 +4,7 @@ import NotFound from './pages/notFound/notFound';
 import Customers from './pages/customers';
 import Admins from './pages/admins';
 import Subscriptions from './pages/subscriptions';
+import UserSubscriptions from './pages/user-subscriptions';
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
@@ -33,6 +34,7 @@ function App() {
         <Route path='/customers' element={<Customers />} />
         <Route path='/admins' element={<Admins />} />
         <Route path='/subscriptions' element={<Subscriptions />} />
+        <Route path="/subscriptions/user/:userId" element={<UserSubscriptions />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
     </div>

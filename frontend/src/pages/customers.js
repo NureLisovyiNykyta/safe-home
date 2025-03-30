@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import TablePage from "./tablePage";
 
 const Customers = () => {
+  const navigate = useNavigate();
+
   const columnDefs = [
     { field: "name", headerName: "Name" },
     { field: "email", headerName: "Email" },
@@ -16,16 +19,25 @@ const Customers = () => {
 
   const transformData = (data) =>
     data.users.map((user) => ({
+      ...user,
       name: user.name,
       email: user.email,
       currentSubscription: user.subscription_plan_name,
       createdAt: new Date(user.created_at).toLocaleDateString(),
     }));
 
-  return <TablePage
-    apiEndpoint="/admin/users"
-    columnDefs={columnDefs}
-    transformData={transformData} />;
+  const onRowClicked = (row) => {
+    navigate(`/subscriptions/user/${row.data.user_id}`);
+  };
+
+  return (
+    <TablePage
+      apiEndpoint="/admin/users"
+      columnDefs={columnDefs}
+      transformData={transformData}
+      onRowClicked={onRowClicked}
+    />
+  );
 };
 
 export default Customers;
