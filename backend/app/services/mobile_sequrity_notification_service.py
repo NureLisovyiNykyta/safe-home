@@ -76,6 +76,40 @@ def send_sensor_activity_change_notification(user_id, sensor, new_activity, new_
             status_code=500
         )
 
+def send_active_sensor_status_changed_notification(user_id, sensor):
+    try:
+        title = "Sensor Status Change Notice"
+        body = (f"The status of your active sensor '{sensor.name}'in home '{sensor.home.name}' has been changed to {sensor.is_closed}.")
+        data = {
+            'title': title,
+            'sensor_id': f'{sensor.sensor_id}',
+            'sensor_name': f'{sensor.name}',
+            'home_id': f'{sensor.home_id}',
+            'home_name': f'{sensor.home.name}',
+            'new_status': f'{sensor.is_active}'
+        }
+
+        SecurityUserNotification.create_notification(
+            home_id=sensor.home_id,
+            title=title,
+            body=body,
+            importance="high",
+            type="sensor_status_change",
+            sensor_id=sensor.sensor_id,
+            user_id=user_id
+        )
+
+        send_notification(user_id, title, body, data)
+
+    except ValueError as ve:
+        print(ErrorHandler.handle_validation_error(str(ve)))
+    except Exception as e:
+        return ErrorHandler.handle_error(
+            e,
+            message="Internal server error while sending sensor activity change notification.",
+            status_code=500
+        )
+
 def send_sensor_security_breached_notification(user_id, sensor):
     try:
         title = "Sensor Security Breached"

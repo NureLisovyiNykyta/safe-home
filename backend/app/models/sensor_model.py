@@ -7,6 +7,7 @@ from app.models.subscription_model import Subscription
 from app.models.home_model import Home, DefaultSecurityMode
 from app.services.mobile_sequrity_notification_service import send_sensor_activity_change_notification
 from app.services.mobile_sequrity_notification_service import send_sensor_security_breached_notification
+from app.services.mobile_sequrity_notification_service import send_active_sensor_status_changed_notification
 from app.utils import ErrorHandler
 
 class Sensor(db.Model):
@@ -128,20 +129,37 @@ class Sensor(db.Model):
             if not sensor:
                 raise ValueError("Sensor not found for the specified user.")
 
+            if sensor.is_active == is_active:
+                return jsonify({"message": "No changes needed, sensor activity remains the same."}), 200
+
             if is_active and not sensor.is_closed:
                 raise ValueError("Sensor can't be set as active. Close device connected to sensor.")
 
             sensor.is_active = is_active
+            sensor.is_security_breached = False
+
+            db.session.commit()
 
             home = sensor.home
+
             all_sensors_status = all(s.is_active == is_active for s in home.sensors if not s.is_archived)
+            all_sensors_not_breached = all(s.is_security_breached == False for s in home.sensors if not s.is_archived)
 
-            if all_sensors_status:
-                mode_name = "armed" if is_active else "disarmed"
-                default_mode = DefaultSecurityMode.get_security_mode(mode_name)
+            # Determine the new security mode for the home based on sensor statuses:
+            # 1. If all sensors are active and none are breached → set mode to "armed".
+            # 2. If all sensors are inactive → set mode to "disarmed".
+            # 3. If some sensors are active but none are breached → set mode to "custom".
+            # 4. Otherwise, keep the current security mode.
+            if all_sensors_status and is_active and all_sensors_not_breached:
+                mode_name = "armed"
+            elif all_sensors_status and not is_active:
+                mode_name = "disarmed"
+            elif all_sensors_not_breached:
+                mode_name = "custom"
             else:
-                default_mode = DefaultSecurityMode.get_security_mode("custom")
+                mode_name = home.default_mode.mode_name  # Retain the current mode if conditions don't match.
 
+            default_mode = DefaultSecurityMode.get_security_mode(mode_name)
             home.default_mode_id = default_mode.mode_id
 
             db.session.commit()
@@ -164,29 +182,36 @@ class Sensor(db.Model):
     def set_sensor_status(cls, user_id, data):
         try:
             sensor_id = data.get('sensor_id')
-            new_status = data.get('new_status')
+            is_closed = str(data.get('is_closed')).lower()
+            if not sensor_id or is_closed not in ['true', 'false', '1', '0']:
+                raise ValueError("Sensor ID and valid 'is_closed' status are required.")
 
-            if not sensor_id or not new_status:
-                raise ValueError("Sensor id, new status are required.")
-
-            bool_new_status = new_status.lower() in ['true', '1']
-            if not isinstance(bool_new_status, bool):
-                raise ValueError("New activity must be a boolean value.")
+            bool_is_closed = is_closed in ['true', '1']
 
             sensor = cls.query.filter_by(user_id=user_id, sensor_id=sensor_id, is_archived=False).first()
             if not sensor:
                 raise ValueError("Sensor not found for the specified user.")
 
-            sensor.is_closed = bool_new_status
+            if sensor.is_closed == bool_is_closed:
+                return jsonify({"message": "No changes needed, sensor status remains the same."}), 200
+
+            sensor.is_closed = bool_is_closed
             db.session.commit()
 
             if sensor.is_active:
-                if not sensor.is_security_breached and new_status:
+
+                # Если сенсор активен и стал открытым, проверяем, не нарушена ли безопасность
+                if not bool_is_closed and not sensor.is_security_breached:
                     sensor.is_security_breached = True
+                    home = sensor.home
+                    default_mode = DefaultSecurityMode.get_security_mode("alert")
+                    home.default_mode_id = default_mode.mode_id
                     db.session.commit()
                     send_sensor_security_breached_notification(user_id, sensor)
+                else :
+                    send_active_sensor_status_changed_notification(user_id, sensor)
 
-            return jsonify({"message": f"Sensor status 'is closed' was set as {new_status}."}), 200
+            return jsonify({"message": f"Sensor status 'is_closed' was set as {bool_is_closed}."}), 200
 
         except ValueError as ve:
             return ErrorHandler.handle_validation_error(str(ve))
@@ -194,7 +219,7 @@ class Sensor(db.Model):
             db.session.rollback()
             return ErrorHandler.handle_error(
                 e,
-                message="Database error while setting sensor activity",
+                message="Database error while setting sensor status",
                 status_code=500
             )
 
