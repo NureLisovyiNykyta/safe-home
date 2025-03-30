@@ -1,34 +1,8 @@
-from datetime import date
 from app.utils import ErrorHandler
 import requests
 
 
 class GoogleUtils:
-
-    @staticmethod
-    def fetch_google_birthday(access_token):
-        headers = {'Authorization': f'Bearer {access_token}'}
-
-        try:
-            response = requests.get(
-                'https://people.googleapis.com/v1/people/me?personFields=birthdays',
-                headers=headers
-            )
-            response.raise_for_status()
-
-            birthday_info = response.json().get('birthdays', [{}])[0].get('date', {})
-
-            if 'year' in birthday_info and 'month' in birthday_info and 'day' in birthday_info:
-                return date(
-                    birthday_info['year'],
-                    birthday_info['month'],
-                    birthday_info['day']
-                )
-
-            return None
-
-        except requests.exceptions.RequestException as e:
-            raise RuntimeError("Failed to fetch birthday information.") from e
 
     @staticmethod
     def get_user_info(access_token):

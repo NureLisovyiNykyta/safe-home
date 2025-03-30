@@ -1,6 +1,6 @@
 from app.models import User, Subscription
 from app import login_manager
-from app.services.email_confirm_service import send_email_confirmation
+from app.services.email_confirm_service import EmailConfirmService
 from app.utils import ErrorHandler, JwtUtils
 from flask import jsonify
 import flask_login
@@ -22,7 +22,7 @@ def register_user(data):
         if existing_user:
             if existing_user.google_id:
                 existing_user.drop_email_verification()
-                send_email_confirmation(existing_user)
+                EmailConfirmService.send_email_confirmation(existing_user)
                 existing_user.add_user_data(data)
                 return jsonify({'message': 'User data updated successfully.'}), 200
             raise ValueError('User already exists.')
@@ -31,7 +31,7 @@ def register_user(data):
         Subscription.create_basic_subscription(user.user_id)
 
         if not user.email_confirmed:
-            send_email_confirmation(user)
+            EmailConfirmService.send_email_confirmation(user)
         return jsonify({'message': 'User registered successfully.'}), 201
 
     except ValueError as ve:
@@ -42,6 +42,33 @@ def register_user(data):
         return ErrorHandler.handle_error(
             e,
             message="Internal Server Error while register",
+            status_code=500
+        )
+
+def register_admin(data):
+    try:
+        email = data.get('email')
+        if not email:
+            raise ValueError("Email is required for registration.")
+
+        existing_user = User.get_user_by_email(email)
+
+        if existing_user:
+            raise ValueError('User already exists.')
+
+        user = User.register_user(data, 'admin')
+
+        EmailConfirmService.send_user_registered_email(user, password=data.get('password'))
+        return jsonify({'message': 'Admin registered successfully.'}), 201
+
+    except ValueError as ve:
+        return ErrorHandler.handle_validation_error(str(ve))
+    except RuntimeError as re:
+        return ErrorHandler.handle_error(re, message=str(re), status_code=500)
+    except Exception as e:
+        return ErrorHandler.handle_error(
+            e,
+            message="Internal Server Error while admin register",
             status_code=500
         )
 
@@ -102,7 +129,7 @@ def login_user(data):
         raise PermissionError('Invalid credentials.')
 
     if not user.email_confirmed:
-        send_email_confirmation(user)
+        EmailConfirmService.send_email_confirmation(user)
         raise PermissionError("Please confirm your email first.")
 
     if user.password is None:

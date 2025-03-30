@@ -1,4 +1,5 @@
-from app.services import auth_service, email_confirm_service
+from app.services.email_confirm_service import EmailConfirmService
+from app.services import auth_service
 from app.services import google_auth_service, firebase_auth_service
 from flask import Blueprint, request
 from flask_login import login_required
@@ -10,7 +11,6 @@ auth_bp = Blueprint('auth', __name__)
 def register():
     data = request.get_json()
     return auth_service.register_user(data)
-
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -36,7 +36,7 @@ def firebase_auth():
 
 @auth_bp.route('/confirm_email/<token>', methods=['GET'])
 def confirm_email(token):
-    return email_confirm_service.verify_email_token(token)
+    return EmailConfirmService.verify_email_token(token)
 
 
 @auth_bp.route('/logout', methods=['POST'])

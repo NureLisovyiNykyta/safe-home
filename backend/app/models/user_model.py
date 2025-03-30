@@ -19,7 +19,6 @@ class User(db.Model, UserMixin):
     user_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     role_id = db.Column(UUID(as_uuid=True), db.ForeignKey('role.role_id', ondelete='CASCADE'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    birthday = db.Column(db.Date)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(256))
     google_id = db.Column(db.String(128))
@@ -87,8 +86,8 @@ class User(db.Model, UserMixin):
             email = data.get('email')
             password = data.get('password')
 
-            if not name or not email:
-                raise ValueError("Name and email are required for registration.")
+            if not name or not email or not password:
+                raise ValueError("Name, email and password are required for registration.")
 
             user_role = Role.query.filter_by(role_name=role).first()
 
@@ -109,13 +108,10 @@ class User(db.Model, UserMixin):
 
     def add_user_data(self, data):
         name = data.get('name')
-        birthday = data.get('birthday')
         password = data.get('password')
 
         if name:
             self.name = name
-        if birthday:
-            self.birthday = birthday
         if password:
             self.set_password(password)
 
@@ -130,7 +126,6 @@ class User(db.Model, UserMixin):
         try:
             name = data.get('name')
             email = data.get('email')
-            birthday = data.get('birthday')
             google_id = data.get('google_id')
             refresh_token = data.get('refresh_token')
 
@@ -142,14 +137,11 @@ class User(db.Model, UserMixin):
             user = cls(
                 name=name,
                 email=email,
-                google_id=google_id
+                google_id=google_id,
+                role_id = user_role.role_id
             )
             db.session.add(user)
             db.session.commit()
-
-            if birthday:
-                user.birthday = birthday
-                db.session.commit()
 
             if refresh_token:
                 user.set_refresh_token(refresh_token)
@@ -297,48 +289,12 @@ class User(db.Model, UserMixin):
             )
 
     @classmethod
-    def register_admin(cls, data):
-        try:
-            name = data.get('name')
-            email = data.get('email')
-            password = data.get('password')
-
-            if not name or not email:
-                raise ValueError("Name and email are required for registration.")
-
-            existing_user = cls.query.filter_by(email=email).first()
-            if existing_user:
-                raise ValueError("Email is already registered.")
-
-            user_role = Role.query.filter_by(role_name="admin").first()
-
-            admin = cls(name=name, email=email, role_id=user_role.role_id)
-
-            if password:
-                admin.set_password(password)
-
-            db.session.add(admin)
-            db.session.commit()
-
-            from app.services.email_confirm_service import send_email_confirmation
-            send_email_confirmation(admin)
-
-            return jsonify({"message": "Admin registered successfully."}), 201
-
-        except ValueError as ve:
-            return ErrorHandler.handle_validation_error(str(ve))
-        except Exception as e:
-            db.session.rollback()
-            raise RuntimeError("Database error while user register") from e
-
-    @classmethod
     def update_user_profile(cls, user_id, data):
         try:
             name = data.get('name')
-            birthday = data.get('birthday')
 
-            if not name and not birthday:
-                raise ValueError("Name or birthday is required.")
+            if not name:
+                raise ValueError("Name is required.")
 
             user = cls.query.filter_by(user_id=user_id).first()
             if not user:
@@ -348,10 +304,7 @@ class User(db.Model, UserMixin):
                     status_code=404
                 )
 
-            if name:
-                user.name = name
-            if birthday:
-                user.birthday = birthday
+            user.name = name
 
             db.session.commit()
             return jsonify({'message': 'User data updated successfully.'}), 200

@@ -28,7 +28,7 @@ class SubscriptionPlan(db.Model):
                     "max_homes": plan.max_homes,
                     "max_sensors": plan.max_sensors,
                     "price": plan.price,
-                    "description": plan.duration_days,
+                    "duration": plan.duration_days,
                 } for plan in subscription_plans
             ]
             return jsonify({"subscription_plans": subscription_plans_list}), 200
