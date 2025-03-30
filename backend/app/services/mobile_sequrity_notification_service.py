@@ -80,7 +80,7 @@ def send_sensor_activity_change_notification(user_id, sensor, new_activity, new_
 def send_active_sensor_status_changed_notification(user_id, sensor):
     try:
         title = "Sensor Status Change Notice"
-        body = (f"The {sensor.type} '{sensor.name}'in home '{sensor.home.name}' "
+        body = (f"The {sensor.type} '{sensor.name}' in home '{sensor.home.name}' "
                 f"was {'closed' if sensor.is_closed else 'opened'}.")
         data = {
             'title': title,
