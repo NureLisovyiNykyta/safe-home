@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext, use } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from './apiConfig';
 
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
         const response = await api.get('/profile');
         if (response.status === 200) {
           setIsAuthenticated(true);
-          setUserData(response.data);
+          setUserData(response.data.user);
         }
       } catch (error) {
         console.error("Authentication check failed:", error.message);
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuthStatus();
-  }, []);
+  }, [isAuthenticated]);
 
   const login = () => {
     setIsAuthenticated(true);

@@ -11,7 +11,7 @@ import LanguageSwitcher from '../languageSwitcher';
 
 const Navigation = ({ changeLanguage }) => {
   const { t, i18n } = useTranslation();
-  const { logout } = useAuth();
+  const { logout, userData } = useAuth();
   const [activeLink, setActiveLink] = useState('customers');
   const [loading, setLoading] = useState(true);
 
@@ -72,8 +72,8 @@ const Navigation = ({ changeLanguage }) => {
       <div className='user-panel'>
         <LanguageSwitcher changeLanguage={changeLanguage} />
         <button className='user'>
-          <p className='name'>Oleg</p>
-          <p className='email'>oleg.kivirenko@safe.home</p>
+        <p className='name'>{userData?.name || ''}</p>
+        <p className='email'>{userData?.email || ''}</p>
         </button>
         <button className='logout' onClick={handleLogout}>
           <MdLogout className='icon' />
