@@ -1,5 +1,5 @@
 from app import db
-from datetime import datetime, timezone
+from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from flask import jsonify
@@ -21,7 +21,7 @@ class MobileDevice(db.Model):
     )
     device_token = db.Column(db.String, nullable=False)
     device_info = db.Column(db.String(256), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     user = db.relationship('User', back_populates='devices')
 

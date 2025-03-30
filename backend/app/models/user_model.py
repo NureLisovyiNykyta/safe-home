@@ -1,5 +1,5 @@
 from app import db
-from datetime import datetime, timezone
+from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from flask_login import UserMixin
@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(256))
     google_id = db.Column(db.String(128))
     google_refresh_token = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     email_confirmed = db.Column(db.Boolean, default=False)
     subscription_plan_name = db.Column(db.String(100))
 
