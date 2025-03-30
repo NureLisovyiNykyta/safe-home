@@ -17,7 +17,7 @@ export const LoginForm = ({ changeLanguage }) => {
         setStatus({ message: t("login.success"), type: "success" });
         setTimeout(() => {
           login();
-        }, 2000);
+        }, 1000);
       }
     } catch (error) {
       setStatus({

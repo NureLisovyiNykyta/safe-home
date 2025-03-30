@@ -9,9 +9,10 @@ const Subscriptions = () => {
     { field: "duration", headerName: "Duration (days)" },
     {
       field: "edit",
-      headerName: "",
+      headerName: "Actions",
       cellRenderer: () => <button className="edit-btn">Edit</button>,
       width: 100,
+      filter: false,
     },
   ];
 
@@ -21,7 +22,7 @@ const Subscriptions = () => {
       maxHomes: plan.max_homes,
       maxSensors: plan.max_sensors,
       price: `${plan.price.toFixed(2)}$`,
-      duration: plan.description,
+      duration: plan.duration,
     }));
 
   return <TablePage

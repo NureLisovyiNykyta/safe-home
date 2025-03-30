@@ -11,7 +11,7 @@ const UserSubscriptions = () => {
     { field: "endDate", headerName: "End date" },
     {
       field: "cancel",
-      headerName: "",
+      headerName: "Actions",
       cellRenderer: (params) =>
         params.data.isCancelable ? (
           <button
@@ -22,6 +22,7 @@ const UserSubscriptions = () => {
           </button>
         ) : null,
       width: 100,
+      filter: false,
     },
   ];
 

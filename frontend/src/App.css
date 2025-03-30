@@ -1,9 +1,9 @@
 .app {
   min-height: 100vh;
-  width: 100%;
+  width: 100vw;
   background: #C7DBFF;
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: max-content 1fr;
   overflow: hidden;
 }
 

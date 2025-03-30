@@ -5,9 +5,7 @@
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 8rem);
-  position: fixed;
-  overflow: hidden;  
+  overflow: hidden;
 }
 
 .navigation .logo {
