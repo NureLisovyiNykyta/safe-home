@@ -40,7 +40,7 @@ def send_security_mode_change_notification(user_id, home, new_mode):
 def send_sensor_activity_change_notification(user_id, sensor, new_activity, new_mode_name):
     try:
         title = "Sensor Activity Change Notice"
-        body = (f"Sensor '{sensor.name}' in home '{sensor.home.name}' was turn {'on' if new_activity else 'off'}. "
+        body = (f"Sensor '{sensor.name}' in home '{sensor.home.name}' was turned {'on' if new_activity else 'off'}. "
                 f"Default security mode is set to {new_mode_name}.")
 
         data = {
