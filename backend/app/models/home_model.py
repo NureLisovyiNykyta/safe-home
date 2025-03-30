@@ -48,7 +48,7 @@ class Home(db.Model):
                     "created_at": home.created_at.isoformat(),
                     "default_mode_id": str(home.default_mode_id),
                     "default_mode_name": home.default_mode.mode_name,
-                     "is_archived": home.is_archived
+                    "is_archived": home.is_archived
                 } for home in homes
             ]
             return jsonify({"homes": homes_list}), 200
@@ -77,7 +77,7 @@ class Home(db.Model):
             if current_homes_count >= current_subscription.plan.max_homes:
                 raise ValueError("You have reached the maximum number of homes allowed by your subscription.")
 
-            default_mode = DefaultSecurityMode.query.filter_by(mode_name="safety").first()
+            default_mode = DefaultSecurityMode.get_security_mode("disarmed")
 
             new_home = cls(
                 user_id=user_id,
@@ -158,19 +158,9 @@ class Home(db.Model):
         try:
             home = cls.query.filter_by(user_id=user_id, home_id=home_id, is_archived=False).first()
             if not home:
-                raise ValueError("Active home not found for the user.")
+                raise ValueError("Home not found for the user.")
 
-            default_mode = DefaultSecurityMode.query.filter_by(mode_name="safety").first()
-
-            home.default_mode_id = default_mode.mode_id
-            home.is_archived = True
-
-            for sensor in home.sensors:
-                sensor.is_archived = True
-                sensor.is_closed = False
-                sensor.is_active = False
-                sensor.is_security_breached = False
-
+            cls.archive_home(home)
             db.session.commit()
             return jsonify({"message": "Home and its sensors archived successfully."}), 200
 
@@ -185,41 +175,24 @@ class Home(db.Model):
             )
 
     @classmethod
-    def set_default_security_mode(cls, user_id, data):
+    def set_armed_security_mode(cls, user_id, home_id):
         try:
-            home_id = data.get('home_id')
-            new_mode_name = data.get('new_mode_name')
-
-            if not home_id or not new_mode_name:
-                raise ValueError("Home ID and new mode name are required.")
-
             home = cls.query.filter_by(user_id=user_id, home_id=home_id, is_archived=False).first()
             if not home:
-                raise ValueError("Active home not found for the user.")
+                raise ValueError("Home not found for the user.")
 
-            new_mode = DefaultSecurityMode.query.filter_by(mode_name=new_mode_name).first()
-            if not new_mode:
-                raise ValueError("Invalid security mode.")
+            default_mode = DefaultSecurityMode.get_security_mode("armed")
 
-            if new_mode_name == "security":
-                if any(not sensor.is_closed and not sensor.is_archived for sensor in home.sensors):
-                    cls._set_sensors_to_safety(home)
-                    safety_mode = DefaultSecurityMode.query.filter_by(mode_name="safety").first()
-                    home.default_mode_id = safety_mode.mode_id
-                    db.session.commit()
-                    return jsonify({"message": "Security mode cannot be set! Safety mode was set."}), 200
+            if any(not sensor.is_closed and not sensor.is_archived for sensor in home.sensors):
+                return jsonify({"message": "Armed mode cannot be set! Close all your devices connected to sensors."}), 200
 
-                cls._activate_sensors(home)
-
-            elif new_mode_name == "safety":
-                cls._set_sensors_to_safety(home)
-
-            home.default_mode_id = new_mode.mode_id
+            cls._arm_sensors(home)
+            home.default_mode_id = default_mode.mode_id
             db.session.commit()
 
-            send_security_mode_change_notification(user_id, home, new_mode)
+            send_security_mode_change_notification(user_id, home, default_mode)
 
-            return jsonify({"message": f"Default security mode changed to '{new_mode_name}' and sensors updated."}), 200
+            return jsonify({"message": "Home armed successfully."}), 200
 
         except ValueError as ve:
             return ErrorHandler.handle_validation_error(str(ve))
@@ -227,20 +200,61 @@ class Home(db.Model):
             db.session.rollback()
             return ErrorHandler.handle_error(
                 e,
-                message="Database error while changing default security mode",
+                message="Database error while arming home",
+                status_code=500
+            )
+
+    @classmethod
+    def set_disarmed_security_mode(cls, user_id, home_id):
+        try:
+            home = cls.query.filter_by(user_id=user_id, home_id=home_id, is_archived=False).first()
+            if not home:
+                raise ValueError("Home not found for the user.")
+
+            default_mode = DefaultSecurityMode.get_security_mode("disarmed")
+
+            cls._disarm_sensors(home)
+            home.default_mode_id = default_mode.mode_id
+            db.session.commit()
+
+            send_security_mode_change_notification(user_id, home, default_mode)
+
+            return jsonify({"message": "Home disarmed successfully."}), 200
+
+        except ValueError as ve:
+            return ErrorHandler.handle_validation_error(str(ve))
+        except Exception as e:
+            db.session.rollback()
+            return ErrorHandler.handle_error(
+                e,
+                message="Database error while disarming home",
                 status_code=500
             )
 
     @staticmethod
-    def _activate_sensors(home):
+    def archive_home(home):
+        default_mode = DefaultSecurityMode.query.filter_by(mode_name="disarmed").first()
+
+        home.default_mode_id = default_mode.mode_id
+        home.is_archived = True
+
         for sensor in home.sensors:
-            if not sensor.is_archived:
-                sensor.is_active = True
+            sensor.is_archived = True
+            sensor.is_closed = False
+            sensor.is_active = False
+            sensor.is_security_breached = False
 
     @staticmethod
-    def _set_sensors_to_safety(home):
+    def _disarm_sensors(home):
         for sensor in home.sensors:
             if not sensor.is_archived:
                 sensor.is_active = False
                 sensor.is_closed = False
+                sensor.is_security_breached = False
+
+    @staticmethod
+    def _arm_sensors(home):
+        for sensor in home.sensors:
+            if not sensor.is_archived:
+                sensor.is_active = True
                 sensor.is_security_breached = False
