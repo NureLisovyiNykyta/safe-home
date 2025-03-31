@@ -1,5 +1,5 @@
 from app import db
-from datetime import datetime, timezone
+from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from flask import jsonify
@@ -26,7 +26,7 @@ class Sensor(db.Model):
     is_active = db.Column(db.Boolean, default=False)
     is_security_breached = db.Column(db.Boolean, default=False)
     is_archived = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     home = db.relationship('Home', back_populates='sensors')
 
