@@ -6,16 +6,13 @@ const Modal = ({ isOpen, onClose, children }) => {
 
   return ReactDOM.createPortal(
     <div className="modal">
+      <div className="overlay" onClick={onClose}></div>
       <div className="content">
-        {/* <button className="close-button" onClick={onClose}>
-          &times;
-        </button> */}
         {children}
       </div>
-      <div className="overlay" onClick={onClose}></div>
     </div>,
     document.body
   );
-}
+};
 
 export default Modal;
