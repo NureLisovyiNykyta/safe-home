@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import TablePage from "./tablePage";
 import api from "../apiConfig";
-import { set } from "react-hook-form";
 
 const Customers = () => {
   const navigate = useNavigate();

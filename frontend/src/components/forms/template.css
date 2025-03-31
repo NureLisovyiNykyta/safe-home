@@ -115,21 +115,10 @@
 .form-template .form .additional {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin: 1rem 0;
   color: #333;
   user-select: none;
-}
-
-.form-template .form .additional .remember,
-.form-template .form .additional .remember label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.form-template .form .additional .remember label {
-  margin: calc(-0.2rem) 0 0 0.5rem;
 }
 
 .form-template .form .additional .forgot {

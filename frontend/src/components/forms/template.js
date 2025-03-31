@@ -58,11 +58,7 @@ const FormTemplate = ({
           </div>
         ))}
         {isLogin && (
-          <div className='additional'>
-            <div className='remember'>
-              <input type='checkbox' id='remember-me' />
-              <label htmlFor='remember-me'>{t("login.rememberMe")}</label>
-            </div>
+          <div className='additional'>            
             <span className='forgot' onClick={onForgotPassword}>{t("login.forgotPassword")}</span>
           </div>
         )}

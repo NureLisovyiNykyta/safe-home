@@ -72,8 +72,8 @@ const Navigation = ({ changeLanguage }) => {
       <div className='user-panel'>
         <LanguageSwitcher changeLanguage={changeLanguage} />
         <button className='user'>
-        <p className='name'>{userData?.name || ''}</p>
-        <p className='email'>{userData?.email || ''}</p>
+          <p className='name'>{userData?.name || ''}</p>
+          <p className='email'>{userData?.email || ''}</p>
         </button>
         <button className='logout' onClick={handleLogout}>
           <MdLogout className='icon' />

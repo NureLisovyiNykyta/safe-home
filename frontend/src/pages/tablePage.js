@@ -4,6 +4,7 @@ import { AllCommunityModule, ModuleRegistry, themeMaterial } from "ag-grid-commu
 import "ag-grid-community/styles/ag-theme-material.css";
 import api from "../apiConfig";
 import "./tablePage.css";
+import { IoAdd } from "react-icons/io5";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -48,7 +49,7 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData, onRowClicked = null
 
   return (
     <div className="page">
-      <div className="table ag-theme-material" style={{ height: "100%", width: "100%" }}>
+      <div className="table ag-theme-material" style={{ height: "70%", width: "100%" }}>
         <AgGridReact
           rowData={rowData}
           columnDefs={columnDefs}
@@ -60,6 +61,12 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData, onRowClicked = null
           onRowClicked={onRowClicked}
           theme={myTheme}
         />
+      </div>
+      <div className="actions">
+        <button className="">
+          <IoAdd className="icon" />
+          <span>add new</span>
+        </button>
       </div>
     </div>
   );
