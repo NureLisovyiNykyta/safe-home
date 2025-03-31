@@ -1,13 +1,14 @@
 import FormTemplate from "./template";
 import api from "../../apiConfig";
 
-const RegisterForm = ({ onBack }) => {
+const RegisterForm = ({ onBack, onSuccess }) => {
   const handleRegister = async (data, setStatus) => {
     try {
       const response = await api.post("/admin/register_admin", data);
       if (response.status === 201) {
         setStatus({ message: "Admin added successfully!", type: "success" });
         setTimeout(() => {
+          onSuccess();
           onBack();
         }, 1000);
       }
@@ -47,7 +48,7 @@ const RegisterForm = ({ onBack }) => {
           },
         },
       ]}
-      onBack={onBack} 
+      onBack={onBack}
     />
   );
 };

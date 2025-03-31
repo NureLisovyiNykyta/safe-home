@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TablePage from "./tablePage";
 import api from "../apiConfig";
 
 const Customers = () => {
   const navigate = useNavigate();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const columnDefs = [
     { field: "name", headerName: "Name" },
@@ -37,18 +39,19 @@ const Customers = () => {
       ),
       width: 100,
       filter: false,
-    }
+    },
   ];
 
   const handleDeleteUser = async (userId) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) {
+      return;
+    }
+
     try {
       const response = await api.post(`/admin/delete_user/user?user=${userId}`);
       if (response.status === 200) {
-        alert("User deleted successfully");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }       
+        setRefreshKey((prev) => prev + 1);
+      }
     } catch (error) {
       console.error("Error deleting user:", error);
     }
@@ -68,6 +71,7 @@ const Customers = () => {
       apiEndpoint="/admin/users"
       columnDefs={columnDefs}
       transformData={transformData}
+      refreshKey={refreshKey} 
     />
   );
 };

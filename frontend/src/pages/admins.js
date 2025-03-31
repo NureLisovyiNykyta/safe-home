@@ -5,6 +5,7 @@ import Modal from "../components/modal";
 
 const Admins = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const columnDefs = [
     { field: "name", headerName: "Name" },
@@ -20,6 +21,13 @@ const Admins = () => {
       createdAt: new Date(admin.created_at).toLocaleDateString(),
     }));
 
+  const handleModalClose = (shouldRefresh = false) => {
+    setModalIsOpen(false);
+    if (shouldRefresh) {
+      setRefreshKey((prev) => prev + 1);
+    }
+  };
+
   return (
     <>
       <TablePage
@@ -28,10 +36,14 @@ const Admins = () => {
         transformData={transformData}
         showActions={true}
         onAddClick={() => setModalIsOpen(true)}
+        refreshKey={refreshKey}
       />
       {modalIsOpen && (
-        <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
-          <RegisterForm onBack={() => setModalIsOpen(false)} />
+        <Modal isOpen={modalIsOpen} onClose={() => handleModalClose(false)}>
+          <RegisterForm
+            onBack={() => handleModalClose(false)}
+            onSuccess={() => handleModalClose(true)}
+          />
         </Modal>
       )}
     </>

@@ -1,7 +1,7 @@
 import './template.css';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { useForm } from "react-hook-form";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import LanguageSwitcher from "../languageSwitcher";
@@ -18,9 +18,20 @@ const FormTemplate = ({
   changeLanguage = null
 }) => {
   const { t } = useTranslation();
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm(); // Додано reset
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState({ message: null, type: null });
+
+  // Використовуємо useEffect для оновлення значень форми
+  useEffect(() => {
+    const defaultValues = {};
+    fields.forEach(({ name, defaultValue }) => {
+      if (defaultValue !== undefined) {
+        defaultValues[name] = defaultValue;
+      }
+    });
+    reset(defaultValues); // Оновлюємо значення форми
+  }, [fields, reset]);
 
   const handleFormSubmit = async (data) => {
     try {

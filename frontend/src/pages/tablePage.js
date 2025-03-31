@@ -8,7 +8,8 @@ import { IoAdd } from "react-icons/io5";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const TablePage = ({ apiEndpoint, columnDefs, transformData, showActions = false, onRowClicked = null, onAddClick }) => {
+const TablePage = ({ apiEndpoint, columnDefs, transformData, 
+  showActions = false, onRowClicked = null, onAddClick, refreshKey }) => {
   const [rowData, setRowData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,22 +23,22 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData, showActions = false
     headerFontSize: "32px",
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get(apiEndpoint);
-        const data = transformData ? transformData(response.data) : response.data;
-        setRowData(data);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Failed to load data.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const response = await api.get(apiEndpoint);
+      const data = transformData ? transformData(response.data) : response.data;
+      setRowData(data);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      setError("Failed to load data.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
-  }, [apiEndpoint, transformData]);
+  }, [apiEndpoint, transformData, refreshKey]);
 
   if (loading) {
     return <div className="page loading">Loading...</div>;
