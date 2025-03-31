@@ -1,6 +1,6 @@
 import FormTemplate from "./template";
 
-export const RegisterForm = () => (
+const RegisterForm = ({ onBack }) => (
   <FormTemplate
     title='Add new admin'
     status='admin added successfully. Closing...'
@@ -13,5 +13,8 @@ export const RegisterForm = () => (
       name: 'password', type: 'password', placeholder: 'password',
       validation: { required: "password is required", minLength: { value: 8, message: "password must be at least 8 characters" } }
     }]}
+    onBack={onBack}
   />
 );
+
+export default RegisterForm;

@@ -8,7 +8,7 @@ import { IoAdd } from "react-icons/io5";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const TablePage = ({ apiEndpoint, columnDefs, transformData, onRowClicked = null }) => {
+const TablePage = ({ apiEndpoint, columnDefs, transformData, showActions = false, onRowClicked = null, onAddClick }) => {
   const [rowData, setRowData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,11 +40,11 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData, onRowClicked = null
   }, [apiEndpoint, transformData]);
 
   if (loading) {
-    return <div className="page">Loading...</div>;
+    return <div className="page loading">Loading...</div>;
   }
 
   if (error) {
-    return <div className="page">{error}</div>;
+    return <div className="page error">{error}</div>;
   }
 
   return (
@@ -62,12 +62,13 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData, onRowClicked = null
           theme={myTheme}
         />
       </div>
-      <div className="actions">
-        <button className="">
-          <IoAdd className="icon" />
-          <span>add new</span>
-        </button>
-      </div>
+      {showActions && (
+        <div className="actions">
+          <button className="add-btn" onClick={onAddClick}>
+            <IoAdd className="icon" /> add new
+          </button>
+        </div>
+      )}
     </div>
   );
 };

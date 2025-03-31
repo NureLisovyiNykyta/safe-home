@@ -28,7 +28,8 @@ const Subscriptions = () => {
   return <TablePage
     apiEndpoint="/subscription_plans"
     columnDefs={columnDefs}
-    transformData={transformData} />;
+    transformData={transformData} 
+    showActions={true}/>;
 };
 
 export default Subscriptions;

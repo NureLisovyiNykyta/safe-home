@@ -15,7 +15,7 @@ const FormTemplate = ({
   className,
   onForgotPassword,
   onBack,
-  changeLanguage
+  changeLanguage = null
 }) => {
   const { t } = useTranslation();
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -36,9 +36,11 @@ const FormTemplate = ({
   return (
     <div className={`form-template ${className}`}>
       <div className='header'>
-        <IoArrowBackOutline className='icon' onClick={onBack} />
-        <span>{title}</span>
-        <LanguageSwitcher changeLanguage={changeLanguage} />
+        {changeLanguage && <LanguageSwitcher changeLanguage={changeLanguage} />}
+        <div className='title'>
+          <IoArrowBackOutline className='icon' onClick={onBack} />
+          {title}
+        </div>
       </div>
       {status.message && <div className={`status ${status.type}`}>{status.message}</div>}
       <form className='form' onSubmit={handleSubmit(handleFormSubmit)}>
@@ -58,7 +60,7 @@ const FormTemplate = ({
           </div>
         ))}
         {isLogin && (
-          <div className='additional'>            
+          <div className='additional'>
             <span className='forgot' onClick={onForgotPassword}>{t("login.forgotPassword")}</span>
           </div>
         )}
