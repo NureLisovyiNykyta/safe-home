@@ -1,5 +1,5 @@
 from app import db
-from datetime import datetime, timezone
+from sqlalchemy.sql import func
 import uuid
 from app.utils import ErrorHandler
 from flask import jsonify
@@ -12,7 +12,7 @@ class GeneralUserNotification(db.Model):
     title = db.Column(db.String(255), nullable=False)
     body = db.Column(db.Text, nullable=False)
     importance = db.Column(db.Enum('low', 'medium', 'high', name='importance_enum'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     type = db.Column(db.String(50), nullable=False)
     data = db.Column(db.JSON, nullable=True)
 
