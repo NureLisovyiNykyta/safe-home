@@ -8,14 +8,15 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/authContext';
 import LanguageSwitcher from '../languageSwitcher';
-import { useUser } from '../../contexts/userContext';
+import api from '../../configs/api';
 
 const Navigation = ({ changeLanguage }) => {
   const { t, i18n } = useTranslation();
   const { logout, userData } = useAuth();
   const [loading, setLoading] = useState(true);
-  const { userName, setUserName } = useUser();
+  const [userName, setUserName] = useState(null);
   const location = useLocation();
+  const userId = location.pathname.split('/')[3]
 
   useEffect(() => {
     if (i18n.isInitialized) {
@@ -28,10 +29,28 @@ const Navigation = ({ changeLanguage }) => {
   }, [i18n]);
 
   useEffect(() => {
-    if (!location.pathname.startsWith("/subscriptions")) {
+    if (!location.pathname.startsWith("/subscriptions/user")) {
       setUserName(null);
     }
-  }, [location, setUserName]);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const response = await api.get(`/admin/user/user?user=${userId}`);
+        console.log(response);
+        if (response.data && response.data.user.name) {
+          setUserName(response.data.user.name);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (userId) {
+      console.log(userId);
+      fetchUserName();
+    }
+  }, [userId]);
 
   const handleLogout = () => {
     logout();
