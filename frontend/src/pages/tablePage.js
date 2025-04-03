@@ -65,7 +65,7 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData,
       </div>
       {showActions && (
         <div className="actions">
-          <button className="add-btn" onClick={onAddClick}>
+          <button className="row-btn add" onClick={onAddClick}>
             <IoAdd className="icon" /> add new
           </button>
         </div>

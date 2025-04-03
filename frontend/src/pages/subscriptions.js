@@ -16,10 +16,10 @@ const Subscriptions = () => {
     { field: "duration", headerName: "Duration (days)" },
     {
       field: "edit",
-      headerName: "Actions",
+      headerName: "",
       cellRenderer: (params) => (
         <button
-          className="edit-btn"
+          className="row-btn edit"
           onClick={() => {
             setEditData(params.data);
             setModalIsOpen(true);
@@ -30,6 +30,7 @@ const Subscriptions = () => {
       ),
       width: 100,
       filter: false,
+      cellStyle: { textAlign: "center" },
     },
   ];
 
@@ -64,15 +65,13 @@ const Subscriptions = () => {
         }}
         refreshKey={refreshKey}
       />
-      {modalIsOpen && (
-        <Modal isOpen={modalIsOpen} onClose={() => handleModalClose(false)}>
-          <EditPlanForm
-            initialData={editData}
-            onBack={() => handleModalClose(false)}
-            onSuccess={() => handleModalClose(true)}
-          />
-        </Modal>
-      )}
+      <Modal isOpen={modalIsOpen} onClose={() => handleModalClose(false)}>
+        <EditPlanForm
+          initialData={editData}
+          onBack={() => handleModalClose(false)}
+          onSuccess={() => handleModalClose(true)}
+        />
+      </Modal>
     </>
   );
 };

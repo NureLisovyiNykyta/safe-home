@@ -1,6 +1,6 @@
 .page {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   background: white;
   margin: 2rem;
   margin-left: 0;
@@ -8,7 +8,7 @@
   padding: 2rem;
   overflow-y: auto;
   grid-column: 2;
-  height: calc(100vh - 4rem); 
+  height: calc(100vh - 4rem);
   box-sizing: border-box;
 }
 
@@ -23,7 +23,7 @@
 .page .actions button {
   margin-left: 1rem;
   padding: 0.5rem 1rem;
-  border-radius: 0.5rem;  
+  border-radius: 0.5rem;
   background: white;
   color: #333;
   display: flex;
@@ -39,10 +39,31 @@
   background: #d1d1d1;
 }
 
-.page.loading, .page.error {
+.page.loading,
+.page.error {
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 3rem;
   color: #333;
+}
+
+.page .row-btn {
+  background: #e3e3e3;
+  justify-self: center;
+  padding: 0.5rem 2rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.page .row-btn.delete,
+.page .row-btn.cancel {
+  background: #ff7070;
+  color: white;
+}
+
+.page .row-btn.edit {
+  background: #5cad5e;
+  color: white;
 }

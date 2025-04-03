@@ -5,8 +5,11 @@ export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
   const handleSubmit = async (data, setStatus) => {
     try {
       const formattedData = {
-        ...data,
+        name: data.name,
+        max_homes: parseInt(data.maxHomes, 10),
+        max_sensors: parseInt(data.maxSensors, 10),
         price: parseFloat(data.price),
+        duration_days: parseInt(data.duration, 10),
       };
 
       if (initialData) {
@@ -56,10 +59,16 @@ export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
         },
         {
           name: "price",
-          type: "number",
+          type: "text",
           placeholder: "price",
           defaultValue: initialData?.price || "",
-          validation: { required: "Price is required", min: { value: 0.01, message: "Price must be positive" } },
+          validation: {
+            required: "Price is required",
+            pattern: {
+              value: /^\d+(\.\d{1,2})?$/,
+              message: "Enter a valid price (e.g., 10.99)",
+            },
+          },
         },
         {
           name: "duration",

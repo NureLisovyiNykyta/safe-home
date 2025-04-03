@@ -1,9 +1,13 @@
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 import TablePage from "./tablePage";
 import api from "../apiConfig";
+import Modal from "../components/modal";
 
 const UserSubscriptions = () => {
   const { userId } = useParams();
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [notification, setNotification] = useState({ isOpen: false, message: "" });
 
   const columnDefs = [
     { field: "subscriptionPlan", headerName: "Subscription plan" },
@@ -11,11 +15,11 @@ const UserSubscriptions = () => {
     { field: "endDate", headerName: "End date" },
     {
       field: "cancel",
-      headerName: "Actions",
+      headerName: "",
       cellRenderer: (params) =>
         params.data.isCancelable ? (
           <button
-            className="cancel-btn"
+            className="row-btn cancel"
             onClick={() => handleCancel(params.data.subscriptionId)}
           >
             Cancel
@@ -23,6 +27,7 @@ const UserSubscriptions = () => {
         ) : null,
       width: 100,
       filter: false,
+      cellStyle: { textAlign: "center" },
     },
   ];
 
@@ -35,24 +40,32 @@ const UserSubscriptions = () => {
       subscriptionId: sub.subscription_id,
     }));
 
-  const handleCancel = async () => {
+  const handleCancel = async (subscriptionId) => {
     try {
-      await api.post(`/admin/cancel_current_user_subscription/user?user=${userId}`);
-      alert("Subscription canceled successfully.");
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      await api.post(`/admin/cancel_current_user_subscription/user?user=${userId}&subscription=${subscriptionId}`);
+      setNotification({ isOpen: true, message: "Subscription canceled successfully" });
+      setRefreshKey((prev) => prev + 1);
     } catch (err) {
       console.error("Error canceling subscription:", err);
+      setNotification({ isOpen: true, message: "Failed to cancel subscription" });
     }
   };
 
   return (
-    <TablePage
-      apiEndpoint={`/admin/user_subscriptions/user?user=${userId}`}
-      columnDefs={columnDefs}
-      transformData={transformData}
-    />
+    <>
+      <TablePage
+        apiEndpoint={`/admin/user_subscriptions/user?user=${userId}`}
+        columnDefs={columnDefs}
+        transformData={transformData}
+        refreshKey={refreshKey}
+      />
+      <Modal
+        isOpen={notification.isOpen}
+        onClose={() => setNotification({ isOpen: false, message: "" })}
+        message={notification.message}
+        showCloseButton={true}
+      />
+    </>
   );
 };
 
