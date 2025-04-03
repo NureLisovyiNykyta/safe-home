@@ -81,21 +81,12 @@ const Customers = () => {
       <Modal
         isOpen={confirmModal.isOpen}
         onClose={() => setConfirmModal({ isOpen: false, userId: null })}
-        showCloseButton={false}
+        isDialog={true}
+        onConfirm={() => handleDeleteUser(confirmModal.userId)}
+        confirmText="Confirm"
+        cancelText="Cancel"
       >
         <p>Are you sure you want to delete this user?</p>
-        <div>
-          <button
-            onClick={() => setConfirmModal({ isOpen: false, userId: null })}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => handleDeleteUser(confirmModal.userId)}
-          >
-            Confirm
-          </button>
-        </div>
       </Modal>
       <Modal
         isOpen={notification.isOpen}

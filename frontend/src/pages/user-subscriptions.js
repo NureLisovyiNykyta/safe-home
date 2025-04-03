@@ -40,9 +40,9 @@ const UserSubscriptions = () => {
       subscriptionId: sub.subscription_id,
     }));
 
-  const handleCancel = async (subscriptionId) => {
+  const handleCancel = async () => {
     try {
-      await api.post(`/admin/cancel_current_user_subscription/user?user=${userId}&subscription=${subscriptionId}`);
+      await api.put(`/admin/cancel_current_user_subscription/user?user=${userId}`);
       setNotification({ isOpen: true, message: "Subscription canceled successfully" });
       setRefreshKey((prev) => prev + 1);
     } catch (err) {
