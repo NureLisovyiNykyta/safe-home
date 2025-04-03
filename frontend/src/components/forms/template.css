@@ -35,7 +35,7 @@
   cursor: pointer;
   z-index: 1001;
   position: absolute;
-  top: 55%;
+  top: 60%;
   transform: translateY(-50%);
   left: -0.4rem;
 }
@@ -59,8 +59,9 @@
   visibility: visible;
   opacity: 1;
   height: auto;
-  margin: 1rem 0;
-  padding: 1rem;
+  margin: 0.5rem 0;
+  margin-top: 0;
+  padding: 1rem 0;
 }
 
 .form-template .status.error {
@@ -135,4 +136,22 @@
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.form-template .form .form-group input:-webkit-autofill {
+  background-color: transparent !important;
+  color: #333 !important;
+  border: 1px solid #ccc;
+  transition: background-color 5000s ease-in-out 0s; 
+}
+
+.form-template .form .form-group input:-webkit-autofill::first-line {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Для інших браузерів */
+.form-template .form .form-group input:autofill {
+  background-color: transparent !important;
+  color: #333 !important;
 }

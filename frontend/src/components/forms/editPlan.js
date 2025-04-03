@@ -4,18 +4,22 @@ import api from "../../apiConfig";
 export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
   const handleSubmit = async (data, setStatus) => {
     try {
+      const formattedData = {
+        ...data,
+        price: parseFloat(data.price),
+      };
+
       if (initialData) {
-        // Редагування існуючого плану
-        await api.put(`/admin/update_subscription_plan/plan?plan=${initialData.id}`, data);
+        await api.put(`/admin/update_subscription_plan/plan?plan=${initialData.id}`, formattedData);
         setStatus({ message: "Plan updated successfully!", type: "success" });
       } else {
-        // Додавання нового плану
-        await api.post("/admin/create_subscription_plan", data);
+        await api.post("/admin/create_subscription_plan", formattedData);
         setStatus({ message: "Plan added successfully!", type: "success" });
       }
+
       setTimeout(() => {
-        onSuccess(); // Викликаємо onSuccess після успішного сабміту
-        onBack(); // Закриваємо форму
+        onSuccess();
+        onBack();
       }, 1000);
     } catch (error) {
       setStatus({
@@ -27,8 +31,8 @@ export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
 
   return (
     <FormTemplate
-      title={initialData ? "Edit plan" : "Add new plan"} // Змінюємо заголовок залежно від режиму
-      buttonText={initialData ? "Save changes" : "Add plan"} // Змінюємо текст кнопки
+      title={initialData ? "Edit plan" : "Add new plan"}
+      buttonText={initialData ? "Save changes" : "Add plan"}
       onSubmit={handleSubmit}
       fields={[
         {
@@ -55,6 +59,7 @@ export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
           type: "number",
           placeholder: "price",
           defaultValue: initialData?.price || "",
+          validation: { required: "Price is required", min: { value: 0.01, message: "Price must be positive" } },
         },
         {
           name: "duration",

@@ -7,11 +7,12 @@ const Subscriptions = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [editData, setEditData] = useState(null);
+
   const columnDefs = [
     { field: "name", headerName: "Name" },
     { field: "maxHomes", headerName: "Max homes" },
     { field: "maxSensors", headerName: "Max sensors" },
-    { field: "price", headerName: "Price" },
+    { field: "price", headerName: "Price ($)" },
     { field: "duration", headerName: "Duration (days)" },
     {
       field: "edit",
@@ -38,15 +39,15 @@ const Subscriptions = () => {
       name: plan.name,
       maxHomes: plan.max_homes,
       maxSensors: plan.max_sensors,
-      price: `${plan.price.toFixed(2)}$`,
+      price: plan.price.toFixed(1),
       duration: plan.duration,
     }));
 
   const handleModalClose = (shouldRefresh = false) => {
     setModalIsOpen(false);
-    setEditData(null); // Скидаємо дані для редагування
+    setEditData(null);
     if (shouldRefresh) {
-      setRefreshKey((prev) => prev + 1); // Оновлюємо таблицю
+      setRefreshKey((prev) => prev + 1);
     }
   };
 
@@ -58,17 +59,17 @@ const Subscriptions = () => {
         transformData={transformData}
         showActions={true}
         onAddClick={() => {
-          setEditData(null); // Очищаємо дані для додавання нового плану
+          setEditData(null);
           setModalIsOpen(true);
         }}
-        refreshKey={refreshKey} // Передаємо refreshKey для оновлення таблиці
+        refreshKey={refreshKey}
       />
       {modalIsOpen && (
         <Modal isOpen={modalIsOpen} onClose={() => handleModalClose(false)}>
           <EditPlanForm
-            initialData={editData} // Передаємо дані для редагування або null для додавання
+            initialData={editData}
             onBack={() => handleModalClose(false)}
-            onSuccess={() => handleModalClose(true)} // Оновлюємо таблицю після успішного сабміту
+            onSuccess={() => handleModalClose(true)}
           />
         </Modal>
       )}

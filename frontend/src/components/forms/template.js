@@ -18,11 +18,10 @@ const FormTemplate = ({
   changeLanguage = null
 }) => {
   const { t } = useTranslation();
-  const { register, handleSubmit, formState: { errors }, reset } = useForm(); // Додано reset
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState({ message: null, type: null });
 
-  // Використовуємо useEffect для оновлення значень форми
   useEffect(() => {
     const defaultValues = {};
     fields.forEach(({ name, defaultValue }) => {
@@ -30,7 +29,7 @@ const FormTemplate = ({
         defaultValues[name] = defaultValue;
       }
     });
-    reset(defaultValues); // Оновлюємо значення форми
+    reset(defaultValues);
   }, [fields, reset]);
 
   const handleFormSubmit = async (data) => {

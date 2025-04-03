@@ -29,10 +29,6 @@
   color: white;
 }
 
-.language-switcher .button.active:hover {
-  background-color: #0056b3;
-}
-
 .language-switcher .button:not(.active):hover {
   background-color: #d4d4d4;
 }
