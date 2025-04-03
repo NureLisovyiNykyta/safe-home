@@ -1,5 +1,5 @@
 import FormTemplate from "./template";
-import api from "../../apiConfig";
+import api from "../../configs/api";
 import { useTranslation } from "react-i18next";
 
 const RegisterForm = ({ onBack, onSuccess }) => {

@@ -8,8 +8,8 @@ import UserSubscriptions from './pages/user-subscriptions';
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
-import i18n from './i18n';
-import { AuthContext } from './authContext';
+import i18n from './configs/locale';
+import { AuthContext } from './contexts/authContext';
 import { LoginForm } from './components/forms/login';
 
 function App() {

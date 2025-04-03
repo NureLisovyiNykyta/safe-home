@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { AllCommunityModule, ModuleRegistry, themeMaterial } from "ag-grid-community";
 import "ag-grid-community/styles/ag-theme-material.css";
-import api from "../apiConfig";
+import api from "../configs/api";
 import "./tablePage.css";
 import { IoAdd } from "react-icons/io5";
 import { useTranslation } from "react-i18next";

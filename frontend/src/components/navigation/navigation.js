@@ -4,16 +4,18 @@ import { MdLogout, MdPayment } from "react-icons/md";
 import { FiUsers } from "react-icons/fi";
 import { GrUserAdmin } from "react-icons/gr";
 import { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../authContext';
+import { useAuth } from '../../contexts/authContext';
 import LanguageSwitcher from '../languageSwitcher';
+import { useUser } from '../../contexts/userContext';
 
 const Navigation = ({ changeLanguage }) => {
   const { t, i18n } = useTranslation();
   const { logout, userData } = useAuth();
-  const [activeLink, setActiveLink] = useState('customers');
   const [loading, setLoading] = useState(true);
+  const { userName, setUserName } = useUser();
+  const location = useLocation();
 
   useEffect(() => {
     if (i18n.isInitialized) {
@@ -25,17 +27,23 @@ const Navigation = ({ changeLanguage }) => {
     }
   }, [i18n]);
 
-  const handleLinkClick = (link) => {
-    setActiveLink(link);
-  };
+  useEffect(() => {
+    if (!location.pathname.startsWith("/subscriptions")) {
+      setUserName(null);
+    }
+  }, [location, setUserName]);
 
   const handleLogout = () => {
     logout();
-  }
+  };
 
   if (loading) {
     return null;
   }
+
+  const getActiveLink = (path) => {
+    return location.pathname.startsWith(path) ? 'active' : '';
+  };
 
   return (
     <div className='navigation'>
@@ -46,27 +54,28 @@ const Navigation = ({ changeLanguage }) => {
       <div className='links'>
         <Link
           to="/customers"
-          className={`link ${activeLink === 'customers' ? 'active' : ''}`}
-          onClick={() => handleLinkClick('customers')}
+          className={`link ${getActiveLink('/customers')}`}
         >
           <FiUsers className='icon' />
           {t('navigation.customers')}
         </Link>
         <Link
           to="/admins"
-          className={`link ${activeLink === 'admins' ? 'active' : ''}`}
-          onClick={() => handleLinkClick('admins')}
+          className={`link ${getActiveLink('/admins')}`}
         >
           <GrUserAdmin className='icon' />
           {t('navigation.admins')}
         </Link>
         <Link
           to="/subscriptions"
-          className={`link ${activeLink === 'subscriptions' ? 'active' : ''}`}
-          onClick={() => handleLinkClick('subscriptions')}
+          className={`link ${getActiveLink('/subscriptions')}`}
         >
           <MdPayment className='icon' />
           {t('navigation.subscriptions')}
+          {userName && <>
+            <span className='separator'>/</span>
+            <span className="user-name">{userName}</span>
+          </>}
         </Link>
       </div>
       <div className='user-panel'>

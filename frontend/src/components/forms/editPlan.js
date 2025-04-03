@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import FormTemplate from "./template";
-import api from "../../apiConfig";
+import api from "../../configs/api";
 
 export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
   const { t } = useTranslation();

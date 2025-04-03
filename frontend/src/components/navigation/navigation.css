@@ -120,3 +120,7 @@
   font-size: 1.8rem;
   margin-top: 0.25rem;
 }
+
+.navigation .links .link .separator {
+  margin: 0 0.5rem;
+}

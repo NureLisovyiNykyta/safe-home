@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TablePage from "./tablePage";
-import api from "../apiConfig";
+import api from "../configs/api";
 import Modal from "../components/modal";
 import { useTranslation } from "react-i18next";
+import { useUser } from "../contexts/userContext";
+
 
 const Customers = () => {
   const { t } = useTranslation();
@@ -11,6 +13,7 @@ const Customers = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [notification, setNotification] = useState({ isOpen: false, message: "" });
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, userId: null });
+  const { setUserName } = useUser();
 
   const columnDefs = [
     { field: "name", headerName: t("customers.name") },
@@ -23,7 +26,10 @@ const Customers = () => {
       cellRenderer: (params) => (
         <button
           className="row-btn go-to-user"
-          onClick={() => navigate(`/subscriptions/user/${params.data.user_id}`)}
+          onClick={() => {
+            navigate(`/subscriptions/user/${params.data.user_id}`);
+            setUserName(params.data.name);
+          }}
         >
           {t("customers.goToUser")}
         </button>

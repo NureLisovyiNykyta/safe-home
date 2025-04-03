@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import './i18n';
+import './configs/locale';
 import { CookiesProvider } from 'react-cookie';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './authContext';
+import { AuthProvider } from './contexts/authContext';
+import { UserProvider } from './contexts/userContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,7 +14,9 @@ root.render(
     <CookiesProvider>
       <Router>
         <AuthProvider>
-          <App />
+          <UserProvider>
+            <App />
+          </UserProvider>
         </AuthProvider>
       </Router>
     </CookiesProvider>

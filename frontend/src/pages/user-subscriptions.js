@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import TablePage from "./tablePage";
-import api from "../apiConfig";
+import api from "../configs/api";
 import Modal from "../components/modal";
 import { useTranslation } from "react-i18next";
 
