@@ -2,15 +2,17 @@ import { useState } from "react";
 import TablePage from "./tablePage";
 import RegisterForm from "../components/forms/register";
 import Modal from "../components/modal";
+import { useTranslation } from "react-i18next";
 
 const Admins = () => {
+  const { t } = useTranslation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
   const columnDefs = [
-    { field: "name", headerName: "Name" },
-    { field: "email", headerName: "Email" },
-    { field: "createdAt", headerName: "Created at" },
+    { field: "name", headerName: t("admins.name") },
+    { field: "email", headerName: t("admins.email") },
+    { field: "createdAt", headerName: t("admins.createdAt") },
   ];
 
   const transformData = (data) =>

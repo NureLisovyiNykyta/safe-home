@@ -1,4 +1,3 @@
-/* Базові стилі для всіх модальних вікон */
 .modal {
   position: fixed;
   display: flex;
@@ -10,10 +9,11 @@
 .modal.form,
 .modal.dialog {
   top: 0;
-  left: 0;
+  left: 0;  
+  width: 100%;
+  height: 100%;
 }
 
-/* Напівпрозорий фон тільки для форми і діалогу */
 .modal.form .overlay,
 .modal.dialog .overlay {
   position: absolute;
@@ -23,7 +23,6 @@
   backdrop-filter: blur(5px);
 }
 
-/* Вміст модального вікна */
 .modal .content {
   background: white;
   padding: 2rem;

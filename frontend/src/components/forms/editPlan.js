@@ -1,7 +1,10 @@
+import { useTranslation } from "react-i18next";
 import FormTemplate from "./template";
 import api from "../../apiConfig";
 
 export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
+  const { t } = useTranslation();
+
   const handleSubmit = async (data, setStatus) => {
     try {
       const formattedData = {
@@ -14,10 +17,10 @@ export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
 
       if (initialData) {
         await api.put(`/admin/update_subscription_plan/plan?plan=${initialData.id}`, formattedData);
-        setStatus({ message: "Plan updated successfully!", type: "success" });
+        setStatus({ message: t("editPlanForm.planUpdatedSuccessfully"), type: "success" });
       } else {
         await api.post("/admin/create_subscription_plan", formattedData);
-        setStatus({ message: "Plan added successfully!", type: "success" });
+        setStatus({ message: t("editPlanForm.planAddedSuccessfully"), type: "success" });
       }
 
       setTimeout(() => {
@@ -26,7 +29,7 @@ export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
       }, 1000);
     } catch (error) {
       setStatus({
-        message: error.response?.data?.message || "Failed to save plan.",
+        message: error.response?.data?.message || t("editPlanForm.failedToSavePlan"),
         type: "error",
       });
     }
@@ -34,46 +37,46 @@ export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
 
   return (
     <FormTemplate
-      title={initialData ? "Edit plan" : "Add new plan"}
-      buttonText={initialData ? "Save changes" : "Add plan"}
+      title={initialData ? t("editPlanForm.editPlan") : t("editPlanForm.addNewPlan")}
+      buttonText={initialData ? t("editPlanForm.saveChanges") : t("editPlanForm.addPlan")}
       onSubmit={handleSubmit}
       fields={[
         {
           name: "name",
           type: "text",
-          placeholder: "name",
+          placeholder: t("editPlanForm.name"),
           defaultValue: initialData?.name || "",
-          validation: { required: "Name is required" },
+          validation: { required: t("editPlanForm.nameRequired") },
         },
         {
           name: "maxHomes",
           type: "number",
-          placeholder: "max homes",
+          placeholder: t("editPlanForm.maxHomes"),
           defaultValue: initialData?.maxHomes || "",
         },
         {
           name: "maxSensors",
           type: "number",
-          placeholder: "max sensors",
+          placeholder: t("editPlanForm.maxSensors"),
           defaultValue: initialData?.maxSensors || "",
         },
         {
           name: "price",
           type: "text",
-          placeholder: "price",
+          placeholder: t("editPlanForm.price"),
           defaultValue: initialData?.price || "",
           validation: {
-            required: "Price is required",
+            required: t("editPlanForm.priceRequired"),
             pattern: {
               value: /^\d+(\.\d{1,2})?$/,
-              message: "Enter a valid price (e.g., 10.99)",
+              message: t("editPlanForm.pricePattern"),
             },
           },
         },
         {
           name: "duration",
           type: "number",
-          placeholder: "duration (days)",
+          placeholder: t("editPlanForm.duration"),
           defaultValue: initialData?.duration || "",
         },
       ]}

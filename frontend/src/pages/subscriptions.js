@@ -2,18 +2,20 @@ import { useState } from "react";
 import TablePage from "./tablePage";
 import Modal from "../components/modal";
 import { EditPlanForm } from "../components/forms/editPlan";
+import { useTranslation } from "react-i18next";
 
 const Subscriptions = () => {
+  const { t } = useTranslation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [editData, setEditData] = useState(null);
 
   const columnDefs = [
-    { field: "name", headerName: "Name" },
-    { field: "maxHomes", headerName: "Max homes" },
-    { field: "maxSensors", headerName: "Max sensors" },
-    { field: "price", headerName: "Price ($)" },
-    { field: "duration", headerName: "Duration (days)" },
+    { field: "name", headerName: t("subscriptions.name") },
+    { field: "maxHomes", headerName: t("subscriptions.maxHomes") },
+    { field: "maxSensors", headerName: t("subscriptions.maxSensors") },
+    { field: "price", headerName: t("subscriptions.price") },
+    { field: "duration", headerName: t("subscriptions.duration") },
     {
       field: "edit",
       headerName: "",
@@ -25,7 +27,7 @@ const Subscriptions = () => {
             setModalIsOpen(true);
           }}
         >
-          Edit
+          {t("subscriptions.edit")}
         </button>
       ),
       width: 100,

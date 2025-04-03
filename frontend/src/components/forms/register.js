@@ -1,12 +1,15 @@
 import FormTemplate from "./template";
 import api from "../../apiConfig";
+import { useTranslation } from "react-i18next";
 
 const RegisterForm = ({ onBack, onSuccess }) => {
+  const { t } = useTranslation();
+
   const handleRegister = async (data, setStatus) => {
     try {
       const response = await api.post("/admin/register_admin", data);
       if (response.status === 201) {
-        setStatus({ message: "Admin added successfully!", type: "success" });
+        setStatus({ message: t("registerForm.adminAddedSuccessfully"), type: "success" });
         setTimeout(() => {
           onSuccess();
           onBack();
@@ -14,7 +17,7 @@ const RegisterForm = ({ onBack, onSuccess }) => {
       }
     } catch (error) {
       setStatus({
-        message: error.response?.data?.message || "Failed to register admin.",
+        message: error.response?.data?.message || t("registerForm.failedToRegisterAdmin"),
         type: "error",
       });
     }
@@ -22,29 +25,29 @@ const RegisterForm = ({ onBack, onSuccess }) => {
 
   return (
     <FormTemplate
-      title="Add new admin"
-      buttonText="Register"
+      title={t("registerForm.addNewAdmin")}
+      buttonText={t("registerForm.register")}
       onSubmit={handleRegister}
       fields={[
         {
           name: "name",
           type: "text",
-          placeholder: "name",
-          validation: { required: "Name is required" },
+          placeholder: t("registerForm.name"),
+          validation: { required: t("registerForm.nameRequired") },
         },
         {
           name: "email",
           type: "email",
-          placeholder: "email",
-          validation: { required: "Email is required" },
+          placeholder: t("registerForm.email"),
+          validation: { required: t("registerForm.emailRequired") },
         },
         {
           name: "password",
           type: "password",
-          placeholder: "password",
+          placeholder: t("registerForm.password"),
           validation: {
-            required: "Password is required",
-            minLength: { value: 8, message: "Password must be at least 8 characters" },
+            required: t("registerForm.passwordRequired"),
+            minLength: { value: 8, message: t("registerForm.passwordMinLength") },
           },
         },
       ]}
@@ -54,3 +57,4 @@ const RegisterForm = ({ onBack, onSuccess }) => {
 };
 
 export default RegisterForm;
+ 

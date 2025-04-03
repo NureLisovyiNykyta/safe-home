@@ -1,15 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { AllCommunityModule, ModuleRegistry, themeMaterial } from "ag-grid-community";
 import "ag-grid-community/styles/ag-theme-material.css";
 import api from "../apiConfig";
 import "./tablePage.css";
 import { IoAdd } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const TablePage = ({ apiEndpoint, columnDefs, transformData, 
   showActions = false, onRowClicked = null, onAddClick, refreshKey }) => {
+  const { t } = useTranslation();
   const [rowData, setRowData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,25 +25,25 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData,
     headerFontSize: "32px",
   });
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await api.get(apiEndpoint);
       const data = transformData ? transformData(response.data) : response.data;
       setRowData(data);
     } catch (err) {
       console.error("Error fetching data:", err);
-      setError("Failed to load data.");
+      setError(t("tablePage.error"));
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiEndpoint, transformData, t]);
 
   useEffect(() => {
     fetchData();
-  }, [apiEndpoint, transformData, refreshKey]);
+  }, [fetchData, refreshKey]);
 
   if (loading) {
-    return <div className="page loading">Loading...</div>;
+    return <div className="page loading">{t("tablePage.loading")}</div>;
   }
 
   if (error) {
@@ -66,7 +68,7 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData,
       {showActions && (
         <div className="actions">
           <button className="row-btn add" onClick={onAddClick}>
-            <IoAdd className="icon" /> add new
+            <IoAdd className="icon" /> {t("tablePage.addNew")}
           </button>
         </div>
       )}

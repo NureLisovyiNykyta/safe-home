@@ -3,18 +3,20 @@ import { useNavigate } from "react-router-dom";
 import TablePage from "./tablePage";
 import api from "../apiConfig";
 import Modal from "../components/modal";
+import { useTranslation } from "react-i18next";
 
 const Customers = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [refreshKey, setRefreshKey] = useState(0);
   const [notification, setNotification] = useState({ isOpen: false, message: "" });
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, userId: null });
 
   const columnDefs = [
-    { field: "name", headerName: "Name" },
-    { field: "email", headerName: "Email" },
-    { field: "currentSubscription", headerName: "Current subscription" },
-    { field: "createdAt", headerName: "Created at" },
+    { field: "name", headerName: t("customers.name") },
+    { field: "email", headerName: t("customers.email") },
+    { field: "currentSubscription", headerName: t("customers.currentSubscription") },
+    { field: "createdAt", headerName: t("customers.createdAt") },
     {
       field: "goToUser",
       headerName: "",
@@ -23,7 +25,7 @@ const Customers = () => {
           className="row-btn go-to-user"
           onClick={() => navigate(`/subscriptions/user/${params.data.user_id}`)}
         >
-          Go to user
+          {t("customers.goToUser")}
         </button>
       ),
       width: 150,
@@ -38,7 +40,7 @@ const Customers = () => {
           className="row-btn delete"
           onClick={() => setConfirmModal({ isOpen: true, userId: params.data.user_id })}
         >
-          Delete user
+          {t("customers.deleteUser")}
         </button>
       ),
       width: 100,
@@ -51,12 +53,12 @@ const Customers = () => {
     try {
       const response = await api.post(`/admin/delete_user/user?user=${userId}`);
       if (response.status === 200) {
-        setNotification({ isOpen: true, message: "User deleted successfully" });
+        setNotification({ isOpen: true, message: t("customers.userDeleted") });
         setRefreshKey((prev) => prev + 1);
       }
     } catch (error) {
       console.error("Error deleting user:", error);
-      setNotification({ isOpen: true, message: "Failed to delete user" });
+      setNotification({ isOpen: true, message: t("notification.failedToDeleteUser") });
     } finally {
       setConfirmModal({ isOpen: false, userId: null });
     }
@@ -83,10 +85,10 @@ const Customers = () => {
         onClose={() => setConfirmModal({ isOpen: false, userId: null })}
         isDialog={true}
         onConfirm={() => handleDeleteUser(confirmModal.userId)}
-        confirmText="Confirm"
-        cancelText="Cancel"
+        confirmText={t("customers.confirm")}
+        cancelText={t("customers.cancel")}
       >
-        <p>Are you sure you want to delete this user?</p>
+        <p>{t("customers.deleteUserConfirmation")}</p>
       </Modal>
       <Modal
         isOpen={notification.isOpen}
