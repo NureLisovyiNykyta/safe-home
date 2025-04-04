@@ -3,6 +3,8 @@ import logo from './logo.png';
 import { MdLogout, MdPayment } from "react-icons/md";
 import { FiUsers } from "react-icons/fi";
 import { GrUserAdmin } from "react-icons/gr";
+import { IoArrowBackOutline } from "react-icons/io5";
+import { FaRegUser } from "react-icons/fa";
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
@@ -14,7 +16,7 @@ const Navigation = ({ changeLanguage }) => {
   const { t, i18n } = useTranslation();
   const { logout, userData } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [userName, setUserName] = useState(null);
+  const [userEmail, setUserEmail] = useState(null);
   const location = useLocation();
   const userId = location.pathname.split('/')[3]
 
@@ -29,26 +31,24 @@ const Navigation = ({ changeLanguage }) => {
   }, [i18n]);
 
   useEffect(() => {
-    if (!location.pathname.startsWith("/subscriptions/user")) {
-      setUserName(null);
+    if (!location.pathname.startsWith("/customers/user")) {
+      setUserEmail(null);
     }
   }, [location.pathname]);
 
   useEffect(() => {
-    const fetchUserName = async () => {
+    const fetchUserEmail = async () => {
       try {
         const response = await api.get(`/admin/user/user?user=${userId}`);
-        console.log(response);
-        if (response.data && response.data.user.name) {
-          setUserName(response.data.user.name);
+        if (response.data && response.data.user.email) {
+          setUserEmail(response.data.user.email);
         }
       } catch (error) {
         console.log(error);
       }
     };
     if (userId) {
-      console.log(userId);
-      fetchUserName();
+      fetchUserEmail();
     }
   }, [userId]);
 
@@ -71,31 +71,32 @@ const Navigation = ({ changeLanguage }) => {
         <span>safe home</span>
       </div>
       <div className='links'>
-        <Link
-          to="/customers"
-          className={`link ${getActiveLink('/customers')}`}
-        >
-          <FiUsers className='icon' />
-          {t('navigation.customers')}
-        </Link>
-        <Link
-          to="/admins"
-          className={`link ${getActiveLink('/admins')}`}
-        >
-          <GrUserAdmin className='icon' />
-          {t('navigation.admins')}
-        </Link>
-        <Link
-          to="/subscriptions"
-          className={`link ${getActiveLink('/subscriptions')}`}
-        >
-          <MdPayment className='icon' />
-          {t('navigation.subscriptions')}
-          {userName && <>
-            <span className='separator'>/</span>
-            <span className="user-name">{userName}</span>
-          </>}
-        </Link>
+        <div className={`link-container ${getActiveLink('/customers')}`}>
+          <Link to="/customers" className="link">
+            {!userEmail ?
+              <FiUsers className='icon' /> :
+              <IoArrowBackOutline className='icon arrow' />
+            }
+            {t('navigation.customers')}
+          </Link>
+          {userEmail &&
+            <div className="user-email">
+              <FaRegUser className='icon' />
+              {userEmail}
+            </div>}
+        </div>
+        <div className={`link-container ${getActiveLink('/admins')}`}>
+          <Link to="/admins" className="link">
+            <GrUserAdmin className='icon' />
+            {t('navigation.admins')}
+          </Link>
+        </div>
+        <div className={`link-container ${getActiveLink('/subscriptions')}`}>
+          <Link to="/subscriptions" className="link">
+            <MdPayment className='icon' />
+            {t('navigation.subscriptions')}
+          </Link>
+        </div>
       </div>
       <div className='user-panel'>
         <LanguageSwitcher changeLanguage={changeLanguage} />

@@ -92,35 +92,46 @@
   margin-top: 2rem;
 }
 
-.navigation .links .link {
-  height: 3rem;
-  border-radius: 0.5rem;
-  transition: .4s;
-  font-size: 1.5rem;
-  padding: 0.2rem 1rem;
+.navigation .link-container {
   display: flex;
-  align-items: center;
-  color: #333;
+  flex-direction: column;
   margin-bottom: 1rem;
-  user-select: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background 0.3s;
 }
 
-.navigation .links .link:last-child {
-  margin-bottom: 0;
-}
-
-.navigation .links .link.active,
-.navigation .links .link:hover {
+.navigation .link-container.active,
+.navigation .link-container:hover {
   background: #D9D9D9;
 }
 
-.navigation .links .link .icon {
+.navigation .link-container .link {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
   color: #333;
-  margin-right: 1rem;
-  font-size: 1.8rem;
-  margin-top: 0.25rem;
+  text-decoration: none;
+  width: 100%;
 }
 
-.navigation .links .link .separator {
-  margin: 0 0.5rem;
+.navigation .link-container .link .icon {
+  margin-right: 1rem;
+  font-size: 1.8rem;
+}
+
+.navigation .link-container .link .icon.arrow {
+  font-size: 2rem;
+}
+
+.navigation .link-container .user-email {
+  font-size: 1.1rem;
+  color: #333;
+  padding-top: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.navigation .link-container .user-email .icon {
+  margin: 0 1.5rem 0 0.5rem;
 }

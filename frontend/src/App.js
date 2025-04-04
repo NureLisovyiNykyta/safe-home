@@ -31,10 +31,10 @@ function App() {
       {isAuthenticated && <Navigation changeLanguage={changeLanguage} />}
       <Routes>
         <Route path='/' element={<LoginForm changeLanguage={changeLanguage} />} />
-        <Route path='/customers' element={<Customers />} />
+        <Route path='/customers' element={<Customers />} />        
+        <Route path="/customers/user/:userId" element={<UserSubscriptions />} />
         <Route path='/admins' element={<Admins />} />
         <Route path='/subscriptions' element={<Subscriptions />} />
-        <Route path="/subscriptions/user/:userId" element={<UserSubscriptions />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
     </div>

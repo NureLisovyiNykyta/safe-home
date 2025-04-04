@@ -25,7 +25,7 @@ const Customers = () => {
         <button
           className="row-btn go-to-user"
           onClick={() => {
-            navigate(`/subscriptions/user/${params.data.user_id}`);
+            navigate(`/customers/user/${params.data.user_id}`);
           }}
         >
           {t("customers.goToUser")}
