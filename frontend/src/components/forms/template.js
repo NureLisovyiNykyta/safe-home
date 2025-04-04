@@ -54,19 +54,23 @@ const FormTemplate = ({
       </div>
       {status.message && <div className={`status ${status.type}`}>{status.message}</div>}
       <form className='form' onSubmit={handleSubmit(handleFormSubmit)}>
-        {fields.map(({ name, type, placeholder, validation }) => (
-          <div className='form-group' key={name}>
+        {fields.map(({ name, type, label, validation, showLabel = false, placeholder }) => (
+          <div className="form-group" key={name}>
+            {showLabel && <label htmlFor={name}>{label}</label>}
             <input
-              placeholder={placeholder}
-              type={name === "password" && showPassword ? 'text' : type}
-              {...register(name, validation)}              
+              id={name}
+              type={name === "password" && showPassword ? "text" : type}
+              {...register(name, validation)}
               autoComplete={name === "password" ? "new-password" : "off"}
+              placeholder={!showLabel ? placeholder : undefined}
             />
-            {errors[name] && <p className='error'>{errors[name].message}</p>}
+            {errors[name] && <p className="error">{errors[name].message}</p>}
             {name === "password" && (
-              showPassword ?
-                <FiEyeOff className='icon' onClick={() => setShowPassword(false)} /> :
-                <FiEye className='icon' onClick={() => setShowPassword(true)} />
+              showPassword ? (
+                <FiEyeOff className="icon" onClick={() => setShowPassword(false)} />
+              ) : (
+                <FiEye className="icon" onClick={() => setShowPassword(true)} />
+              )
             )}
           </div>
         ))}

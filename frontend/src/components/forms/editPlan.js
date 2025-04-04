@@ -44,26 +44,29 @@ export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
         {
           name: "name",
           type: "text",
-          placeholder: t("editPlanForm.name"),
+          label: t("editPlanForm.name"),
           defaultValue: initialData?.name || "",
           validation: { required: t("editPlanForm.nameRequired") },
+          showLabel: true,
         },
         {
           name: "maxHomes",
           type: "number",
-          placeholder: t("editPlanForm.maxHomes"),
+          label: t("editPlanForm.maxHomes"),
           defaultValue: initialData?.maxHomes || "",
+          showLabel: true,
         },
         {
           name: "maxSensors",
           type: "number",
-          placeholder: t("editPlanForm.maxSensors"),
+          label: t("editPlanForm.maxSensors"),
           defaultValue: initialData?.maxSensors || "",
+          showLabel: true,
         },
         {
           name: "price",
           type: "text",
-          placeholder: t("editPlanForm.price"),
+          label: t("editPlanForm.price"),
           defaultValue: initialData?.price || "",
           validation: {
             required: t("editPlanForm.priceRequired"),
@@ -72,12 +75,14 @@ export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
               message: t("editPlanForm.pricePattern"),
             },
           },
+          showLabel: true,
         },
         {
           name: "duration",
           type: "number",
-          placeholder: t("editPlanForm.duration"),
+          label: t("editPlanForm.duration"),
           defaultValue: initialData?.duration || "",
+          showLabel: true,
         },
       ]}
       onBack={onBack}
