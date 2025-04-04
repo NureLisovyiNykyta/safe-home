@@ -3,7 +3,10 @@
     "customers": "клієнти",
     "admins": "адміністратори",
     "subscriptions": "підписки",
-    "logout": "вийти"
+    "logout": "вийти",
+    "oldPassword": "старий пароль",
+    "newPassword": "новий пароль",
+    "changePassword": "Змінити пароль"
   },
   "notFound": {
     "title": "404 Сторінка не знайдена"
@@ -60,7 +63,7 @@
     "passwordRequired": "Пароль є обов'язковим",
     "passwordMinLength": "Пароль повинен містити не менше 8 символів",
     "adminAddedSuccessfully": "Адміністратора успішно додано!",
-    "failedToRegisterAdmin": "Не вдалося зареєструвати адміністратора."
+    "failedToRegisterAdmin": "Не вдалося зареєструвати адміністратора"
   },
   "admins": {
     "name": "Ім'я",
@@ -81,7 +84,9 @@
     "cancel": "Скасувати"
   },
   "notification": {
-    "failedToDeleteUser": "Не вдалося видалити користувача"
+    "failedToDeleteUser": "Не вдалося видалити користувача",
+    "passwordUpdated": "Пароль успішно оновлено",
+    "passwordUpdateFailed": "Не вдалося оновити пароль"
   },
   "subscriptions": {
     "title": "Підписки",

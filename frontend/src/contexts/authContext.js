@@ -49,8 +49,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updatePassword = async (oldPassword, newPassword) => {
+    try {
+      const response = await api.put('/update_password', {
+        old_password: oldPassword,
+        new_password: newPassword,
+      });
+      if (response.status === 200) {
+        console.log("Password updated successfully");
+      }
+    } catch (error) {
+      console.error("Password update failed:", error.message);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userData, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, userData, login, logout, updatePassword }}>
       {!loading && children}
     </AuthContext.Provider>
   );

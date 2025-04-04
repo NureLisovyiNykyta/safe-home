@@ -1,7 +1,6 @@
 .language-switcher {
   display: flex;
   gap: 0.5rem;
-  place-self: center;
   width: 100%;
 }
 

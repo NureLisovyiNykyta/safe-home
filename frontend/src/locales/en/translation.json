@@ -3,7 +3,10 @@
     "customers": "customers",
     "admins": "admins",
     "subscriptions": "subscriptions",
-    "logout": "logout"
+    "logout": "logout",
+    "oldPassword": "old password",
+    "newPassword": "new password",
+    "changePassword": "Change password"
   },
   "notFound": {
     "title": "404 Page not found"
@@ -81,7 +84,9 @@
     "cancel": "Cancel"
   },
   "notification": {
-    "failedToDeleteUser": "Failed to delete user"
+    "failedToDeleteUser": "Failed to delete user",
+    "passwordUpdated": "Password updated successfully",
+    "passwordUpdateFailed": "Failed to update password"
   },
   "subscriptions": {
     "title": "Subscriptions",
