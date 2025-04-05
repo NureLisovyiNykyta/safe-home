@@ -3,7 +3,7 @@
   width: 100vw;
   background: #C7DBFF;
   overflow: hidden;
-  display: flex;  
+  display: flex;
 }
 
 button {
@@ -19,4 +19,11 @@ a {
 
 button, a {
   user-select: none;
+}
+
+@media screen and (max-width: 768px) {
+  .app {
+    flex-direction: column;
+    align-items: center;
+  }  
 }

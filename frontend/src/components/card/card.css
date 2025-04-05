@@ -13,10 +13,7 @@
   border-radius: 1rem;
   background: #f1f1f1;
   padding: 0.5rem 1rem;
-}
-
-.page .card-list .card .card-field {
-  margin: 0.5rem 0;
+  gap: 0.5rem;
 }
 
 .page .card-list .card .card-field .header {

@@ -6,6 +6,7 @@ import { GrUserAdmin } from "react-icons/gr";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
+import { RxHamburgerMenu } from "react-icons/rx";
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
@@ -24,6 +25,7 @@ const Navigation = ({ changeLanguage }) => {
   const location = useLocation();
   const userId = location.pathname.split('/')[3];
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notification, setNotification] = useState({ isOpen: false, message: "" });
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -70,6 +72,10 @@ const Navigation = ({ changeLanguage }) => {
     setIsAccordionOpen(!isAccordionOpen);
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const onSubmit = async (data) => {
     try {
       const response = await api.put('/update_password', {
@@ -78,10 +84,10 @@ const Navigation = ({ changeLanguage }) => {
       });
       if (response.status === 200) {
         setNotification({ isOpen: true, message: t("notification.passwordUpdated") });
-      setTimeout(() => {
-        toggleAccordion();
-        reset();
-      }, 700);
+        setTimeout(() => {
+          toggleAccordion();
+          reset();
+        }, 700);
       }
     } catch (error) {
       setNotification({ isOpen: true, message: t("notification.passwordUpdateFailed") });
@@ -97,98 +103,101 @@ const Navigation = ({ changeLanguage }) => {
   }
 
   return (
-    <div className='navigation'>
+    <div className={`navigation ${isMenuOpen ? 'expanded' : ''}`}>
       <div className='logo'>
+        <RxHamburgerMenu className="burger-menu-icon" onClick={toggleMenu} />
         <img src={logo} alt='company-logo' />
         <span>safe home</span>
       </div>
-      <div className='links'>
-        <div className={`link-container ${getActiveLink('/customers')}`}>
-          <Link to="/customers" className="link">
-            {!userEmail ? (
-              <FiUsers className='icon' />
-            ) : (
-              <IoArrowBackOutline className='icon arrow' />
+      <div className='navigation-container'>
+        <div className='links'>
+          <div className={`link-container ${getActiveLink('/customers')}`}>
+            <Link to="/customers" className="link">
+              {!userEmail ? (
+                <FiUsers className='icon' />
+              ) : (
+                <IoArrowBackOutline className='icon arrow' />
+              )}
+              {t('navigation.customers')}
+            </Link>
+            {userEmail && (
+              <div className="user-email">
+                <FaRegUser className='icon' />
+                {userEmail}
+              </div>
             )}
-            {t('navigation.customers')}
-          </Link>
-          {userEmail && (
-            <div className="user-email">
-              <FaRegUser className='icon' />
-              {userEmail}
-            </div>
-          )}
+          </div>
+          <div className={`link-container ${getActiveLink('/admins')}`}>
+            <Link to="/admins" className="link">
+              <GrUserAdmin className='icon' />
+              {t('navigation.admins')}
+            </Link>
+          </div>
+          <div className={`link-container ${getActiveLink('/subscriptions')}`}>
+            <Link to="/subscriptions" className="link">
+              <MdPayment className='icon' />
+              {t('navigation.subscriptions')}
+            </Link>
+          </div>
         </div>
-        <div className={`link-container ${getActiveLink('/admins')}`}>
-          <Link to="/admins" className="link">
-            <GrUserAdmin className='icon' />
-            {t('navigation.admins')}
-          </Link>
+        <div className='user-panel'>
+          <div className='user-header'>
+            <p className='name'>{userData?.name || ''}</p>
+            <p className='email'>{userData?.email || ''}</p>
+            <IoIosArrowDown
+              className={`icon ${isAccordionOpen ? 'open' : ''}`}
+              onClick={toggleAccordion}
+            />
+            {isAccordionOpen && (
+              <div className='accordion-content'>
+                <form className='form' onSubmit={handleSubmit(onSubmit)}>
+                  <div className='form-group'>
+                    <input
+                      type={showOldPassword ? 'text' : 'password'}
+                      {...register('oldPassword', {
+                        required: t('login.passwordRequired'),
+                        minLength: { value: 8, message: t('login.passwordMinLength', { length: 8 }) },
+                      })}
+                      placeholder={t('navigation.oldPassword')}
+                    />
+                    <button
+                      type="button"
+                      className="icon"
+                      onClick={() => setShowOldPassword(!showOldPassword)}
+                    >
+                      {showOldPassword ? <FiEyeOff /> : <FiEye />}
+                    </button>
+                  </div>
+                  {errors.oldPassword && <p className="error">{errors.oldPassword.message}</p>}
+                  <div className='form-group'>
+                    <input
+                      type={showNewPassword ? 'text' : 'password'}
+                      {...register('newPassword', {
+                        required: t('login.passwordRequired'),
+                        minLength: { value: 8, message: t('login.passwordMinLength', { length: 8 }) },
+                      })}
+                      placeholder={t('navigation.newPassword')}
+                    />
+                    <button
+                      type="button"
+                      className="icon"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                    >
+                      {showNewPassword ? <FiEyeOff /> : <FiEye />}
+                    </button>
+                  </div>
+                  {errors.newPassword && <p className="error">{errors.newPassword.message}</p>}
+                  <button type='submit'>{t('navigation.changePassword')}</button>
+                </form>
+                <LanguageSwitcher changeLanguage={changeLanguage} />
+              </div>
+            )}
+          </div>
+          <button className='logout' onClick={handleLogout}>
+            <MdLogout className='icon' />
+            <span>{t('navigation.logout')}</span>
+          </button>
         </div>
-        <div className={`link-container ${getActiveLink('/subscriptions')}`}>
-          <Link to="/subscriptions" className="link">
-            <MdPayment className='icon' />
-            {t('navigation.subscriptions')}
-          </Link>
-        </div>
-      </div>
-      <div className='user-panel'>
-        <div className='user-header'>
-          <p className='name'>{userData?.name || ''}</p>
-          <p className='email'>{userData?.email || ''}</p>
-          <IoIosArrowDown
-            className={`icon ${isAccordionOpen ? 'open' : ''}`}
-            onClick={toggleAccordion}
-          />
-          {isAccordionOpen && (
-            <div className='accordion-content'>
-              <form className='form' onSubmit={handleSubmit(onSubmit)}>
-                <div className='form-group'>
-                  <input
-                    type={showOldPassword ? 'text' : 'password'}
-                    {...register('oldPassword', {
-                      required: t('login.passwordRequired'),
-                      minLength: { value: 8, message: t('login.passwordMinLength', { length: 8 }) },
-                    })}
-                    placeholder={t('navigation.oldPassword')}
-                  />
-                  <button
-                    type="button"
-                    className="icon"
-                    onClick={() => setShowOldPassword(!showOldPassword)}
-                  >
-                    {showOldPassword ? <FiEyeOff /> : <FiEye />}
-                  </button>
-                </div>
-                {errors.oldPassword && <p className="error">{errors.oldPassword.message}</p>}
-                <div className='form-group'>
-                  <input
-                    type={showNewPassword ? 'text' : 'password'}
-                    {...register('newPassword', {
-                      required: t('login.passwordRequired'),
-                      minLength: { value: 8, message: t('login.passwordMinLength', { length: 8 }) },
-                    })}
-                    placeholder={t('navigation.newPassword')}
-                  />
-                  <button
-                    type="button"
-                    className="icon"
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                  >
-                    {showNewPassword ? <FiEyeOff /> : <FiEye />}
-                  </button>
-                </div>
-                {errors.newPassword && <p className="error">{errors.newPassword.message}</p>}
-                <button type='submit'>{t('navigation.changePassword')}</button>
-              </form>
-              <LanguageSwitcher changeLanguage={changeLanguage} />
-            </div>
-          )}
-        </div>
-        <button className='logout' onClick={handleLogout}>
-          <MdLogout className='icon' />
-          <span>{t('navigation.logout')}</span>
-        </button>
       </div>
       <Modal
         isOpen={notification.isOpen}

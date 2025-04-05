@@ -21,8 +21,9 @@ const UserSubscriptions = () => {
       cellRenderer: (params) => {
         if (params.data.isActive) {
           return <span style={{ color: "green", fontWeight: "bold" }}>{t("userSubscriptions.active")}</span>;
+        } else {
+          return <span style={{ color: "red", fontWeight: "bold" }}>{t("userSubscriptions.inactive")}</span>;
         }
-        return null;
       },
       filter: false,
     },

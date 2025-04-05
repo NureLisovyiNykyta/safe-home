@@ -106,6 +106,7 @@
     "endDate": "End date",
     "status": "Status",
     "active": "Active",
+    "inactive": "Not active",
     "cancel": "Cancel",
     "subscriptionCanceled": "Subscription canceled successfully",
     "cancelFailed": "Failed to cancel subscription"
