@@ -1,7 +1,6 @@
 .language-switcher {
   display: flex;
   gap: 0.5rem;
-  place-self: center;
   width: 100%;
 }
 
@@ -29,10 +28,6 @@
   color: white;
 }
 
-.language-switcher .button.active:hover {
-  background-color: #0056b3;
-}
-
 .language-switcher .button:not(.active):hover {
   background-color: #d4d4d4;
 }
@@ -42,4 +37,11 @@
   height: 1.6rem;
   border-radius: 0.3rem;
   object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .language-switcher .flag {
+    width: 1.8rem;
+    height: 1.2rem;
+  }
 }
