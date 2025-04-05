@@ -6,24 +6,19 @@ import api from "../configs/api";
 import "./tablePage.css";
 import { IoAdd } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import { useMediaQuery } from "react-responsive";
+import Card from "../components/card/card";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const TablePage = ({ apiEndpoint, columnDefs, transformData, 
+const TablePage = ({ apiEndpoint, columnDefs, transformData,
   showActions = false, onRowClicked = null, onAddClick, refreshKey }) => {
   const { t } = useTranslation();
   const [rowData, setRowData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const defaultColDef = {
-    filter: true,
-    flex: 1,
-  };
-
-  const myTheme = themeMaterial.withParams({
-    headerFontSize: "32px",
-  });
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   const fetchData = useCallback(async () => {
     try {
@@ -52,19 +47,27 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData,
 
   return (
     <div className="page">
-      <div className="table ag-theme-material" style={{ height: "70%", width: "100%" }}>
-        <AgGridReact
-          rowData={rowData}
-          columnDefs={columnDefs}
-          rowSelection="multiple"
-          pagination={true}
-          paginationPageSize={20}
-          paginationPageSizeSelector={[10, 20, 30, 40]}
-          defaultColDef={defaultColDef}
-          onRowClicked={onRowClicked}
-          theme={myTheme}
-        />
-      </div>
+      {isMobile ? (
+        <div className="card-list">
+          {rowData.map((row, index) => (
+            <Card key={index} data={row} columns={columnDefs} onClick={onRowClicked} />
+          ))}
+        </div>
+      ) : (
+        <div className="table ag-theme-material" style={{ height: "70%", width: "100%" }}>
+          <AgGridReact
+            rowData={rowData}
+            columnDefs={columnDefs}
+            rowSelection="multiple"
+            pagination={true}
+            paginationPageSize={20}
+            paginationPageSizeSelector={[10, 20, 30, 40]}
+            defaultColDef={{ filter: true, flex: 1 }}
+            onRowClicked={onRowClicked}
+            theme={themeMaterial}
+          />
+        </div>
+      )}
       {showActions && (
         <div className="actions">
           <button className="row-btn add" onClick={onAddClick}>

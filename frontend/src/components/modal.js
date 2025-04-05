@@ -21,7 +21,7 @@ const Modal = ({
       }, autoCloseTime);
       return () => clearTimeout(timer);
     }
-  }, [isOpen, autoCloseTime, onClose, isDialog]);
+  }, [isOpen, autoCloseTime, onClose, isDialog, showCloseButton]);
 
   if (!isOpen) return null;
 

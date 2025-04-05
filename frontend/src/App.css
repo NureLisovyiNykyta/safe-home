@@ -2,9 +2,8 @@
   min-height: 100vh;
   width: 100vw;
   background: #C7DBFF;
-  display: grid;
-  grid-template-columns: max-content 1fr;
   overflow: hidden;
+  display: flex;  
 }
 
 button {

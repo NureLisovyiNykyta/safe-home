@@ -18,15 +18,15 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Navigation = ({ changeLanguage }) => {
   const { t, i18n } = useTranslation();
-  const { logout, userData, updatePassword } = useAuth();
+  const { logout, userData } = useAuth();
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState(null);
   const location = useLocation();
   const userId = location.pathname.split('/')[3];
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const [notification, setNotification] = useState({ isOpen: false, message: "" });
-  const [showOldPassword, setShowOldPassword] = useState(false); // Стан для видимості старого пароля
-  const [showNewPassword, setShowNewPassword] = useState(false); // Стан для видимості нового пароля
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
@@ -72,12 +72,17 @@ const Navigation = ({ changeLanguage }) => {
 
   const onSubmit = async (data) => {
     try {
-      await updatePassword(data.oldPassword, data.newPassword);
-      setNotification({ isOpen: true, message: t("notification.passwordUpdated") });
+      const response = await api.put('/update_password', {
+        old_password: data.oldPassword,
+        new_password: data.newPassword,
+      });
+      if (response.status === 200) {
+        setNotification({ isOpen: true, message: t("notification.passwordUpdated") });
       setTimeout(() => {
         toggleAccordion();
         reset();
       }, 700);
+      }
     } catch (error) {
       setNotification({ isOpen: true, message: t("notification.passwordUpdateFailed") });
     }

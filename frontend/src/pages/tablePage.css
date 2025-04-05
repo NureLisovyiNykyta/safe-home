@@ -7,9 +7,9 @@
   border-radius: 1rem;
   padding: 2rem;
   overflow-y: auto;
-  grid-column: 2;
   height: calc(100vh - 4rem);
   box-sizing: border-box;
+  width: 100%;
 }
 
 .page .actions {
@@ -66,4 +66,27 @@
 .page .row-btn.edit {
   background: #5cad5e;
   color: white;
+}
+
+@media (max-width: 768px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+    margin: 2rem;
+    gap: 1rem;
+  }
+
+  .page .card-list {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .page .actions {
+    margin-top: auto;
+    background: #EBE9E9;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+  }
 }
