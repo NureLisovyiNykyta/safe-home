@@ -27,7 +27,7 @@
     <string name="title_sign_up_fragment">Create Account</string>
     <string name="full_name">Name Surname</string>
     <string name="full_name_hint">Full Name</string>
-    <string name="date">MM / DD / YYYY</string>
+    <string name="date">MM DD YYYY</string>
     <string name="date_of_birth">Date Of Birth</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="terms_and_policy">By continuing, you agree to \nTerms of Use and Privacy Policy.</string>
