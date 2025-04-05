@@ -1,13 +1,18 @@
 import React from "react";
 import "./card.css";
 
-const Card = ({ data, columns, onClick, onEdit, onDelete }) => {
+const Card = ({ data, columns }) => {
   return (
-    <div className="card" onClick={() => onClick?.(data)}>
+    <div className="card">
       {columns.map((col, index) => (
-        <p key={index}>
-          <strong>{col.headerName}</strong> {data[col.field]}
-        </p>
+        <div key={index} className="card-field">
+          <div className="header">{col.headerName}</div>
+          {col.cellRenderer ? (
+            col.cellRenderer({ data })
+          ) : (
+            <span className="data">{data[col.field]}</span>
+          )}
+        </div>
       ))}
     </div>
   );
