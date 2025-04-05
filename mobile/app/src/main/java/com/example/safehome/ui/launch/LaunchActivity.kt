@@ -1,12 +1,12 @@
-package com.example.safehome.ui.view.launch
+package com.example.safehome.ui.launch
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.safehome.ui.view.auth.AuthActivity
-import com.example.safehome.ui.view.main.MainActivity
+import com.example.safehome.ui.auth.AuthActivity
+import com.example.safehome.ui.main.MainActivity
 
 @SuppressLint("CustomSplashScreen")
 class LaunchActivity : ComponentActivity() {
@@ -21,11 +21,11 @@ class LaunchActivity : ComponentActivity() {
         }
 
         startActivity(intent)
-        finish() // Закриваємо LaunchActivity
+        finish()
     }
 
     private fun isUserAuthenticated(): Boolean {
-        // Перевірка авторизації (замініть на свій метод)
+        // Перевірка авторизації
         return false
     }
 }

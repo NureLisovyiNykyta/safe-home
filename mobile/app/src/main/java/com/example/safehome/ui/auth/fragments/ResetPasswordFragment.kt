@@ -1,13 +1,11 @@
-package com.example.safehome.ui.view.auth.fragments
+package com.example.safehome.ui.auth.fragments
 
 import android.os.Bundle
-import android.text.method.PasswordTransformationMethod
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.safehome.R
-import com.example.safehome.databinding.FragmentLoginBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -16,19 +14,16 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
+ * Use the [ResetPasswordFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class LoginFragment : Fragment() {
+class ResetPasswordFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var bindingLogin: FragmentLoginBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -39,30 +34,10 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        bindingLogin = FragmentLoginBinding.inflate(inflater, container, false)
-
-        return bindingLogin.root
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_reset_password, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        var isPasswordVisible = false
-
-        bindingLogin.eyeButton.setOnClickListener {
-            val cursorPosition = bindingLogin.pswdEditText.selectionStart
-            isPasswordVisible = !isPasswordVisible
-
-            if (isPasswordVisible) {
-                bindingLogin.pswdEditText.transformationMethod = null
-                bindingLogin.eyeButton.setImageResource(R.drawable.ic_eye_open)
-            } else {
-                bindingLogin.pswdEditText.transformationMethod = PasswordTransformationMethod.getInstance()
-                bindingLogin.eyeButton.setImageResource(R.drawable.ic_eye_close)
-            }
-            bindingLogin.pswdEditText.setSelection(cursorPosition)
-        }
-    }
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -70,12 +45,12 @@ class LoginFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment LoginFragment.
+         * @return A new instance of fragment ResetPasswordFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            LoginFragment().apply {
+            ResetPasswordFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

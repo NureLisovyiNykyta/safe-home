@@ -1,4 +1,4 @@
-package com.example.safehome.ui.view.main
+package com.example.safehome.ui.main
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView

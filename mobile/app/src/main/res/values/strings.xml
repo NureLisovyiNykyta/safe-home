@@ -12,16 +12,24 @@
 
     <string name="error_image">Error :(</string>
 
-    <!-- LoginFragment -->
-    <string name="welcome">Welcome!</string>
-    <string name="username_or_email">Username Or Email</string>
-    <string name="email_hint">Example@gmail.com</string>
+    <!-- SignInFragment -->
+    <string name="title_sign_in_fragment">Welcome!</string>
+    <string name="email">Email</string>
+    <string name="email_hint">email@gmail.com</string>
     <string name="password">Password</string>
+    <string name="password_hint">********</string>
     <string name="login_button">Log In</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="sign_up_button">Sign Up</string>
     <string name="sign_up_with_google">Sign up with Google</string>
 
-    <!-- Fragment -->
-
+    <!-- SignUpFragment -->
+    <string name="title_sign_up_fragment">Create Account</string>
+    <string name="full_name">Name Surname</string>
+    <string name="full_name_hint">Full Name</string>
+    <string name="date">MM / DD / YYYY</string>
+    <string name="date_of_birth">Date Of Birth</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="terms_and_policy">By continuing, you agree to \nTerms of Use and Privacy Policy.</string>
+    <string name="have_account">Already have an account? Log In</string>
 </resources>

@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/primary"
-    tools:context=".ui.view.auth.fragments.LoginFragment">
+    tools:context=".ui.auth.fragments.SignInFragment">
 
     <TextView
         android:id="@+id/title_textView"
         style="@style/TextView"
-        android:text="@string/welcome"
+        android:text="@string/title_sign_in_fragment"
         android:textSize="36sp"
         android:textColor="@color/white"
         android:textStyle="bold"
@@ -36,7 +36,7 @@
 
         <TextView
             style="@style/TextView"
-            android:text="@string/username_or_email"
+            android:text="@string/email"
             android:layout_marginStart="26dp"
             android:layout_marginTop="50dp" />
 
@@ -92,7 +92,7 @@
                     android:id="@+id/pswdEditText"
                     style="@style/EditText"
                     android:autofillHints="password"
-                    android:hint="@string/password"
+                    android:hint="@string/password_hint"
                     android:inputType="textPassword" />
 
                 <ImageButton

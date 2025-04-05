@@ -13,7 +13,7 @@
         android:theme="@style/Theme.SafeHome"
         tools:targetApi="31" >
         <activity
-            android:name=".ui.view.launch.LaunchActivity"
+            android:name=".ui.launch.LaunchActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/title_activity_launch"
@@ -25,12 +25,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.view.auth.AuthActivity"
+            android:name=".ui.auth.AuthActivity"
             android:exported="true"
             android:label="@string/title_activity_auth"
             android:theme="@style/Theme.SafeHome" />
         <activity
-            android:name=".ui.view.main.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.SafeHome" >
         </activity>
