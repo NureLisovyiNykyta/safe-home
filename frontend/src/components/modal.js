@@ -8,7 +8,7 @@ const Modal = ({
   children,
   message = null,
   showCloseButton = false,
-  autoCloseTime = 10000,
+  autoCloseTime = 7000,
   isDialog = false,
   onConfirm = null,
   confirmText = "Confirm",

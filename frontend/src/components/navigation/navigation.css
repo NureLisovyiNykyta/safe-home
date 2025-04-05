@@ -27,10 +27,18 @@
   position: relative;
 }
 
-.navigation .logo img {
+.navigation .logo .desktop-logo {
   width: 48px;
   height: 40px;
   padding-right: 1rem;
+}
+
+.navigation .logo .desktop-logo, .desktop-text {
+  display: block;
+}
+
+.navigation .logo .mobile-title {
+  display: none;
 }
 
 .navigation .logo span {
@@ -271,12 +279,31 @@
 }
 
 @media (max-width: 768px) {
+  .navigation .logo .desktop-logo,
+  .navigation .logo .desktop-text {
+    display: none;
+  }
+
+  .navigation .logo .mobile-title {
+    display: block;
+    font-size: 1.4rem;
+    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+    text-align: center;
+  }
+
   .navigation .navigation-container {
     display: none;
   }
 
   .navigation.expanded .navigation-container {
-    display: block;
+    display: flex;
   }
 
   .navigation {
@@ -303,5 +330,5 @@
 
   .burger-menu-icon {
     display: block;
-  } 
+  }
 }

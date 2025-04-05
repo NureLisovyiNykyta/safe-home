@@ -3,6 +3,7 @@
   border-radius: 2rem;
   min-width: 400px;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 .form-template .header {
@@ -163,16 +164,14 @@
 
 @media (max-width: 768px) {
   .form-template {
-    min-width: 100%;
+    min-width: 90%;
+    padding: 1rem;
+    border-radius: 1rem;
   }
 
   .form-template .header .title {
     font-size: 1.2rem;
     margin: 0.5rem 0;
-  }
-
-  .form-template .header .title .icon {
-    font-size: 1.8rem;
   }
 
   .form-template .form .form-group input,
@@ -181,56 +180,13 @@
     padding: 0.4rem 0.8rem;
   }
 
-  .form-template .form .form-group .icon {
-    font-size: 1.2rem;
-  }
-
-  .form-template .form .form-group .error {
-    font-size: 0.9rem;
-    margin: 0 0.8rem;
-  }
-
-  .form-template .form .additional {
-    font-size: 0.9rem;
-    margin: 0.5rem 0;
+  .form-template .header .title .icon {
+    font-size: 1.5rem;
+    left: -0.2rem;
   }
 
   .form-template .status {
     font-size: 0.9rem;
     padding: 0.8rem 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .form-template .header .title {
-    font-size: 1rem;
-  }
-
-  .form-template .form .form-group input,
-  .form-template .form button {
-    font-size: 0.9rem;
-    padding: 0.3rem 0.6rem;
-  }
-
-  .form-template .form .form-group .icon {
-    font-size: 1rem;
-  }
-
-  .form-template .form .form-group .error {
-    font-size: 0.8rem;
-    margin: 0 0.6rem;
-  }
-
-  .form-template .form .additional {
-    font-size: 0.8rem;
-  }
-
-  .form-template .status {
-    font-size: 0.8rem;
-    padding: 0.6rem 0;
-  }
-
-  .form-template .form .form-group input::placeholder {
-    font-size: 0.8rem;
   }
 }

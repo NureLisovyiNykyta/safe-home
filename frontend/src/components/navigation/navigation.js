@@ -98,6 +98,22 @@ const Navigation = ({ changeLanguage }) => {
     return location.pathname.startsWith(path) ? 'active' : '';
   };
 
+  const getPageTitle = () => {
+    if (userEmail) {
+      return userEmail;
+    }
+    if (getActiveLink('/customers') === 'active') return t('navigation.customers');
+    if (getActiveLink('/admins') === 'active') return t('navigation.admins');
+    if (getActiveLink('/subscriptions') === 'active') return t('navigation.subscriptions');
+    return 'safe home';
+  };
+
+  const handleLinkClick = () => {
+    if (window.innerWidth <= 768) {
+      toggleMenu();
+    }
+  };
+
   if (loading) {
     return null;
   }
@@ -106,13 +122,14 @@ const Navigation = ({ changeLanguage }) => {
     <div className={`navigation ${isMenuOpen ? 'expanded' : ''}`}>
       <div className='logo'>
         <RxHamburgerMenu className="burger-menu-icon" onClick={toggleMenu} />
-        <img src={logo} alt='company-logo' />
-        <span>safe home</span>
+        <img src={logo} alt='company-logo' className="desktop-logo" />
+        <span className="desktop-text">safe home</span>
+        <span className="mobile-title">{getPageTitle()}</span>
       </div>
       <div className='navigation-container'>
         <div className='links'>
           <div className={`link-container ${getActiveLink('/customers')}`}>
-            <Link to="/customers" className="link">
+            <Link to="/customers" className="link" onClick={handleLinkClick}>
               {!userEmail ? (
                 <FiUsers className='icon' />
               ) : (
@@ -128,13 +145,13 @@ const Navigation = ({ changeLanguage }) => {
             )}
           </div>
           <div className={`link-container ${getActiveLink('/admins')}`}>
-            <Link to="/admins" className="link">
+            <Link to="/admins" className="link" onClick={handleLinkClick}>
               <GrUserAdmin className='icon' />
               {t('navigation.admins')}
             </Link>
           </div>
           <div className={`link-container ${getActiveLink('/subscriptions')}`}>
-            <Link to="/subscriptions" className="link">
+            <Link to="/subscriptions" className="link" onClick={handleLinkClick}>
               <MdPayment className='icon' />
               {t('navigation.subscriptions')}
             </Link>
