@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:name=".SafeHomeApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -10,10 +12,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.SafeHome"
         tools:targetApi="31" >
+
         <activity
-            android:name=".ui.view.launch.LaunchActivity"
+            android:name=".presentation.launch.LaunchActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/title_activity_launch"
@@ -25,12 +29,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.view.auth.AuthActivity"
+            android:name=".presentation.auth.AuthActivity"
             android:exported="true"
             android:label="@string/title_activity_auth"
             android:theme="@style/Theme.SafeHome" />
         <activity
-            android:name=".ui.view.main.MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.SafeHome" >
         </activity>
