@@ -1,4 +1,4 @@
-package com.example.safehome.ui.auth.fragments
+package com.example.safehome.presentation.auth.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

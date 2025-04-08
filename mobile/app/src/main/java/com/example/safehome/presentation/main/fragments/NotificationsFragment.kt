@@ -1,4 +1,4 @@
-package com.example.safehome.ui.main.fragments
+package com.example.safehome.presentation.main.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

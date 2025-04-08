@@ -1,12 +1,12 @@
-package com.example.safehome.ui.launch
+package com.example.safehome.presentation.launch
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.safehome.ui.auth.AuthActivity
-import com.example.safehome.ui.main.MainActivity
+import com.example.safehome.presentation.auth.AuthActivity
+import com.example.safehome.presentation.main.MainActivity
 
 @SuppressLint("CustomSplashScreen")
 class LaunchActivity : ComponentActivity() {

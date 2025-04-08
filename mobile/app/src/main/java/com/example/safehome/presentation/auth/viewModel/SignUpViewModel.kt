@@ -1,4 +1,4 @@
-package com.example.safehome.ui.auth.viewModel
+package com.example.safehome.presentation.auth.viewModel
 
 import androidx.lifecycle.ViewModel
 import com.example.safehome.data.model.DateModel

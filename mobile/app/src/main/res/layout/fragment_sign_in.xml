@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/primary"
-    tools:context=".ui.auth.fragments.SignInFragment">
+    tools:context=".presentation.auth.fragments.SignInFragment">
 
     <TextView
         android:id="@+id/title_textView"
@@ -110,7 +110,7 @@
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/loginButton"
+            android:id="@+id/signInButton"
             android:layout_marginTop="60dp"
             android:text="@string/login_button"
             style="@style/Button" />

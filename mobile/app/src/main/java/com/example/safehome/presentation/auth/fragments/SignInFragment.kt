@@ -1,15 +1,22 @@
-package com.example.safehome.ui.auth.fragments
+package com.example.safehome.presentation.auth.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.safehome.R
 import com.example.safehome.databinding.FragmentSignInBinding
-import com.example.safehome.ui.auth.utils.PasswordVisibilityUtils
+import com.example.safehome.presentation.auth.utils.PasswordVisibilityUtils
+import com.example.safehome.presentation.auth.viewModel.AuthViewModel
+import com.example.safehome.data.model.Result
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +28,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [SignInFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class SignInFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -28,6 +36,7 @@ class SignInFragment : Fragment() {
 
     private lateinit var binding: FragmentSignInBinding
     private lateinit var navController: NavController
+    private val authViewModel: AuthViewModel by viewModels()
 
     private var _isPasswordVisible = false
 
@@ -37,6 +46,22 @@ class SignInFragment : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+        }
+
+        lifecycleScope.launch {
+            authViewModel.authState.collect { result ->
+                when (result) {
+                    is Result.Loading -> {
+                        Timber.tag("Auth").d("Loading...")
+                    }
+                    is Result.Success -> {
+                        Timber.tag("Auth").d("User is authorized")
+                    }
+                    is Result.Error -> {
+                        Timber.tag("Auth").d(result.message)
+                    }
+                }
+            }
         }
     }
 
@@ -53,6 +78,13 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         navController = findNavController()
+
+        binding.signInButton.setOnClickListener {
+            authViewModel.checkUserAuthorization(
+                binding.emailEditText.text.toString().trim(),
+                binding.pswdEditText.text.toString().trim()
+            )
+        }
 
         binding.signUpButton.setOnClickListener {
             navController.navigate(R.id.action_loginFragment_to_signUpFragment)

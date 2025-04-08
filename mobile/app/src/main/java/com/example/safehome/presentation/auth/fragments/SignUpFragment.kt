@@ -1,4 +1,4 @@
-package com.example.safehome.ui.auth.fragments
+package com.example.safehome.presentation.auth.fragments
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -17,8 +17,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.safehome.R
 import com.example.safehome.data.model.DateModel
 import com.example.safehome.databinding.FragmentSignUpBinding
-import com.example.safehome.ui.auth.utils.PasswordVisibilityUtils
-import com.example.safehome.ui.auth.viewModel.SignUpViewModel
+import com.example.safehome.presentation.auth.utils.PasswordVisibilityUtils
+import com.example.safehome.presentation.auth.viewModel.SignUpViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -127,18 +127,19 @@ class SignUpFragment : Fragment() {
         monthPicker.setOnValueChangedListener { _, _, newMonth ->
             updateDaysInMonth(yearPicker.value, newMonth)
         }
+
         yearPicker.setOnValueChangedListener { _, _, newYear ->
             updateDaysInMonth(newYear, monthPicker.value)
         }
 
         AlertDialog.Builder(requireContext(), R.style.RoundedDialog)
-            .setTitle("Виберіть дату народження")
+            .setTitle(getString(R.string.select_date))
             .setView(dialogView)
-            .setPositiveButton("ОК") { _, _ ->
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 viewModel.setDate(monthPicker.value, dayPicker.value, yearPicker.value)
                 editText.setText(viewModel.selectedDate.value.toFormattedString())
             }
-            .setNegativeButton("Скасувати", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create()
             .apply {
                 show()
@@ -149,7 +150,6 @@ class SignUpFragment : Fragment() {
                     ContextCompat.getColor(context, android.R.color.holo_red_light)
                 )
             }
-
     }
 
     override fun onDestroyView() {

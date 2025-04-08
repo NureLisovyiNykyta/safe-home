@@ -2,6 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
+    alias(libs.plugins.hilt)
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 android {
@@ -41,6 +47,12 @@ android {
 }
 
 dependencies {
+    implementation (libs.logging.interceptor)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation (libs.jakewharton.timber)
+    implementation (libs.retrofit2.retrofit)
+    implementation (libs.converter.gson)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

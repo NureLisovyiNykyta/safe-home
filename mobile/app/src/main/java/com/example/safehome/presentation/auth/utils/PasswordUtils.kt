@@ -1,4 +1,4 @@
-package com.example.safehome.ui.auth.utils
+package com.example.safehome.presentation.auth.utils
 
 import android.text.method.PasswordTransformationMethod
 import android.widget.EditText
