@@ -158,3 +158,48 @@ def logout_user():
             message="Internal server error while logout",
             status_code=500
         )
+
+
+def verify_token(token: str | None) -> tuple[dict, int]:
+    """
+    Verify JWT token and return API-friendly response.
+
+    Args:
+        token: The 'Authorization' header content (may include 'Bearer ' prefix)
+
+    Returns:
+        tuple: (response_dict, status_code) where:
+            - response_dict contains:
+                - 'valid': bool indicating token validity
+                - 'user_id': string (present when valid=True)
+                - 'message': error description (present when valid=False)
+            - status_code: HTTP status code (200, 401, or 500)
+
+    Behavior:
+        - Returns 401 if:
+            - Token is missing
+            - Token has invalid format
+            - Token is expired/invalid
+        - Returns 500 for unexpected server errors
+        - Returns 200 with user_id for valid tokens
+    """
+    # Token presence check
+    if not token:
+        return {"valid": False, "message": "Token is missing"}, 401
+
+    # Remove 'Bearer ' prefix if present
+    clean_token = token[7:] if token.startswith("Bearer ") else token
+    if not clean_token:
+        return {"valid": False, "message": "Invalid token format"}, 401
+
+    # Token validation
+    try:
+        payload = JwtUtils.decode_jwt(clean_token)
+        return {
+            "valid": True,
+            "user_id": payload.get("user_id")
+        }, 200
+    except ValueError as e:
+        return {"valid": False, "message": str(e)}, 401
+    except Exception:
+        return {"valid": False, "message": "Token verification failed"}, 500
