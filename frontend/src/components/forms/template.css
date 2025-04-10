@@ -3,38 +3,42 @@
   border-radius: 2rem;
   min-width: 400px;
   padding: 2rem;
-  padding-top: 1rem;
-  margin: 1rem;
+  box-sizing: border-box;
 }
 
 .form-template .header {
-  position: relative;
-  min-height: 7rem;
+  min-height: 3.5rem;
 }
 
-.form-template .header .icon,
-.form-template .header span {
-  color: #333;
-  position: absolute;
+.login-form .header .icon {
+  display: none;
+}
+
+.form-template .language-switcher {
+  width: fit-content;
+  place-self: flex-end;
+}
+
+.form-template .header .title {
+  font-size: 1.5rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0;
+  position: relative;
   user-select: none;
 }
 
-.form-template .header .icon {
+.form-template .header .title .icon {
   font-size: 2.5rem;
-  left: -0.4rem;
   cursor: pointer;
-  top: 50%;
-  transform: translateY(-49%);
   z-index: 1001;
-}
-
-.form-template .header span {
-  font-size: 1.5rem;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  text-align: center;
+  position: absolute;
+  top: 60%;
+  transform: translateY(-50%);
+  left: -0.4rem;
 }
 
 .form-template .status {
@@ -56,8 +60,9 @@
   visibility: visible;
   opacity: 1;
   height: auto;
-  margin: 1rem 0;
-  padding: 1rem;
+  margin: 0.5rem 0;
+  margin-top: 0;
+  padding: 1rem 0;
 }
 
 .form-template .status.error {
@@ -74,7 +79,7 @@
 
 .form-template .form .form-group .icon {
   position: absolute;
-  top: 1.7rem;
+  top: 50%;
   transform: translateY(-50%);
   right: 1rem;
   z-index: 1001;
@@ -106,6 +111,10 @@
   color: #333;
 }
 
+.form-template .form .form-group label {
+  margin-left: 1rem;
+}
+
 .form-template .form .form-group input::placeholder {
   color: #333;
   font-size: 1.2rem;
@@ -115,21 +124,10 @@
 .form-template .form .additional {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin: 1rem 0;
   color: #333;
   user-select: none;
-}
-
-.form-template .form .additional .remember,
-.form-template .form .additional .remember label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.form-template .form .additional .remember label {
-  margin: calc(-0.2rem) 0 0 0.5rem;
 }
 
 .form-template .form .additional .forgot {
@@ -143,16 +141,52 @@
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
+  padding: 2rem;
 }
 
-.login-form .header .icon {
-  display: none;
+.form-template .form .form-group input:-webkit-autofill {
+  background-color: transparent !important;
+  color: #333 !important;
+  border: 1px solid #ccc;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
-.form-template .language-switcher {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 4rem;
-  transform: translate(-50%, -50%);
+.form-template .form .form-group input:-webkit-autofill::first-line {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Для інших браузерів */
+.form-template .form .form-group input:autofill {
+  background-color: transparent !important;
+  color: #333 !important;
+}
+
+@media (max-width: 768px) {
+  .form-template {
+    min-width: 90%;
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .form-template .header .title {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+  }
+
+  .form-template .form .form-group input,
+  .form-template .form button {
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .form-template .header .title .icon {
+    font-size: 1.5rem;
+    left: -0.2rem;
+  }
+
+  .form-template .status {
+    font-size: 0.9rem;
+    padding: 0.8rem 0;
+  }
 }
