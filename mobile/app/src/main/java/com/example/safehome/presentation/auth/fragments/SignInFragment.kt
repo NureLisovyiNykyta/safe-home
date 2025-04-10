@@ -86,8 +86,12 @@ class SignInFragment : Fragment() {
             )
         }
 
+        binding.resetPswdButton.setOnClickListener {
+            navController.navigate(R.id.action_signInFragment_to_resetPasswordFragment)
+        }
+
         binding.signUpButton.setOnClickListener {
-            navController.navigate(R.id.action_loginFragment_to_signUpFragment)
+            navController.navigate(R.id.action_signInFragment_to_signUpFragment)
         }
 
         binding.eyeButton.setOnClickListener {

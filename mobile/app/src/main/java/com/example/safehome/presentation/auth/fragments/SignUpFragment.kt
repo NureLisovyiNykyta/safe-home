@@ -9,11 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import android.widget.EditText
 import android.widget.NumberPicker
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.fragment.findNavController
 import com.example.safehome.R
 import com.example.safehome.data.model.DateModel
 import com.example.safehome.databinding.FragmentSignUpBinding
@@ -63,14 +59,6 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Відступ зверху
-        val rootLayout = view as ConstraintLayout
-        ViewCompat.setOnApplyWindowInsetsListener(rootLayout) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(0, systemBars.top, 0, 0)
-            insets
-        }
-
         binding.dateEditText.setOnClickListener {
             showDatePickerDialog(binding.dateEditText)
         }
@@ -83,10 +71,6 @@ class SignUpFragment : Fragment() {
         binding.eyeConfirmButton.setOnClickListener {
             _isConfirmPasswordVisible = !_isConfirmPasswordVisible
             PasswordVisibilityUtils.togglePasswordVisibility(binding.pswdConfirmEditText, binding.eyeConfirmButton, _isConfirmPasswordVisible)
-        }
-
-        binding.backButton.setOnClickListener {
-            findNavController().popBackStack(R.id.loginFragment, false)
         }
     }
 
