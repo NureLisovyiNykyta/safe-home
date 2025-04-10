@@ -49,3 +49,9 @@ def logout():
 def token_login():
     data = request.get_json()
     return auth_service.token_login_user(data)
+
+
+@auth_bp.route('/verify_token', methods=['GET'])
+def verify_token():
+    token = request.headers.get('Authorization')
+    return auth_service.verify_token(token)

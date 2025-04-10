@@ -1,5 +1,6 @@
 from app import db
 from datetime import datetime, timezone, timedelta
+from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from flask import jsonify
@@ -14,7 +15,7 @@ class Subscription(db.Model):
     subscription_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
     plan_id = db.Column(UUID(as_uuid=True), db.ForeignKey('subscription_plan.plan_id', ondelete='CASCADE'), nullable=False)
-    start_date = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone.utc))
+    start_date = db.Column(db.DateTime(timezone=True), server_default=func.now())
     end_date = db.Column(db.DateTime, nullable=True)
     is_active = db.Column(db.Boolean, default=True)
 
