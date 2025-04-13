@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import FormTemplate from "./template";
 import { ResetPasswordForm } from "./resetPassword";
-import api from "../../apiConfig";
-import { useAuth } from "../../authContext";
+import api from "../../configs/api";
+import { useAuth } from "../../contexts/authContext";
 
 export const LoginForm = ({ changeLanguage }) => {
   const { login } = useAuth();
@@ -17,7 +17,7 @@ export const LoginForm = ({ changeLanguage }) => {
         setStatus({ message: t("login.success"), type: "success" });
         setTimeout(() => {
           login();
-        }, 2000);
+        }, 1000);
       }
     } catch (error) {
       setStatus({
@@ -28,7 +28,7 @@ export const LoginForm = ({ changeLanguage }) => {
   };
 
   return isResetPassword ? (
-    <ResetPasswordForm onBack={() => setIsResetPassword(false)} />
+    <ResetPasswordForm changeLanguage={changeLanguage} onBack={() => setIsResetPassword(false)} />
   ) : (
     <FormTemplate
       title={t("login.title")}
