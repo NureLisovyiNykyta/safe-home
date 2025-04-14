@@ -1,5 +1,6 @@
 package com.example.safehome.domain
 
+import com.example.safehome.data.model.ErrorType
 import com.example.safehome.data.model.Result
 import com.example.safehome.data.repo.AuthRepository
 import com.example.safehome.data.repo.TokenRepository
@@ -17,15 +18,19 @@ class AuthUseCase @Inject constructor(
                 Result.Success(token.isNotEmpty())
             }
             is Result.Error -> result
-            Result.Loading -> Result.Loading
+            is Result.Loading -> Result.Loading
         }
     }
-
-    suspend fun isTokenExpired(token: String): Result<Boolean> {
-        val localToken = tokenRepository.getToken()
-        if (localToken != null) {
-            return Result.Success(true)
+    suspend fun isTokenExpired(): Result<Boolean> {
+        val localToken = tokenRepository.getToken() ?: return Result.Error(ErrorType.InternalError("Токен відсутній"))
+        return when (val result = authRepository.isVerifyToken(localToken)) {
+            is Result.Success -> {
+                val isAuthorized = result.data.isAuthorized
+                if (!isAuthorized) tokenRepository.clearToken()
+                Result.Success(isAuthorized)
+            }
+            is Result.Error -> result
+            is Result.Loading -> Result.Loading
         }
-        return Result.Success(false)
     }
 }

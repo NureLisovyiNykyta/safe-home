@@ -1,6 +1,5 @@
 package com.example.safehome.data.model
 
-data class TokenRequest(
-    val message: String,
+data class TokenVerificationRequest(
     val token: String
 )

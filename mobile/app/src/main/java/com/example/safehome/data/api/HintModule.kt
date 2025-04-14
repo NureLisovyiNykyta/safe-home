@@ -1,8 +1,11 @@
 package com.example.safehome.data.api
 
+import android.content.Context
+import com.example.safehome.data.network.NetworkHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,7 +15,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ApiModule {
+object HintModule {
 
     @Provides
     @Singleton
@@ -40,5 +43,11 @@ object ApiModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkHandler(@ApplicationContext context: Context): NetworkHandler {
+        return NetworkHandler(context)
     }
 }

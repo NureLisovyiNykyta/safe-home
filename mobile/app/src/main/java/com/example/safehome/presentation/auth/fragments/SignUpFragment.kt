@@ -59,6 +59,8 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.registerButton.setOnClickListener {  }
+
         binding.dateEditText.setOnClickListener {
             showDatePickerDialog(binding.dateEditText)
         }
