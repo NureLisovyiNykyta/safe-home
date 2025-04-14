@@ -1,7 +1,7 @@
 import './template.css';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { useForm } from "react-hook-form";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import LanguageSwitcher from "../languageSwitcher";
@@ -15,12 +15,22 @@ const FormTemplate = ({
   className,
   onForgotPassword,
   onBack,
-  changeLanguage
+  changeLanguage = null
 }) => {
   const { t } = useTranslation();
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState({ message: null, type: null });
+
+  useEffect(() => {
+    const defaultValues = {};
+    fields.forEach(({ name, defaultValue }) => {
+      if (defaultValue !== undefined) {
+        defaultValues[name] = defaultValue;
+      }
+    });
+    reset(defaultValues);
+  }, [fields, reset]);
 
   const handleFormSubmit = async (data) => {
     try {
@@ -36,33 +46,36 @@ const FormTemplate = ({
   return (
     <div className={`form-template ${className}`}>
       <div className='header'>
-        <IoArrowBackOutline className='icon' onClick={onBack} />
-        <span>{title}</span>
-        <LanguageSwitcher changeLanguage={changeLanguage} />
+        {changeLanguage && <LanguageSwitcher changeLanguage={changeLanguage} />}
+        <div className='title'>
+          <IoArrowBackOutline className='icon' onClick={onBack} />
+          {title}
+        </div>
       </div>
       {status.message && <div className={`status ${status.type}`}>{status.message}</div>}
       <form className='form' onSubmit={handleSubmit(handleFormSubmit)}>
-        {fields.map(({ name, type, placeholder, validation }) => (
-          <div className='form-group' key={name}>
+        {fields.map(({ name, type, label, validation, showLabel = false, placeholder }) => (
+          <div className="form-group" key={name}>
+            {showLabel && <label htmlFor={name}>{label}</label>}
             <input
-              placeholder={placeholder}
-              type={name === "password" && showPassword ? 'text' : type}
+              id={name}
+              type={name === "password" && showPassword ? "text" : type}
               {...register(name, validation)}
+              autoComplete={name === "password" ? "new-password" : "off"}
+              placeholder={!showLabel ? placeholder : undefined}
             />
-            {errors[name] && <p className='error'>{errors[name].message}</p>}
+            {errors[name] && <p className="error">{errors[name].message}</p>}
             {name === "password" && (
-              showPassword ?
-                <FiEyeOff className='icon' onClick={() => setShowPassword(false)} /> :
-                <FiEye className='icon' onClick={() => setShowPassword(true)} />
+              showPassword ? (
+                <FiEyeOff className="icon" onClick={() => setShowPassword(false)} />
+              ) : (
+                <FiEye className="icon" onClick={() => setShowPassword(true)} />
+              )
             )}
           </div>
         ))}
         {isLogin && (
           <div className='additional'>
-            <div className='remember'>
-              <input type='checkbox' id='remember-me' />
-              <label htmlFor='remember-me'>{t("login.rememberMe")}</label>
-            </div>
             <span className='forgot' onClick={onForgotPassword}>{t("login.forgotPassword")}</span>
           </div>
         )}
