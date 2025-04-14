@@ -33,7 +33,7 @@ class AuthActivity : AppCompatActivity() {
         }
 
         val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+            .findFragmentById(binding.fragmentContainerView.id) as NavHostFragment
         navController = navHostFragment.navController
 
         binding.backButton.setOnClickListener {

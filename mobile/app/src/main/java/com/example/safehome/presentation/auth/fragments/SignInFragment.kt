@@ -5,11 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.safehome.R
+import com.example.safehome.data.model.ErrorType
 import com.example.safehome.databinding.FragmentSignInBinding
 import com.example.safehome.presentation.auth.utils.PasswordVisibilityUtils
 import com.example.safehome.presentation.auth.viewModel.AuthViewModel
@@ -18,19 +22,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SignInFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -42,35 +38,17 @@ class SignInFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
-        }
-
-        lifecycleScope.launch {
-            authViewModel.authState.collect { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        Timber.tag("Auth").d("Loading...")
-                    }
-                    is Result.Success -> {
-                        Timber.tag("Auth").d("User is authorized")
-                    }
-                    is Result.Error -> {
-                        Timber.tag("Auth").d(result.message)
-                    }
-                }
-            }
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSignInBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -79,11 +57,36 @@ class SignInFragment : Fragment() {
 
         navController = findNavController()
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.authState.collect { result ->
+                    when (result) {
+                        is Result.Loading -> Timber.tag("Auth").d("Loading...")
+                        is Result.Success -> {
+                            Timber.tag("Auth").d("User is authorized")
+                            //navController.navigate(R.id.action_signInFragment_to_mainActivity)
+                        }
+                        is Result.Error -> {
+                            val message = when (val error = result.errorType) {
+                                is ErrorType.ServerError -> {
+                                    if (error.code == 403) "Incorrect login or password"
+                                    else error.message
+                                }
+                                is ErrorType.NetworkError -> error.message
+                                is ErrorType.InternalError -> error.message
+                            }
+
+                            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+        }
+
         binding.signInButton.setOnClickListener {
-            authViewModel.checkUserAuthorization(
-                binding.emailEditText.text.toString().trim(),
-                binding.pswdEditText.text.toString().trim()
-            )
+            val email = binding.emailEditText.text.toString().trim()
+            val password = binding.pswdEditText.text.toString().trim()
+            authViewModel.checkUserAuthorization(email, password)
         }
 
         binding.resetPswdButton.setOnClickListener {
@@ -99,16 +102,8 @@ class SignInFragment : Fragment() {
             PasswordVisibilityUtils.togglePasswordVisibility(binding.pswdEditText, binding.eyeButton, _isPasswordVisible)
         }
     }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LoginFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             SignInFragment().apply {

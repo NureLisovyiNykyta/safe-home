@@ -182,7 +182,7 @@
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/loginButton"
+            android:id="@+id/registerButton"
             android:layout_marginTop="40dp"
             android:text="@string/sign_up_button"
             style="@style/Button" />

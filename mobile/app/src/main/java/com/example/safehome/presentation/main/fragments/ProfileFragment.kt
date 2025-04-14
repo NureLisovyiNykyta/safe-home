@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.safehome.databinding.FragmentNotificationsBinding
+import com.example.safehome.databinding.FragmentProfileBinding
 
-class NotificationsFragment : Fragment() {
+class ProfileFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
+    private var _binding: FragmentProfileBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,7 +22,7 @@ class NotificationsFragment : Fragment() {
     ): View {
 
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
 
