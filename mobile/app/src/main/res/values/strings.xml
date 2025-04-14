@@ -1,12 +1,7 @@
 <resources>
     <string name="app_name">Safe home</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="title_activity_auth">AuthActivity</string>
     <string name="title_activity_main">MainActivity</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_launch">LaunchActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
 
@@ -43,5 +38,14 @@
     <string name="forgot_description">Enter your email address to reset your password. After confirming your email, you will receive a new password in your mail.</string>
     <string name="email_enter">Enter email address</string>
     <string name="send">Send</string>
+
+    <!-- HomeFragment -->
+    <string name="title_home_fragment">Home</string>
+
+    <!-- SubscriptionFragment -->
+    <string name="title_subscription_fragment">Subscription</string>
+
+    <!-- ProfileFragment -->
+    <string name="title_profile_fragment">Profile</string>
 
 </resources>

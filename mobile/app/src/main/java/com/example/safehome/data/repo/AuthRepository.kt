@@ -4,7 +4,6 @@ import com.example.safehome.data.api.AuthApi
 import com.example.safehome.data.model.LoginRequest
 import com.example.safehome.data.model.Result
 import com.example.safehome.data.model.TokenResponse
-import com.example.safehome.data.model.TokenVerificationRequest
 import com.example.safehome.data.model.VerifyTokenResponse
 import com.example.safehome.data.network.NetworkHandler
 import javax.inject.Inject
@@ -23,7 +22,7 @@ class AuthRepository @Inject constructor(
 
     suspend fun isVerifyToken(token: String): Result<VerifyTokenResponse> {
         return networkHandler.safeApiCall {
-            authApi.checkToken(TokenVerificationRequest(token))
+            authApi.checkToken(token)
         }
     }
 }

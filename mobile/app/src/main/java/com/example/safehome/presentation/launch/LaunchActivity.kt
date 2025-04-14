@@ -17,7 +17,6 @@ import com.example.safehome.presentation.main.MainActivity
 import kotlinx.coroutines.launch
 import com.example.safehome.data.model.Result
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
@@ -34,28 +33,20 @@ class LaunchActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                Timber.d("Collecting tokenState")
                 launchViewModel.tokenState.collect { result ->
-                    Timber.d("Token state: $result")
                     when (result) {
-                        is Result.Loading -> {
-                            Timber.d("Checking token...")
-                        }
+                        is Result.Loading -> { }
                         is Result.Success -> {
-                            Timber.d("Token isAuthorized: ${result.data}")
                             if (result.data) {
                                 startActivity(MainActivity::class.java)
-                                Toast.makeText(this@LaunchActivity, "Login successful", Toast.LENGTH_SHORT).show()
                             } else {
                                 startActivity(AuthActivity::class.java)
                             }
                             finish()
                         }
                         is Result.Error -> {
-                            Timber.d("Token error: ${result.errorType}")
                             when (val error = result.errorType) {
                                 is ErrorType.InternalError -> {
-                                    Timber.d("Internal error reason: ${error.message}")
                                     startActivity(AuthActivity::class.java)
                                 }
                                 is ErrorType.NetworkError -> {

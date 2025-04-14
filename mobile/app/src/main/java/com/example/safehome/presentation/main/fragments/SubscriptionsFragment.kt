@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.safehome.databinding.FragmentDashboardBinding
+import com.example.safehome.databinding.FragmentSubscriptionsBinding
 
-class DashboardFragment : Fragment() {
+class SubscriptionsFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentSubscriptionsBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,7 +22,7 @@ class DashboardFragment : Fragment() {
     ): View {
 
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentSubscriptionsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
 
