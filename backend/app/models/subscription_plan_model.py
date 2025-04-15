@@ -7,6 +7,9 @@ from app.utils import ErrorHandler
 
 class SubscriptionPlan(db.Model):
     __tablename__ = 'subscription_plan'
+    __table_args__ = (
+        db.Index('idx_subscription_plan_name', 'name'),
+    )
 
     plan_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String(100), nullable=False)

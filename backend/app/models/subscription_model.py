@@ -2,6 +2,7 @@ from app import db
 from datetime import datetime, timezone, timedelta
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import joinedload
 import uuid
 from flask import jsonify
 from app.models.subscription_plan_model import SubscriptionPlan
@@ -11,6 +12,12 @@ from app.utils import ErrorHandler
 
 class Subscription(db.Model):
     __tablename__ = 'subscription'
+    __table_args__ = (
+        db.Index('idx_subscription_user_active', 'user_id', 'is_active'),
+        db.Index('idx_subscription_user_id', 'user_id'),
+        db.Index('idx_subscription_plan_id', 'plan_id'),
+        db.Index('idx_subscription_start_date', 'start_date'),
+    )
 
     subscription_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
@@ -25,38 +32,26 @@ class Subscription(db.Model):
     @classmethod
     def get_current_subscription(cls, user_id):
         try:
-            current_subscription = cls.query.filter_by(user_id=user_id, is_active=True).first()
-            return current_subscription
+            return (
+                cls.query.options(joinedload(cls.plan))
+                .filter_by(user_id=user_id, is_active=True)
+                .first()
+            )
         except Exception as e:
             raise RuntimeError("Database error while getting user current subscription") from e
 
     @classmethod
     def get_current_subscription_info(cls, user_id):
         try:
-            current_subscription = cls.query.filter_by(user_id=user_id, is_active=True).first()
+            current_subscription = cls.get_current_subscription(user_id)
 
             if not current_subscription:
                 raise ValueError("No active subscription found for the user.")
 
-            plan = SubscriptionPlan.query.filter_by(plan_id=current_subscription.plan_id).first()
-            if not plan:
+            if not current_subscription.plan:
                 raise ValueError("Subscription plan not found.")
 
-            subscription_info = {
-                "subscription_id": str(current_subscription.subscription_id),
-                "user_id": str(current_subscription.user_id),
-                "plan": {
-                    "plan_id": str(plan.plan_id),
-                    "name": plan.name,
-                    "price": plan.price,
-                    "duration_days": plan.duration_days,
-                },
-                "start_date": current_subscription.start_date.isoformat(),
-                "end_date": current_subscription.end_date.isoformat() if current_subscription.end_date else None,
-                "is_active": current_subscription.is_active,
-            }
-
-            return jsonify(subscription_info), 200
+            return jsonify(current_subscription.serialize()), 200
 
         except ValueError as ve:
             return ErrorHandler.handle_validation_error(str(ve))
@@ -70,33 +65,19 @@ class Subscription(db.Model):
     @classmethod
     def get_user_subscriptions(cls, user_id):
         try:
-            user_subscriptions = (
-                cls.query.filter_by(user_id=user_id)
+            subscriptions = (
+                cls.query.options(joinedload(cls.plan))
+                .filter_by(user_id=user_id)
                 .order_by(cls.start_date.desc())
                 .all()
             )
 
-            if not user_subscriptions:
+            if not subscriptions:
                 raise ValueError("No subscriptions found for the user.")
 
-            subscriptions = []
-            for subscription in user_subscriptions:
-
-                subscriptions.append({
-                    "subscription_id": str(subscription.subscription_id),
-                    "user_id": str(subscription.user_id),
-                    "plan": {
-                        "plan_id": str(subscription.plan.plan_id),
-                        "name": subscription.plan.name,
-                        "price": subscription.plan.price,
-                        "duration_days": subscription.plan.duration_days,
-                    },
-                    "start_date": subscription.start_date.isoformat(),
-                    "end_date": subscription.end_date.isoformat() if subscription.end_date else None,
-                    "is_active": subscription.is_active,
-                })
-
-            return jsonify({"subscriptions": subscriptions}), 200
+            return jsonify({
+                "subscriptions": [s.serialize() for s in subscriptions]
+            }), 200
 
         except ValueError as ve:
             return ErrorHandler.handle_validation_error(str(ve))
@@ -106,6 +87,21 @@ class Subscription(db.Model):
                 message="Database error while retrieving user subscriptions",
                 status_code=500
             )
+
+    def serialize(self):
+        return {
+            "subscription_id": str(self.subscription_id),
+            "user_id": str(self.user_id),
+            "plan": {
+                "plan_id": str(self.plan.plan_id),
+                "name": self.plan.name,
+                "price": self.plan.price,
+                "duration_days": self.plan.duration_days,
+            },
+            "start_date": self.start_date.isoformat(),
+            "end_date": self.end_date.isoformat() if self.end_date else None,
+            "is_active": self.is_active,
+        }
 
     @classmethod
     def cancel_current_subscription(cls, user_id):

@@ -7,6 +7,9 @@ from app.utils import ErrorHandler
 
 class DefaultSecurityMode(db.Model):
     __tablename__ = 'default_security_mode'
+    __table_args__ = (
+        db.Index('idx_default_security_mode_name', 'mode_name'),
+    )
 
     mode_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     mode_name = db.Column(db.String(100), nullable=False)
@@ -37,7 +40,7 @@ class DefaultSecurityMode(db.Model):
 
     @staticmethod
     def get_security_mode(mode_name):
-        mode = DefaultSecurityMode.query.filter_by(mode_name=mode_name).first()
+        mode = db.session.query(DefaultSecurityMode).filter_by(mode_name=mode_name).first()
         if not mode:
             raise ValueError(f"Default security mode '{mode_name}' not found.")
         return mode
