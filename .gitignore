@@ -1,6 +1,5 @@
 *.idea
 *.pyc
 *.env
-backend/venv/
-.vscode/
-/node_modules
+.venv
+google-services.json

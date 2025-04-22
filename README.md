@@ -1,1 +1,0 @@
-KKP_Lisovyi_Bilous_Kozhanov
