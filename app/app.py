@@ -12,11 +12,12 @@ from firebase_admin import credentials
 import json, os
 from dotenv import load_dotenv
 
-load_dotenv()
+#load_dotenv()
 
-raw_json = os.environ['GOOGLE_CREDENTIALS'].strip("'").strip('"')
-cred_dict = json.loads(raw_json)
-cred = credentials.Certificate(cred_dict)
+#raw_json = os.environ['GOOGLE_CREDENTIALS'].strip('"')
+#print("________________________________________________GOOGLE_CREDENTIALS_______________________________________________", raw_json)
+#cred_dict = json.loads(raw_json)
+#cred = credentials.Certificate(cred_dict)
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -59,7 +60,7 @@ def create_app():
     app.register_blueprint(iot_bp, url_prefix='/iot')
     app.register_blueprint(payments_bp,  url_prefix='/payments')
 
-    firebase_admin.initialize_app(cred)
+    #firebase_admin.initialize_app(cred)
 
     from app.tasks import notify_subscription_expiration, check_subscription_expiration
     scheduler.add_job(
