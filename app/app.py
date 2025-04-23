@@ -9,8 +9,17 @@ import stripe
 from flask_apscheduler import APScheduler
 import firebase_admin
 from firebase_admin import credentials
+import tempfile, json, os
+from dotenv import load_dotenv
 
-cred = credentials.Certificate('google-services.json')
+load_dotenv()
+
+cred_dict = json.loads(os.environ['GOOGLE_CREDENTIALS'])
+
+with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix=".json") as tmp_file:
+    json.dump(cred_dict, tmp_file)
+    tmp_file.flush()
+    cred = credentials.Certificate(tmp_file.name)
 db = SQLAlchemy()
 login_manager = LoginManager()
 oauth = OAuth()
