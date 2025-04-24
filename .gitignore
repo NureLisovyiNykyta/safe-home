@@ -2,4 +2,3 @@
 *.pyc
 *.env
 .venv
-google-services.json

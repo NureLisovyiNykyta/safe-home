@@ -9,15 +9,6 @@ import stripe
 from flask_apscheduler import APScheduler
 import firebase_admin
 from firebase_admin import credentials
-import json, os
-from dotenv import load_dotenv
-
-#load_dotenv()
-
-#raw_json = os.environ['GOOGLE_CREDENTIALS'].strip('"')
-#print("________________________________________________GOOGLE_CREDENTIALS_______________________________________________", raw_json)
-#cred_dict = json.loads(raw_json)
-#cred = credentials.Certificate(cred_dict)
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -60,7 +51,10 @@ def create_app():
     app.register_blueprint(iot_bp, url_prefix='/iot')
     app.register_blueprint(payments_bp,  url_prefix='/payments')
 
-    #firebase_admin.initialize_app(cred)
+    from app.utils.google_services_json_constructor import create_filled_service_account
+    path_to_filled_json = create_filled_service_account('google-template.json')
+    cred = credentials.Certificate(path_to_filled_json)
+    firebase_admin.initialize_app(cred)
 
     from app.tasks import notify_subscription_expiration, check_subscription_expiration
     scheduler.add_job(
