@@ -4,6 +4,8 @@ from app.services.email_subscription_notifications_service import send_subscript
 from app.services.mobile_subscription_notifications_service import send_subscription_expiration_notification
 from app.utils import ErrorHandler
 
+## test for deploy
+
 
 def notify_subscription_expiration(app):
     try:
