@@ -26,10 +26,19 @@ class AuthUseCase @Inject constructor(
         return when (val result = authRepository.isVerifyToken(localToken)) {
             is Result.Success -> {
                 val isAuthorized = result.data.valid
-                if (!isAuthorized) tokenRepository.clearToken()
                 Result.Success(isAuthorized)
             }
-            is Result.Error -> result
+            is Result.Error -> {
+                when (val error = result.errorType) {
+                    is ErrorType.ServerError -> {
+                        if (error.code == 401)
+                            tokenRepository.clearToken()
+                    }
+                    is ErrorType.NetworkError -> error.message
+                    is ErrorType.InternalError -> error.message
+                }
+                result
+            }
             is Result.Loading -> Result.Loading
         }
     }

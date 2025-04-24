@@ -1,11 +1,13 @@
 package com.example.safehome.presentation.auth.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,8 +18,9 @@ import com.example.safehome.R
 import com.example.safehome.data.model.ErrorType
 import com.example.safehome.databinding.FragmentSignInBinding
 import com.example.safehome.presentation.auth.utils.PasswordVisibilityUtils
-import com.example.safehome.presentation.auth.viewModel.AuthViewModel
 import com.example.safehome.data.model.Result
+import com.example.safehome.presentation.auth.viewModel.SignInViewModel
+import com.example.safehome.presentation.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -32,7 +35,7 @@ class SignInFragment : Fragment() {
 
     private lateinit var binding: FragmentSignInBinding
     private lateinit var navController: NavController
-    private val authViewModel: AuthViewModel by viewModels()
+    private val authViewModel: SignInViewModel by viewModels()
 
     private var _isPasswordVisible = false
 
@@ -64,7 +67,7 @@ class SignInFragment : Fragment() {
                         is Result.Loading -> Timber.tag("Auth").d("Loading...")
                         is Result.Success -> {
                             Timber.tag("Auth").d("User is authorized")
-                            //navController.navigate(R.id.action_signInFragment_to_mainActivity)
+                            startActivity(MainActivity::class.java)
                         }
                         is Result.Error -> {
                             val message = when (val error = result.errorType) {
@@ -101,6 +104,12 @@ class SignInFragment : Fragment() {
             _isPasswordVisible = !_isPasswordVisible
             PasswordVisibilityUtils.togglePasswordVisibility(binding.pswdEditText, binding.eyeButton, _isPasswordVisible)
         }
+    }
+
+    private fun startActivity(activityClass: Class<out ComponentActivity>) {
+        val intent = Intent(context, activityClass)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
     }
 
     companion object {

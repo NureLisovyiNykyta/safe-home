@@ -46,18 +46,17 @@ class LaunchActivity : ComponentActivity() {
                         }
                         is Result.Error -> {
                             when (val error = result.errorType) {
-                                is ErrorType.InternalError -> {
-                                    startActivity(AuthActivity::class.java)
+                                is ErrorType.ServerError -> {
+                                    if (error.code != 401)
+                                    Toast.makeText(this@LaunchActivity, error.message, Toast.LENGTH_LONG).show()
                                 }
                                 is ErrorType.NetworkError -> {
                                     Toast.makeText(this@LaunchActivity, error.message, Toast.LENGTH_LONG).show()
-                                    startActivity(AuthActivity::class.java)
                                 }
-                                is ErrorType.ServerError -> {
-                                    Toast.makeText(this@LaunchActivity, error.message, Toast.LENGTH_LONG).show()
-                                    startActivity(AuthActivity::class.java)
-                                }
+                                is ErrorType.InternalError -> error.message
                             }
+
+                            startActivity(AuthActivity::class.java)
                             finish()
                         }
                     }

@@ -14,7 +14,7 @@ import com.example.safehome.R
 import com.example.safehome.data.model.DateModel
 import com.example.safehome.databinding.FragmentSignUpBinding
 import com.example.safehome.presentation.auth.utils.PasswordVisibilityUtils
-import com.example.safehome.presentation.auth.viewModel.SignUpViewModel
+import com.example.safehome.presentation.common.viewModel.DatePickerViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,7 +37,7 @@ class SignUpFragment : Fragment() {
     private var _isPasswordVisible = false
     private var _isConfirmPasswordVisible = false
 
-    private val viewModel: SignUpViewModel by viewModels()
+    private val viewModel: DatePickerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
