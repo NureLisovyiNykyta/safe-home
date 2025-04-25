@@ -11,7 +11,7 @@ class AuthUseCase @Inject constructor(
     private val tokenRepository: TokenRepository
 ) {
     suspend fun isUserAuthorized(email: String, password: String): Result<Boolean> {
-        return when (val result = authRepository.isUserAuthorized(email, password)) {
+        return when (val result = authRepository.login(email, password)) {
             is Result.Success -> {
                 val token = result.data.token
                 tokenRepository.saveToken(token)
@@ -23,7 +23,7 @@ class AuthUseCase @Inject constructor(
     }
     suspend fun isTokenExpired(): Result<Boolean> {
         val localToken = tokenRepository.getToken() ?: return Result.Error(ErrorType.InternalError("Token is null"))
-        return when (val result = authRepository.isVerifyToken(localToken)) {
+        return when (val result = authRepository.verifyToken(localToken)) {
             is Result.Success -> {
                 val isAuthorized = result.data.valid
                 Result.Success(isAuthorized)

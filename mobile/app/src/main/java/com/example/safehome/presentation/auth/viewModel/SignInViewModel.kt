@@ -16,14 +16,15 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val authUseCase: AuthUseCase
 ) : ViewModel() {
-
     private val _authState = MutableStateFlow<Result<Boolean>>(Result.Loading)
     val authState: StateFlow<Result<Boolean>> get() = _authState
 
     fun checkUserAuthorization(email: String, password: String) {
         when {
             !ValidatorUtils.isNotBlank(email, password) -> {
-                emitError("Email or password is empty")
+                _authState.value = Result.Error(
+                    ErrorType.InternalError("Email or password is empty")
+                )
             }
             else -> {
                 _authState.value = Result.Loading
@@ -33,9 +34,5 @@ class SignInViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun emitError(message: String) {
-        _authState.value = Result.Error(ErrorType.InternalError(message))
     }
 }

@@ -9,12 +9,23 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import android.widget.EditText
 import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.safehome.R
 import com.example.safehome.data.model.DateModel
+import com.example.safehome.data.model.ErrorType
+import com.example.safehome.data.model.Result
 import com.example.safehome.databinding.FragmentSignUpBinding
 import com.example.safehome.presentation.auth.utils.PasswordVisibilityUtils
+import com.example.safehome.presentation.auth.viewModel.SignUpViewModel
 import com.example.safehome.presentation.common.viewModel.DatePickerViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +37,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [SignUpFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -37,7 +49,8 @@ class SignUpFragment : Fragment() {
     private var _isPasswordVisible = false
     private var _isConfirmPasswordVisible = false
 
-    private val viewModel: DatePickerViewModel by viewModels()
+    private val datePickerViewModel: DatePickerViewModel by viewModels()
+    private val signUpViewModel: SignUpViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +72,49 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.registerButton.setOnClickListener {  }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                signUpViewModel.signUpState.collect { result ->
+                    when (result) {
+                        is Result.Loading -> Timber.tag("SignUp").d("Loading...")
+                        is Result.Success -> {
+                            Timber.tag("SignUp").d("Register successfully, mail send")
+                            Toast.makeText(requireContext(), "A confirmation letter has been sent to the mail", Toast.LENGTH_LONG).show()
+                            findNavController().popBackStack()
+                        }
+                        is Result.Error -> {
+                            val message = when (val error = result.errorType) {
+                                is ErrorType.ServerError -> {
+                                    if (error.code == 400) "An account with this email already exists"
+                                    else error.message
+                                }
+                                is ErrorType.NetworkError -> error.message
+                                is ErrorType.InternalError -> error.message
+                            }
+
+                            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+        }
+
+        binding.registerButton.setOnClickListener {
+            binding.apply {
+                val name = giveTextFromEditText(nameEditText)
+                val email = giveTextFromEditText(emailEditText)
+                val password = giveTextFromEditText(pswdEditText)
+                val confirmPassword = giveTextFromEditText(pswdConfirmEditText)
+                val date = datePickerViewModel.selectedDate.value
+
+                signUpViewModel.registerUser(
+                    name,
+                    email,
+                    password,
+                    confirmPassword,
+                    date, )
+            }
+        }
 
         binding.dateEditText.setOnClickListener {
             showDatePickerDialog(binding.dateEditText)
@@ -74,6 +129,10 @@ class SignUpFragment : Fragment() {
             _isConfirmPasswordVisible = !_isConfirmPasswordVisible
             PasswordVisibilityUtils.togglePasswordVisibility(binding.pswdConfirmEditText, binding.eyeConfirmButton, _isConfirmPasswordVisible)
         }
+    }
+
+    private fun giveTextFromEditText(editText: EditText) : String {
+        return editText.text.toString().trim()
     }
 
     private fun showDatePickerDialog(editText: EditText) {
@@ -103,7 +162,7 @@ class SignUpFragment : Fragment() {
             if (dayPicker.value > daysInMonth) dayPicker.value = daysInMonth
         }
 
-        val currentDate = viewModel.selectedDate.value
+        val currentDate = datePickerViewModel.selectedDate.value ?: DateModel.DEFAULT
 
         updateDaysInMonth(currentDate.year, currentDate.month)
         monthPicker.value = currentDate.month
@@ -122,8 +181,8 @@ class SignUpFragment : Fragment() {
             .setTitle(getString(R.string.select_date))
             .setView(dialogView)
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                viewModel.setDate(monthPicker.value, dayPicker.value, yearPicker.value)
-                editText.setText(viewModel.selectedDate.value.toFormattedString())
+                datePickerViewModel.setDate(monthPicker.value, dayPicker.value, yearPicker.value)
+                editText.setText(datePickerViewModel.selectedDate.value?.toFormattedString() ?: DateModel.DEFAULT.toFormattedString())
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .create()
