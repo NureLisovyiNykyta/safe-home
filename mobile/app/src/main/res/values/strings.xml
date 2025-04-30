@@ -38,6 +38,9 @@
     <string name="send">Send</string>
 
     <!-- HomeFragment -->
+    <string name="title_homes_fragment">Homes</string>
+
+    <!-- HomeFragment -->
     <string name="title_home_fragment">Home</string>
 
     <!-- SubscriptionFragment -->
