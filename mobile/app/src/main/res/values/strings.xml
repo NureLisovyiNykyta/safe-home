@@ -43,8 +43,8 @@
     <!-- HomeFragment -->
     <string name="title_home_fragment">Home</string>
 
-    <!-- SubscriptionFragment -->
-    <string name="title_subscription_fragment">Subscription</string>
+    <!-- SubscriptionsFragment -->
+    <string name="title_subscriptions_fragment">Subscriptions</string>
 
     <!-- ProfileFragment -->
     <string name="title_profile_fragment">Profile</string>
