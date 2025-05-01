@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/title_textView"
         style="@style/TitleTextView"
-        android:text="@string/title_subscription_fragment"
+        android:text="@string/title_subscriptions_fragment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
