@@ -2,14 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".presentation.main.fragments.ProfileFragment"
-    android:id="@+id/profileFragment"
+    tools:context=".presentation.main.fragments.HomesFragment"
+    android:id="@+id/homesFragment"
     style="@style/Fragment" >
 
     <TextView
         android:id="@+id/title_textView"
         style="@style/TitleTextView"
-        android:text="@string/title_profile_fragment"
+        android:text="@string/title_homes_fragment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
