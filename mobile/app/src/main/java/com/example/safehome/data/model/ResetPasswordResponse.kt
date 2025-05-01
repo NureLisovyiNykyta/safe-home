@@ -1,6 +1,5 @@
 package com.example.safehome.data.model
 
-data class TokenResponse(
+data class ResetPasswordResponse (
     val message: String,
-    val token: String
 )
