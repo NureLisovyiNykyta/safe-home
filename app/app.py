@@ -27,6 +27,8 @@ def create_app():
          supports_credentials=app.config['CORS_SUPPORTS_CREDENTIALS'],
          allow_headers=app.config['CORS_ALLOW_HEADERS'],
          max_age=app.config['CORS_MAX_AGE'])
+    
+    app.config['SESSION_COOKIE_SAMESITE'] = 'None' 
 
     db.init_app(app)
     login_manager.init_app(app)
