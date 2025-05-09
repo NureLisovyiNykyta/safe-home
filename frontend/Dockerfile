@@ -4,10 +4,6 @@ FROM node:22 AS build
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Принимаем переменную окружения через аргумент сборки
-ARG REACT_APP_BACKEND_URL
-ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
-
 # Копируем package.json и package-lock.json
 COPY package.json package-lock.json ./
 
