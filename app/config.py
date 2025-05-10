@@ -27,7 +27,7 @@ class Config:
     PERMANENT_SESSION_LIFETIME = timedelta(hours=3)
 
     # CORS configuration
-    CORS_ALLOW_ORIGINS = os.environ.get('CORS_ALLOW_ORIGINS', '*').split(',')
+    CORS_ALLOW_ORIGINS = os.environ.get('CORS_ALLOW_ORIGINS').split(',')
     CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'DELETE']
     CORS_ALLOW_HEADERS = ['Content-Type', 'Authorization']
     CORS_SUPPORTS_CREDENTIALS = True
