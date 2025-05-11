@@ -13,7 +13,7 @@
   },
   "login": {
     "title": "Connect a system",
-    "buttonText": "Log in",
+    "buttonText": "Login",
     "emailPlaceholder": "email",
     "emailRequired": "Email is required",
     "passwordPlaceholder": "password",
