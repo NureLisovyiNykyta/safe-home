@@ -22,7 +22,7 @@
     "success": "Login successful. Redirecting...",
     "failed": "Login failed",
     "rememberMe": "Remember me?",
-    "forgotPassword": "Forgot password?"
+    "forgotPassword": "Forgot your password?"
   },
   "error": {
     "generic": "An error occurred. Please try again"
