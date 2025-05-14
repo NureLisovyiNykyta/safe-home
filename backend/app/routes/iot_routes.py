@@ -1,19 +1,44 @@
 from flask import Blueprint, request
-from app.models import Sensor
-from app.services import auth_service
-from app.utils import ErrorHandler
+from app.services.auth import auth_service
+from app.services.sensor_service import SensorService
+from app.utils.error_handler import handle_errors
+from app.utils.error_handler import UnauthorizedError
+from flasgger import swag_from
 
 iot_bp = Blueprint('iot', __name__)
 
 
-@iot_bp.route('/send_sensor_status', methods=['Put'])
+@iot_bp.route('/send_sensor_status', methods=['PUT'])
+@swag_from({
+    'summary': 'Update sensor status (for IoT devices)',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'sensor_id': {'type': 'string'},
+                    'is_closed': {'type': 'string', 'enum': ['true', 'false', '1', '0']}
+                },
+                'required': ['sensor_id', 'is_closed']
+            }
+        }
+    ],
+    'responses': {
+        200: {'description': 'Sensor status updated successfully'},
+        400: {'description': 'Validation error'},
+        401: {'description': 'Unauthorized'},
+        422: {'description': 'Unprocessable entity'},
+        500: {'description': 'Internal server error'}
+    }
+})
+@handle_errors
 def send_sensor_status():
     data = request.get_json()
     user = auth_service.login_user(data)
     if user:
-        return Sensor.set_sensor_status(user.user_id, data)
-    return ErrorHandler.handle_error(
-        None,
-        message="Invalid credentials",
-        status_code=403
-    )
+        return SensorService.set_sensor_status(user.user_id, request.json)
+    else:
+        raise UnauthorizedError('Sensor status update failed. Invalid credentials.')

@@ -1,8 +1,6 @@
 from app import db
 from sqlalchemy.sql import func
 import uuid
-from app.utils import ErrorHandler
-from flask import jsonify
 
 class GeneralUserNotification(db.Model):
     __tablename__ = 'general_user_notifications'
@@ -17,50 +15,3 @@ class GeneralUserNotification(db.Model):
     data = db.Column(db.JSON, nullable=True)
 
     user = db.relationship('User', back_populates='general_notifications')
-
-    @classmethod
-    def create_notification(cls, user_id, title, body, importance, type, data=None):
-        new_notification = cls(
-            user_id=user_id,
-            title=title,
-            body=body,
-            importance=importance,
-            type=type,
-            data=data
-        )
-        try:
-            db.session.add(new_notification)
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            return ErrorHandler.handle_error(
-                e,
-                message="Database error while creating notification",
-                status_code=500
-            )
-
-    @classmethod
-    def get_notifications_by_user(cls, user_id):
-        try:
-            notifications = cls.query.filter_by(user_id=user_id).order_by(cls.created_at.desc()).all()
-
-            notifications_list = [
-                {
-                    "id": str(notification.id),
-                    "title": notification.title,
-                    "body": notification.body,
-                    "importance": notification.importance,
-                    "created_at": notification.created_at.isoformat(),
-                    "type": notification.type,
-                    "data": notification.data
-                } for notification in notifications
-            ]
-
-            return jsonify({"notifications": notifications_list}), 200
-
-        except Exception as e:
-            return ErrorHandler.handle_error(
-                e,
-                message="Database error while retrieving notifications",
-                status_code=500
-            )

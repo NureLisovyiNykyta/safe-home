@@ -9,6 +9,7 @@ import stripe
 from flask_apscheduler import APScheduler
 import firebase_admin
 from firebase_admin import credentials
+from flasgger import Swagger
 
 
 db = SQLAlchemy()
@@ -35,20 +36,31 @@ def create_app():
     mail.init_app(app)
     scheduler.init_app(app)
 
+    app.config['SWAGGER'] = {
+        'title': 'Your API Documentation',
+        'uiversion': 3,
+        'specs_route': '/apidocs/'
+    }
+    swagger = Swagger(app)
+
     stripe.api_key = app.config["STRIPE_SECRET_KEY"]
 
     with app.app_context():
         db.create_all()
 
-    from app.routes import auth_bp, user_profile_bp, security_bp, mobile_device_bp
-    from app.routes import subscription_bp, payments_bp, notification_bp, admin_bp, iot_bp
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(user_profile_bp)
-    app.register_blueprint(security_bp)
-    app.register_blueprint(mobile_device_bp)
-    app.register_blueprint(subscription_bp)
-    app.register_blueprint(notification_bp)
-    app.register_blueprint(admin_bp, url_prefix='/admin')
+    from .routes import auth_bp, default_security_mode_bp, general_notification_bp, security_notification_bp
+    from .routes import mobile_device_bp, home_bp, sensor_bp, subscription_bp, subscription_plan_bp,  user_bp
+    from .routes import iot_bp, payments_bp
+    app.register_blueprint(auth_bp, url_prefix='/api')
+    app.register_blueprint(default_security_mode_bp, url_prefix='/api')
+    app.register_blueprint(general_notification_bp, url_prefix='/api')
+    app.register_blueprint(security_notification_bp, url_prefix='/api')
+    app.register_blueprint(sensor_bp, url_prefix='/api')
+    app.register_blueprint(home_bp, url_prefix='/api')
+    app.register_blueprint(mobile_device_bp, url_prefix='/api')
+    app.register_blueprint(subscription_bp, url_prefix='/api')
+    app.register_blueprint(subscription_plan_bp, url_prefix='/api')
+    app.register_blueprint(user_bp, url_prefix='/api')
     app.register_blueprint(iot_bp, url_prefix='/iot')
     app.register_blueprint(payments_bp,  url_prefix='/payments')
 
@@ -57,17 +69,17 @@ def create_app():
     cred = credentials.Certificate(path_to_filled_json)
     firebase_admin.initialize_app(cred)
 
-    from app.tasks import notify_subscription_expiration, check_subscription_expiration
+    from app.tasks import SubscriptionTask
     scheduler.add_job(
         id='check_subscription_ending',
-        func=lambda: check_subscription_expiration(app),
+        func=lambda: SubscriptionTask.check_subscription_expiration(app),
         trigger='interval',
         seconds=20,
         max_instances=1
     )
     scheduler.add_job(
         id='notify_subscription_ending',
-        func=lambda: notify_subscription_expiration(app),
+        func=lambda: SubscriptionTask.notify_subscription_expiration(app),
         trigger='cron',
         hour=12,
         minute=0,
