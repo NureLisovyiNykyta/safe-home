@@ -9,6 +9,7 @@ mobile_device_bp = Blueprint('mobile_device', __name__)
 
 @mobile_device_bp.route('/devices', methods=['GET'])
 @swag_from({
+    'tags': ['Mobile Device'],
     'summary': 'Get all devices for the authenticated user',
     'responses': {
         200: {
@@ -44,6 +45,7 @@ def get_user_devices():
 
 @mobile_device_bp.route('/devices', methods=['POST'])
 @swag_from({
+    'tags': ['Mobile Device'],
     'summary': 'Add a new device for the authenticated user',
     'parameters': [
         {
@@ -77,6 +79,7 @@ def add_user_device():
 
 @mobile_device_bp.route('/devices', methods=['DELETE'])
 @swag_from({
+    'tags': ['Mobile Device'],
     'summary': 'Delete a device for the authenticated user by token',
     'parameters': [
         {

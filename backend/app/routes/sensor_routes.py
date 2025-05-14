@@ -9,6 +9,7 @@ sensor_bp = Blueprint('sensor', __name__)
 
 @sensor_bp.route('/sensors/<home_id>', methods=['GET'])
 @swag_from({
+    'tags': ['Sensor'],
     'summary': 'Get all sensors for the authenticated user in a specific home',
     'parameters': [
         {
@@ -57,6 +58,7 @@ def get_all_sensors(home_id):
 
 @sensor_bp.route('/sensors', methods=['POST'])
 @swag_from({
+    'tags': ['Sensor'],
     'summary': 'Add a new sensor for the authenticated user',
     'parameters': [
         {
@@ -91,6 +93,7 @@ def add_sensor():
 
 @sensor_bp.route('/sensors/<sensor_id>', methods=['DELETE'])
 @swag_from({
+    'tags': ['Sensor'],
     'summary': 'Delete a sensor for the authenticated user',
     'parameters': [
         {
@@ -117,6 +120,7 @@ def delete_sensor(sensor_id):
 
 @sensor_bp.route('/sensors/<sensor_id>/activity', methods=['PATCH'])
 @swag_from({
+    'tags': ['Sensor'],
     'summary': 'Set sensor activity (turn on/off) for the authenticated user',
     'parameters': [
         {
@@ -156,6 +160,7 @@ def set_sensor_activity(sensor_id):
 
 @sensor_bp.route('/sensors/<sensor_id>/archive', methods=['POST'])
 @swag_from({
+    'tags': ['Sensor'],
     'summary': 'Archive a sensor for the authenticated user',
     'parameters': [
         {
@@ -182,6 +187,7 @@ def archive_sensor(sensor_id):
 
 @sensor_bp.route('/sensors/<sensor_id>/unarchive', methods=['POST'])
 @swag_from({
+    'tags': ['Sensor'],
     'summary': 'Unarchive a sensor for the authenticated user',
     'parameters': [
         {

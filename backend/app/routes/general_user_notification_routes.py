@@ -9,6 +9,7 @@ general_notification_bp = Blueprint('general_notification', __name__)
 
 @general_notification_bp.route('/notifications', methods=['GET'])
 @swag_from({
+    'tags': ['Notification'],
     'summary': 'Get all notifications for the authenticated user',
     'responses': {
         200: {

@@ -10,6 +10,7 @@ iot_bp = Blueprint('iot', __name__)
 
 @iot_bp.route('/send_sensor_status', methods=['PUT'])
 @swag_from({
+    'tags': ['IoT'],
     'summary': 'Update sensor status (for IoT devices)',
     'parameters': [
         {

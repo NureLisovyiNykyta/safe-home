@@ -9,6 +9,7 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['POST'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Register a new user',
     'parameters': [
         {
@@ -40,6 +41,7 @@ def register_user():
 
 @auth_bp.route('/register/admin', methods=['POST'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Register a new admin',
     'parameters': [
         {
@@ -72,6 +74,7 @@ def register_admin():
 
 @auth_bp.route('/login/session', methods=['POST'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Login user and create a session',
     'parameters': [
         {
@@ -102,6 +105,7 @@ def session_login():
 
 @auth_bp.route('/login/token', methods=['POST'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Login user and return a JWT token',
     'parameters': [
         {
@@ -141,6 +145,7 @@ def token_login():
 
 @auth_bp.route('/logout', methods=['POST'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Logout the current user',
     'responses': {
         200: {'description': 'Logged out successfully'},
@@ -157,6 +162,7 @@ def logout():
 
 @auth_bp.route('/verify-token', methods=['POST'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Verify a JWT token',
     'parameters': [
         {
@@ -190,6 +196,7 @@ def verify_token():
 
 @auth_bp.route('/login/google', methods=['GET'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Initiate Google OAuth login',
     'responses': {
         302: {'description': 'Redirect to Google OAuth page'},
@@ -204,6 +211,7 @@ def initiate_google_login():
 
 @auth_bp.route('/login/google/callback', methods=['GET'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Handle Google OAuth callback',
     'responses': {
         302: {'description': 'Redirect to frontend after successful login'},
@@ -219,6 +227,7 @@ def google_callback():
 
 @auth_bp.route('/login/firebase', methods=['POST'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Authenticate user with Firebase token',
     'parameters': [
         {
@@ -258,6 +267,7 @@ def firebase_login():
 # --- PasswordResetService Routes ---
 @auth_bp.route('/reset-password', methods=['POST'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Request a password reset',
     'description': 'Sends a password reset confirmation email to the specified email address.',
     'parameters': [
@@ -294,9 +304,9 @@ def reset_password_request():
     return PasswordResetService.request_reset_password(request.json)
 
 
-# --- EmailConfirmService Routes ---
 @auth_bp.route('/confirm-reset-password/<token>', methods=['GET'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Confirm password reset',
     'description': 'Verifies the password reset token and sends a new password to the user\'s email. Returns an HTML confirmation page.',
     'parameters': [
@@ -326,8 +336,10 @@ def confirm_reset_password(token):
     return PasswordResetService.verify_reset_password_token(token)
 
 
+# --- EmailConfirmService Routes ---
 @auth_bp.route('/confirm-email/<token>', methods=['GET'])
 @swag_from({
+    'tags': ['Auth'],
     'summary': 'Confirm email address',
     'description': 'Verifies the email confirmation token and marks the user\'s email as confirmed. Returns an HTML confirmation page.',
     'parameters': [

@@ -11,7 +11,7 @@ class HomeRepository:
         return Home.query.get(home_id)
 
     @staticmethod
-    def get_by_user_and_id(home_id, user_id):
+    def get_by_user_and_id(user_id, home_id):
         return Home.query.filter_by(home_id=home_id, user_id=user_id).first()
 
     @staticmethod

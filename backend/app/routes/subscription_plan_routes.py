@@ -9,6 +9,7 @@ subscription_plan_bp = Blueprint('subscription_plan', __name__)
 
 @subscription_plan_bp.route('/subscription-plans', methods=['GET'])
 @swag_from({
+    'tags': ['Subscription Plan'],
     'summary': 'Get all subscription plans',
     'responses': {
         200: {
@@ -44,6 +45,7 @@ def get_all_subscription_plans():
 
 @subscription_plan_bp.route('/subscription-plans', methods=['POST'])
 @swag_from({
+    'tags': ['Subscription Plan'],
     'summary': 'Create a new subscription plan (admin only)',
     'parameters': [
         {
@@ -79,6 +81,7 @@ def create_subscription_plan():
 
 @subscription_plan_bp.route('/subscription-plans/<plan_id>', methods=['PATCH'])
 @swag_from({
+    'tags': ['Subscription Plan'],
     'summary': 'Update a subscription plan (admin only)',
     'parameters': [
         {

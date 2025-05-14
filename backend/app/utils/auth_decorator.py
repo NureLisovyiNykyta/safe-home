@@ -3,7 +3,7 @@ from flask import request
 from app.utils import JwtUtils
 from app.models import User
 from flask_login import current_user
-from app.utils.error_handler import UnauthorizedError, AuthError
+from app.utils.error_handler import UnauthorizedError, AuthError, handle_errors
 import logging
 
 logger = logging.getLogger(__name__)
@@ -38,6 +38,7 @@ def authenticate_user():
 
 def auth_required(f):
     @wraps(f)
+    @handle_errors
     def decorated(*args, **kwargs):
         user = authenticate_user()
         request.current_user = user
@@ -47,11 +48,12 @@ def auth_required(f):
 def role_required(roles):
     def decorator(f):
         @wraps(f)
+        @handle_errors
         def decorated(*args, **kwargs):
             user = authenticate_user()
 
             if user.role.role_name not in roles:
-                logger.error(f"Access denied for user {user.id}: Required roles {roles}, user role {user.role.role_name}")
+                logger.error(f"Access denied for user {user.user_id}: Required roles {roles}, user role {user.role.role_name}")
                 raise AuthError(f"User does not have the required role. Required roles: {roles}")
 
             request.current_user = user

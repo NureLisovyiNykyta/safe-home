@@ -39,7 +39,7 @@ def create_app():
     app.config['SWAGGER'] = {
         'title': 'Your API Documentation',
         'uiversion': 3,
-        'specs_route': '/apidocs/'
+        'specs_route': '/apidocs/',
     }
     swagger = Swagger(app)
 

@@ -9,6 +9,7 @@ home_bp = Blueprint('home', __name__)
 
 @home_bp.route('/homes', methods=['GET'])
 @swag_from({
+    'tags': ['Home'],
     'summary': 'Get all homes for the authenticated user',
     'responses': {
         200: {
@@ -38,8 +39,7 @@ home_bp = Blueprint('home', __name__)
         500: {'description': 'Internal server error'}
     }
 })
-@auth_required
-@role_required(['user', 'admin'])
+@role_required(['user'])
 @handle_errors
 def get_all_homes():
     user_id = request.current_user.user_id
@@ -48,6 +48,7 @@ def get_all_homes():
 
 @home_bp.route('/homes', methods=['POST'])
 @swag_from({
+    'tags': ['Home'],
     'summary': 'Add a new home for the authenticated user',
     'parameters': [
         {
@@ -72,8 +73,7 @@ def get_all_homes():
         500: {'description': 'Internal server error'}
     }
 })
-@auth_required
-@role_required(['user', 'admin'])
+@role_required(['user'])
 @handle_errors
 def add_home():
     user_id = request.current_user.user_id
@@ -82,6 +82,7 @@ def add_home():
 
 @home_bp.route('/homes/<home_id>', methods=['DELETE'])
 @swag_from({
+    'tags': ['Home'],
     'summary': 'Delete a home for the authenticated user',
     'parameters': [
         {
@@ -99,8 +100,7 @@ def add_home():
         500: {'description': 'Internal server error'}
     }
 })
-@auth_required
-@role_required(['user', 'admin'])
+@role_required(['user'])
 @handle_errors
 def delete_home(home_id):
     user_id = request.current_user.user_id
@@ -109,6 +109,7 @@ def delete_home(home_id):
 
 @home_bp.route('/homes/<home_id>/unarchive', methods=['POST'])
 @swag_from({
+    'tags': ['Home'],
     'summary': 'Unarchive a home for the authenticated user',
     'parameters': [
         {
@@ -126,8 +127,7 @@ def delete_home(home_id):
         500: {'description': 'Internal server error'}
     }
 })
-@auth_required
-@role_required(['user', 'admin'])
+@role_required(['user'])
 @handle_errors
 def unarchive_home(home_id):
     user_id = request.current_user.user_id
@@ -136,6 +136,7 @@ def unarchive_home(home_id):
 
 @home_bp.route('/homes/<home_id>/archive', methods=['POST'])
 @swag_from({
+    'tags': ['Home'],
     'summary': 'Archive a home and its sensors for the authenticated user',
     'parameters': [
         {
@@ -153,8 +154,7 @@ def unarchive_home(home_id):
         500: {'description': 'Internal server error'}
     }
 })
-@auth_required
-@role_required(['user', 'admin'])
+@role_required(['user'])
 @handle_errors
 def archive_home_sensors(home_id):
     user_id = request.current_user.user_id
@@ -163,6 +163,7 @@ def archive_home_sensors(home_id):
 
 @home_bp.route('/homes/<home_id>/security/armed', methods=['POST'])
 @swag_from({
+    'tags': ['Home'],
     'summary': 'Set the security mode to armed for a specific home',
     'parameters': [
         {
@@ -180,8 +181,7 @@ def archive_home_sensors(home_id):
         500: {'description': 'Internal server error'}
     }
 })
-@auth_required
-@role_required(['user', 'admin'])
+@role_required(['user'])
 @handle_errors
 def set_armed_security_mode(home_id):
     user_id = request.current_user.user_id
@@ -190,6 +190,7 @@ def set_armed_security_mode(home_id):
 
 @home_bp.route('/homes/<home_id>/security/disarmed', methods=['POST'])
 @swag_from({
+    'tags': ['Home'],
     'summary': 'Set the security mode to disarmed for a specific home',
     'parameters': [
         {
@@ -207,8 +208,7 @@ def set_armed_security_mode(home_id):
         500: {'description': 'Internal server error'}
     }
 })
-@auth_required
-@role_required(['user', 'admin'])
+@role_required(['user'])
 @handle_errors
 def set_disarmed_security_mode(home_id):
     user_id = request.current_user.user_id

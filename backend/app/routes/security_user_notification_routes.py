@@ -9,6 +9,7 @@ security_notification_bp = Blueprint('security_notification', __name__)
 
 @security_notification_bp.route('/security-notifications/<home_id>', methods=['GET'])
 @swag_from({
+    'tags': ['Notification'],
     'summary': 'Get security notifications for the authenticated user and home',
     'parameters': [
         {
@@ -58,6 +59,7 @@ def get_notifications_by_user_and_home(home_id):
 
 @security_notification_bp.route('/security-notifications', methods=['GET'])
 @swag_from({
+    'tags': ['Notification'],
     'summary': 'Get all security notifications for the authenticated user',
     'responses': {
         200: {

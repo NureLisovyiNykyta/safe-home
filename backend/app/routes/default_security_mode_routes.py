@@ -9,6 +9,7 @@ default_security_mode_bp = Blueprint('default_security_mode', __name__)
 
 @default_security_mode_bp.route('/default-security-modes', methods=['GET'])
 @swag_from({
+    'tags': ['Default Security Mode'],
     'summary': 'Get all default security modes',
     'responses': {
         200: {

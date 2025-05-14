@@ -9,6 +9,7 @@ subscription_bp = Blueprint('subscription', __name__)
 
 @subscription_bp.route('/subscriptions/current', methods=['GET'])
 @swag_from({
+    'tags': ['Subscription'],
     'summary': 'Get the current active subscription for the authenticated user',
     'responses': {
         200: {
@@ -47,6 +48,7 @@ def get_current_subscription_info():
 
 @subscription_bp.route('/subscriptions', methods=['GET'])
 @swag_from({
+    'tags': ['Subscription'],
     'summary': 'Get all subscriptions for the authenticated user',
     'responses': {
         200: {
@@ -93,6 +95,7 @@ def get_user_subscriptions():
 
 @subscription_bp.route('/subscriptions/current/cancel', methods=['POST'])
 @swag_from({
+    'tags': ['Subscription'],
     'summary': 'Cancel the current active subscription for the authenticated user',
     'responses': {
         200: {'description': 'Subscription cancelled successfully'},
@@ -110,6 +113,7 @@ def cancel_current_subscription():
 
 @subscription_bp.route('/user_subscriptions/user', methods=['GET'])
 @swag_from({
+    'tags': ['Subscription'],
     'summary': 'Get all subscriptions for a specific user (admin only)',
     'parameters': [
         {
@@ -168,6 +172,7 @@ def get_user_subscriptions_admin():
 
 @subscription_bp.route('/cancel_current_user_subscription/user', methods=['PUT'])
 @swag_from({
+    'tags': ['Subscription'],
     'summary': 'Cancel the current subscription for a specific user (admin only)',
     'parameters': [
         {

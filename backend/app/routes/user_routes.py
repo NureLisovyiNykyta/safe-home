@@ -6,8 +6,10 @@ from flasgger import swag_from
 
 user_bp = Blueprint('user', __name__)
 
+
 @user_bp.route('/users', methods=['GET'])
 @swag_from({
+    'tags': ['User'],
     'summary': 'Get all users with role "user" (admin only)',
     'description': 'Retrieves a list of all users with the "user" role. Restricted to admin users.',
     'responses': {
@@ -46,6 +48,7 @@ def get_all_users():
 
 @user_bp.route('/admins', methods=['GET'])
 @swag_from({
+    'tags': ['User'],
     'summary': 'Get all users with role "admin" (admin only)',
     'description': 'Retrieves a list of all users with the "admin" role. Restricted to admin users.',
     'responses': {
@@ -83,6 +86,7 @@ def get_all_admins():
 
 @user_bp.route('/users/<user_id>', methods=['DELETE'])
 @swag_from({
+    'tags': ['User'],
     'summary': 'Delete a user by ID (admin only)',
     'description': 'Deletes a user by their ID. Restricted to admin users.',
     'parameters': [
@@ -109,6 +113,7 @@ def delete_user(user_id):
 
 @user_bp.route('/user', methods=['GET'])
 @swag_from({
+    'tags': ['User'],
     'summary': 'Get current user profile',
     'description': 'Retrieves the profile of the currently authenticated user.',
     'responses': {
@@ -146,6 +151,7 @@ def get_user():
 
 @user_bp.route('/user', methods=['PUT'])
 @swag_from({
+    'tags': ['User'],
     'summary': 'Update current user profile',
     'description': 'Updates the profile of the currently authenticated user (only name field).',
     'parameters': [
@@ -179,6 +185,7 @@ def update_user():
 
 @user_bp.route('/user/password', methods=['PUT'])
 @swag_from({
+    'tags': ['User'],
     'summary': 'Update current user password',
     'description': 'Updates the password of the currently authenticated user.',
     'parameters': [
