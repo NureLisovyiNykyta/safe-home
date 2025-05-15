@@ -2,4 +2,4 @@
 *.pyc
 *.env
 .venv
-google-services.json
+migrations/alembic.ini
