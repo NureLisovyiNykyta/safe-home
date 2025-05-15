@@ -25,10 +25,3 @@ class Config:
     STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 
     PERMANENT_SESSION_LIFETIME = timedelta(hours=3)
-
-    # CORS configuration
-    CORS_ALLOW_ORIGINS = os.environ.get('CORS_ALLOW_ORIGINS').split(',')
-    CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'DELETE']
-    CORS_ALLOW_HEADERS = ['Content-Type', 'Authorization']
-    CORS_SUPPORTS_CREDENTIALS = True
-    CORS_MAX_AGE = 3600
