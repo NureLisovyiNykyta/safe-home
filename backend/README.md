@@ -11,7 +11,7 @@ python -m venv .venv
 pip install -r requirements.txt
 flask run
 
-Run with Docker
+Run with Dockerfile
 
 docker build -t safe_home_backend .
 docker run -p 5000:5000 --env-file .env -v $(pwd)/google-services.json:/google-services.json safe_home_backend
