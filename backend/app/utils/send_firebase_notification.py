@@ -1,12 +1,13 @@
 from firebase_admin import messaging
-from app.models.mobile_device_model import MobileDevice
+from app.repositories.mobile_device_repo import MobileDeviceRepository
+from app.utils.error_handler import ValidationError
 
 def send_notification(user_id, title, body, data):
-    devices = MobileDevice.query.filter_by(user_id=user_id).all()
-    device_tokens = [device.get_device_token() for device in devices if device.get_device_token()]
+    devices = MobileDeviceRepository.get_all_by_user(user_id)
+    device_tokens = [device.device_token for device in devices if device.device_token]
 
     if not device_tokens:
-        raise ValueError("No device tokens found for the user.")
+        raise ValidationError("No device tokens found for the user.")
 
     for token in device_tokens:
         message = messaging.Message(
