@@ -21,7 +21,10 @@ def create_app():
 
     app.config.from_object(Config)
 
-    CORS(app, max_age=app.config['CORS_MAX_AGE'])
+    CORS(app,
+     methods=app.config['CORS_ALLOW_METHODS'],
+     supports_credentials=app.config['CORS_SUPPORTS_CREDENTIALS'],
+     max_age=app.config['CORS_MAX_AGE'])
 
     db.init_app(app)
     login_manager.init_app(app)
