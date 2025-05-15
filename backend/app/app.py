@@ -3,6 +3,7 @@ from flask import Flask
 from flask_login import LoginManager
 from authlib.integrations.flask_client import OAuth
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_cors import CORS
 import stripe
@@ -10,6 +11,7 @@ from flask_apscheduler import APScheduler
 import firebase_admin
 from firebase_admin import credentials
 from flasgger import Swagger
+from flask.cli import AppGroup
 
 
 db = SQLAlchemy()
@@ -17,6 +19,7 @@ login_manager = LoginManager()
 oauth = OAuth()
 mail = Mail()
 scheduler = APScheduler()
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -24,13 +27,12 @@ def create_app():
     app.config.from_object(Config)
 
     CORS(app,
-         origins=app.config['CORS_ALLOW_ORIGINS'],
-         methods=app.config['CORS_ALLOW_METHODS'],
-         supports_credentials=app.config['CORS_SUPPORTS_CREDENTIALS'],
-         allow_headers=app.config['CORS_ALLOW_HEADERS'],
-         max_age=app.config['CORS_MAX_AGE'])
+     methods=app.config['CORS_ALLOW_METHODS'],
+     allow_headers=app.config['CORS_ALLOW_HEADERS'],
+     max_age=app.config['CORS_MAX_AGE'])
 
     db.init_app(app)
+    migrate.init_app(app, db)
     login_manager.init_app(app)
     oauth.init_app(app)
     mail.init_app(app)
@@ -45,8 +47,22 @@ def create_app():
 
     stripe.api_key = app.config["STRIPE_SECRET_KEY"]
 
+    # These imports register models in db.metadata for Flask-Migrate
+    from .models import User, Role, SubscriptionPlan, DefaultSecurityMode, Sensor, Home, MobileDevice
+    from .models import GeneralUserNotification, SecurityUserNotification, Subscription
+
+    from app.seed import seed_data
+    seed_cli = AppGroup('seed')
+    @seed_cli.command('init')
+    def seed_init():
+        seed_data(app)
+
+    app.cli.add_command(seed_cli)
+
     with app.app_context():
-        db.create_all()
+        from flask_migrate import upgrade
+        upgrade()  # Apply migrations to create/update tables
+        seed_data(app)  # Seed data
 
     from .routes import auth_bp, default_security_mode_bp, general_notification_bp, security_notification_bp
     from .routes import mobile_device_bp, home_bp, sensor_bp, subscription_bp, subscription_plan_bp,  user_bp

@@ -5,6 +5,12 @@ import uuid
 
 class Subscription(db.Model):
     __tablename__ = 'subscription'
+    __table_args__ = (
+        db.Index('idx_subscription_user_active', 'user_id', 'is_active'),
+        db.Index('idx_subscription_user_id', 'user_id'),
+        db.Index('idx_subscription_plan_id', 'plan_id'),
+        db.Index('idx_subscription_start_date', 'start_date'),
+    )
 
     subscription_id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)

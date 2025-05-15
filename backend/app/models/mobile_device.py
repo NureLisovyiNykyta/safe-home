@@ -5,6 +5,11 @@ import uuid
 
 class MobileDevice(db.Model):
     __tablename__ = 'mobile_device'
+    __table_args__ = (
+        db.Index('idx_mobile_device_user_id', 'user_id'),
+        db.Index('idx_mobile_device_token', 'device_token'),
+        db.Index('idx_mobile_device_user_token', 'user_id', 'device_token'),
+    )
 
     user_device_id = db.Column(
         db.UUID(as_uuid=True),
