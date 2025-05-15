@@ -21,15 +21,6 @@ def create_app():
 
     app.config.from_object(Config)
 
-    CORS(app,
-         origins=app.config['CORS_ALLOW_ORIGINS'],
-         methods=app.config['CORS_ALLOW_METHODS'],
-         supports_credentials=app.config['CORS_SUPPORTS_CREDENTIALS'],
-         allow_headers=app.config['CORS_ALLOW_HEADERS'],
-         max_age=app.config['CORS_MAX_AGE'])
-    
-    app.config['SESSION_COOKIE_SAMESITE'] = 'None' 
-
     db.init_app(app)
     login_manager.init_app(app)
     oauth.init_app(app)
