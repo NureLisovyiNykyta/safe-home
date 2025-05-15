@@ -1,4 +1,4 @@
-Backend Setup
+**Backend Setup**
 
 Make sure to include the following files before running the application:
 .env – contains environment variables
