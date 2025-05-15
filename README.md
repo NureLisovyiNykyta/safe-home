@@ -1,4 +1,5 @@
 **Project overview**  
+
 Safe Home is a comprehensive software system designed for home security management using door open/close sensors.  
 
 **Integrated services:**  
