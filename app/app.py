@@ -23,7 +23,7 @@ def create_app():
 
     CORS(app,
      methods=app.config['CORS_ALLOW_METHODS'],
-     supports_credentials=app.config['CORS_SUPPORTS_CREDENTIALS'],
+     allow_headers=app.config['CORS_ALLOW_HEADERS'],
      max_age=app.config['CORS_MAX_AGE'])
 
     db.init_app(app)
