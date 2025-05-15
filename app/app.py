@@ -21,6 +21,8 @@ def create_app():
 
     app.config.from_object(Config)
 
+    CORS(app, max_age=app.config['CORS_MAX_AGE'])
+
     db.init_app(app)
     login_manager.init_app(app)
     oauth.init_app(app)
