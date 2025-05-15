@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_BACKEND_URL,
+  baseURL: 'https://safe-home-backend-d2f2atb3d0eee9ay.northeurope-01.azurewebsites.net',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
