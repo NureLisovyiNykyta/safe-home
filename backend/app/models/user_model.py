@@ -4,10 +4,11 @@ from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from flask_login import UserMixin
 from flask import jsonify
+from sqlalchemy.orm import joinedload
 from werkzeug.security import generate_password_hash, check_password_hash
 from cryptography.fernet import Fernet
 from app.models.role_model import Role
-from app.utils import ErrorHandler
+from app.utils import ErrorHandler, Validator
 import os
 
 cipher = Fernet(os.getenv('SECRET_KEY_Fernet'))
@@ -15,6 +16,9 @@ cipher = Fernet(os.getenv('SECRET_KEY_Fernet'))
 
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
+    __table_args__ = (
+        db.Index('idx_user_role_id', 'role_id'),
+    )
 
     user_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     role_id = db.Column(UUID(as_uuid=True), db.ForeignKey('role.role_id', ondelete='CASCADE'), nullable=False)
@@ -86,8 +90,11 @@ class User(db.Model, UserMixin):
             email = data.get('email')
             password = data.get('password')
 
-            if not name or not email or not password:
-                raise ValueError("Name, email and password are required for registration.")
+            # Validate required fields
+            Validator.validate_required_fields(data, ['name', 'email', 'password'])
+            Validator.validate_email(email)
+            Validator.validate_name(name)
+            Validator.validate_password(password)
 
             user_role = Role.query.filter_by(role_name=role).first()
 
@@ -109,6 +116,9 @@ class User(db.Model, UserMixin):
     def add_user_data(self, data):
         name = data.get('name')
         password = data.get('password')
+
+        Validator.validate_name(name)
+        Validator.validate_password(password)
 
         if name:
             self.name = name
@@ -185,7 +195,7 @@ class User(db.Model, UserMixin):
     @classmethod
     def get_all_users(cls):
         try:
-            users = cls.query.all()
+            users = cls.query.options(joinedload(cls.role)).all()
             users_list = [
                 {
                     "user_id": str(user.user_id),
@@ -195,7 +205,7 @@ class User(db.Model, UserMixin):
                     "created_at": user.created_at.isoformat(),
                     "email_confirmed": user.email_confirmed,
                     "subscription_plan_name": user.subscription_plan_name
-                } for user in users if user.role.role_name == "user"
+                } for user in users if user.role and user.role.role_name == "user"
             ]
             return jsonify({"users": users_list}), 200
         except Exception as e:
@@ -208,7 +218,7 @@ class User(db.Model, UserMixin):
     @classmethod
     def get_all_admins(cls):
         try:
-            users = cls.query.all()
+            users = cls.query.options(joinedload(cls.role)).all()
             users_list = [
                 {
                     "user_id": str(user.user_id),
@@ -217,7 +227,7 @@ class User(db.Model, UserMixin):
                     "role": user.role.role_name if user.role else None,
                     "created_at": user.created_at.isoformat(),
                     "email_confirmed": user.email_confirmed,
-                } for user in users if user.role.role_name == "admin"
+                } for user in users if user.role and user.role.role_name == "admin"
             ]
             return jsonify({"admins": users_list}), 200
         except Exception as e:
@@ -233,7 +243,7 @@ class User(db.Model, UserMixin):
             if not user_id:
                 raise ValueError("'user_id' is a required parameter.")
 
-            user = cls.query.filter_by(user_id=user_id).first()
+            user = cls.query.options(joinedload(cls.role)).filter_by(user_id=user_id).first()
             if not user:
                 return ErrorHandler.handle_error(
                     None,
@@ -323,6 +333,9 @@ class User(db.Model, UserMixin):
         try:
             old_password = data.get('old_password')
             new_password = data.get('new_password')
+
+            Validator.validate_password(old_password)
+            Validator.validate_password(new_password)
 
             user = cls.query.filter_by(user_id=user_id).first()
             if not user:

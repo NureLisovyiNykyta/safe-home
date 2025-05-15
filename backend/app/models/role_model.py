@@ -1,9 +1,6 @@
 from app import db
-from datetime import datetime, timezone
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
-from flask import jsonify
-from app.utils import ErrorHandler
 
 
 class Role(db.Model):

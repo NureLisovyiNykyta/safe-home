@@ -8,6 +8,11 @@ from app.utils import ErrorHandler
 
 class MobileDevice(db.Model):
     __tablename__ = 'mobile_device'
+    __table_args__ = (
+        db.Index('idx_mobile_device_user_id', 'user_id'),
+        db.Index('idx_mobile_device_token', 'device_token'),
+        db.Index('idx_mobile_device_user_token', 'user_id', 'device_token'),
+    )
 
     user_device_id = db.Column(
         UUID(as_uuid=True),
@@ -65,14 +70,12 @@ class MobileDevice(db.Model):
                 raise ValueError("Device token is required.")
 
             # Check if the device already exists for this user
-            existing_user_device = cls.query.filter_by(user_id=user_id, device_token=device_token).first()
-            if existing_user_device:
-                raise ValueError("This device is already registered for the user.")
-
-            # Check if the device already exists for other user
-            user_device = cls.query.filter_by(device_token=device_token).first()
-            if user_device:
-                db.session.delete(user_device)
+            existing_device = cls.query.filter(cls.device_token == device_token).first()
+            if existing_device:
+                if existing_device.user_id == user_id:
+                    raise ValueError("This device is already registered for the user.")
+                # If the device token already exists for a different user, delete it
+                db.session.delete(existing_device)
                 db.session.commit()
 
             # Create a new user device

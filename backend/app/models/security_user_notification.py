@@ -1,11 +1,17 @@
 from app import db
 import uuid
-from app.utils import ErrorHandler
+from app.utils import ErrorHandler, Validator
 from flask import jsonify
 from sqlalchemy.sql import func
 
 class SecurityUserNotification(db.Model):
     __tablename__ = 'security_user_notifications'
+    __table_args__ = (
+        db.Index('idx_security_user_notifications_home_id', 'home_id'),
+        db.Index('idx_security_user_notifications_user_id', 'user_id'),
+        db.Index('idx_security_user_notifications_home_created', 'home_id', 'created_at'),
+        db.Index('idx_security_user_notifications_user_created', 'user_id', 'created_at'),
+    )
 
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     home_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('home.home_id', ondelete='CASCADE'), nullable=False)
@@ -44,9 +50,17 @@ class SecurityUserNotification(db.Model):
             )
 
     @classmethod
-    def get_notifications_by_home(cls, home_id):
+    def get_notifications_by_home(cls, home_id, limit="100"):
         try:
-            notifications = cls.query.filter_by(home_id=home_id).order_by(cls.created_at.desc()).all()
+            Validator.validate_limit(limit)
+
+            notifications = (
+                cls.query
+                .filter_by(home_id=home_id)
+                .order_by(cls.created_at.desc())
+                .limit(limit)
+                .all()
+            )
 
             notifications_list = [
                 {
@@ -72,9 +86,17 @@ class SecurityUserNotification(db.Model):
             )
 
     @classmethod
-    def get_notifications_by_user(cls, user_id):
+    def get_notifications_by_user(cls, user_id, limit="100"):
         try:
-            notifications = cls.query.filter_by(user_id=user_id).order_by(cls.created_at.desc()).all()
+            Validator.validate_limit(limit)
+
+            notifications = (
+                cls.query
+                .filter_by(user_id=user_id)
+                .order_by(cls.created_at.desc())
+                .limit(limit)
+                .all()
+            )
 
             notifications_list = [
                 {

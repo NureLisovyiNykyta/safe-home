@@ -3,6 +3,8 @@ from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from flask import jsonify
+from operator import and_
+from sqlalchemy.orm import joinedload
 from app.models.default_security_mode_model import DefaultSecurityMode
 from app.models.subscription_model import Subscription
 from app.services.mobile_sequrity_notification_service import send_security_mode_change_notification
@@ -15,10 +17,10 @@ class Home(db.Model):
     home_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
     default_mode_id = db.Column(UUID(as_uuid=True), db.ForeignKey('default_security_mode.mode_id'), nullable=False)
+    is_archived = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(100), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    is_archived = db.Column(db.Boolean, default=False)
 
     user = db.relationship('User', back_populates='homes')
     default_mode = db.relationship('DefaultSecurityMode', back_populates='homes')
@@ -39,7 +41,10 @@ class Home(db.Model):
     @classmethod
     def get_all_homes(cls, user_id):
         try:
-            homes = cls.query.filter_by(user_id=user_id).all()
+            homes = cls.query.options(
+                joinedload(cls.default_mode)
+            ).filter(cls.user_id == user_id).all()
+
             homes_list = [
                 {
                     "home_id": str(home.home_id),
@@ -47,10 +52,11 @@ class Home(db.Model):
                     "address": home.address,
                     "created_at": home.created_at.isoformat(),
                     "default_mode_id": str(home.default_mode_id),
-                    "default_mode_name": home.default_mode.mode_name,
+                    "default_mode_name": home.default_mode.mode_name if home.default_mode else None,
                     "is_archived": home.is_archived
                 } for home in homes
             ]
+
             return jsonify({"homes": homes_list}), 200
 
         except Exception as e:
@@ -73,7 +79,9 @@ class Home(db.Model):
             if not current_subscription:
                 raise ValueError("User does not have an active subscription.")
 
-            current_homes_count = cls.query.filter_by(user_id=user_id, is_archived=False).count()
+            current_homes_count = cls.query.filter(
+                and_(cls.user_id == user_id, cls.is_archived == False)
+            ).count()
             if current_homes_count >= current_subscription.plan.max_homes:
                 raise ValueError("You have reached the maximum number of homes allowed by your subscription.")
 
@@ -103,7 +111,10 @@ class Home(db.Model):
     @classmethod
     def delete_home(cls, user_id, home_id):
         try:
-            home = cls.query.filter_by(user_id = user_id, home_id = home_id).first()
+            home = cls.query.filter(
+                and_(cls.user_id == user_id, cls.home_id == home_id)
+            ).first()
+
             if not home:
                 raise ValueError("Home not found for the user.")
 
@@ -125,7 +136,10 @@ class Home(db.Model):
     @classmethod
     def unarchive_home(cls, user_id, home_id):
         try:
-            home = cls.query.filter_by(home_id=home_id, user_id=user_id, is_archived=True).first()
+            home = cls.query.filter(
+                and_(cls.user_id == user_id, cls.home_id == home_id)
+            ).first()
+
             if not home:
                 raise ValueError("Archived home not found for the user.")
 
@@ -133,7 +147,9 @@ class Home(db.Model):
             if not current_subscription:
                 raise ValueError("User does not have an active subscription.")
 
-            current_homes_count = cls.query.filter_by(user_id=user_id, is_archived=False).count()
+            current_homes_count = cls.query.filter(
+                and_(cls.user_id == user_id, cls.is_archived == False)
+            ).count()
             if current_homes_count >= current_subscription.plan.max_homes:
                 raise ValueError("You have reached the maximum number of homes allowed by your subscription.")
 
@@ -156,7 +172,16 @@ class Home(db.Model):
     @classmethod
     def archive_home_sensors(cls, user_id, home_id):
         try:
-            home = cls.query.filter_by(user_id=user_id, home_id=home_id, is_archived=False).first()
+            home = cls.query.options(
+                joinedload(cls.sensors)
+            ).filter(
+                and_(
+                    cls.user_id == user_id,
+                    cls.home_id == home_id,
+                    cls.is_archived == False
+                )
+            ).first()
+
             if not home:
                 raise ValueError("Home not found for the user.")
 
@@ -177,7 +202,16 @@ class Home(db.Model):
     @classmethod
     def set_armed_security_mode(cls, user_id, home_id):
         try:
-            home = cls.query.filter_by(user_id=user_id, home_id=home_id, is_archived=False).first()
+            home = cls.query.options(
+                joinedload(cls.sensors)
+            ).filter(
+                and_(
+                    cls.user_id == user_id,
+                    cls.home_id == home_id,
+                    cls.is_archived == False
+                )
+            ).first()
+
             if not home:
                 raise ValueError("Home not found for the user.")
 
@@ -207,7 +241,16 @@ class Home(db.Model):
     @classmethod
     def set_disarmed_security_mode(cls, user_id, home_id):
         try:
-            home = cls.query.filter_by(user_id=user_id, home_id=home_id, is_archived=False).first()
+            home = cls.query.options(
+                joinedload(cls.sensors)
+            ).filter(
+                and_(
+                    cls.user_id == user_id,
+                    cls.home_id == home_id,
+                    cls.is_archived == False
+                )
+            ).first()
+
             if not home:
                 raise ValueError("Home not found for the user.")
 
