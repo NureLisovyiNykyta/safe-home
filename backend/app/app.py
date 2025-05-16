@@ -23,11 +23,6 @@ def create_app():
 
     app.config.from_object(Config)
 
-    CORS(app,
-         methods=app.config['CORS_ALLOW_METHODS'],
-         allow_headers=app.config['CORS_ALLOW_HEADERS'],
-         max_age=app.config['CORS_MAX_AGE'])
-
     db.init_app(app)
     login_manager.init_app(app)
     oauth.init_app(app)
