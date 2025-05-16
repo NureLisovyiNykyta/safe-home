@@ -12,8 +12,8 @@
     "title": "404 Page not found"
   },
   "login": {
-    "title": "Connect a system",
-    "buttonText": "Log in",
+    "title": "Enter a system",
+    "buttonText": "Login",
     "emailPlaceholder": "email",
     "emailRequired": "Email is required",
     "passwordPlaceholder": "password",

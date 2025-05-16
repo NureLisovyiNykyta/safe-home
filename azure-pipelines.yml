@@ -1,0 +1,37 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - frontend/*
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'a69df6fd-f5a5-43e8-abaf-73af7b1f418f'
+  imageRepository: 'newfrontend'
+  containerRegistry: 'safehomefrontendacr.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/frontend/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+pool:
+  name: 'Local-Agent-Pool'
+
+steps:
+- task: Docker@2
+  displayName: Build and push an image to container registry
+  inputs:
+    command: buildAndPush
+    repository: $(imageRepository)
+    dockerfile: $(dockerfilePath)
+    containerRegistry: $(dockerRegistryServiceConnection)
+    tags: |
+      $(tag)
+      latest
