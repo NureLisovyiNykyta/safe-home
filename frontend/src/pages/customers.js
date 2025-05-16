@@ -54,7 +54,7 @@ const Customers = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      const response = await api.post(`/admin/delete_user/user?user=${userId}`);
+      const response = await api.delete(`/users/${userId}`);
       if (response.status === 200) {
         setNotification({ isOpen: true, message: t("customers.userDeleted") });
         setRefreshKey((prev) => prev + 1);
@@ -70,7 +70,7 @@ const Customers = () => {
   return (
     <>
       <TablePage
-        apiEndpoint="/admin/users"
+        apiEndpoint="/users"
         columnDefs={columnDefs}
         transformData={(data) =>
           data.users.map((user) => ({

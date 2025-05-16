@@ -51,7 +51,7 @@ const Navigation = ({ changeLanguage }) => {
   useEffect(() => {
     const fetchUserEmail = async () => {
       try {
-        const response = await api.get(`/admin/user/user?user=${userId}`);
+        const response = await api.get(`/users/${userId}`);
         if (response.data && response.data.user.email) {
           setUserEmail(response.data.user.email);
         }
@@ -78,7 +78,7 @@ const Navigation = ({ changeLanguage }) => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await api.put('/update_password', {
+      const response = await api.put('/user/password', {
         old_password: data.oldPassword,
         new_password: data.newPassword,
       });
