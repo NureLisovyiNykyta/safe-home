@@ -7,7 +7,7 @@ export const ResetPasswordForm = ({ onBack, changeLanguage }) => {
 
   const handleResetPassword = async (data, setStatus) => {
     try {
-      const response = await api.post("/reset_password", { email: data.email });
+      const response = await api.post("/reset-password", { email: data.email });
       if (response.status === 200) {
         setStatus({
           message: t("resetPassword.success"),

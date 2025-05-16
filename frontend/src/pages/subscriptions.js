@@ -57,7 +57,7 @@ const Subscriptions = () => {
   return (
     <>
       <TablePage
-        apiEndpoint="/subscription_plans"
+        apiEndpoint="/subscription-plans"
         columnDefs={columnDefs}
         transformData={transformData}
         showActions={true}

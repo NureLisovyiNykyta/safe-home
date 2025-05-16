@@ -7,7 +7,7 @@ const RegisterForm = ({ onBack, onSuccess }) => {
 
   const handleRegister = async (data, setStatus) => {
     try {
-      const response = await api.post("/admin/register_admin", data);
+      const response = await api.post("/register/admin", data);
       if (response.status === 201) {
         setStatus({ message: t("registerForm.adminAddedSuccessfully"), type: "success" });
         setTimeout(() => {
