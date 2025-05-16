@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from app.services.user_service import UserService
 from app.utils.auth_decorator import auth_required, role_required
-from app.utils.error_handler import handle_errors
+from app.utils.error_handler import handle_errors, ValidationError
 from flasgger import swag_from
 
 user_bp = Blueprint('user', __name__)
@@ -89,15 +89,6 @@ def get_all_admins():
     'tags': ['User'],
     'summary': 'Delete a user by ID (admin only)',
     'description': 'Deletes a user by their ID. Restricted to admin users.',
-    'parameters': [
-        {
-            'name': 'user_id',
-            'in': 'path',
-            'required': True,
-            'type': 'string',
-            'description': 'User ID to delete'
-        }
-    ],
     'responses': {
         200: {'description': 'User deleted successfully'},
         401: {'description': 'Unauthorized - Admin role required'},
@@ -108,7 +99,48 @@ def get_all_admins():
 @role_required(['admin'])
 @handle_errors
 def delete_user(user_id):
+    if not user_id:
+        raise ValidationError("User ID is required.")
     return UserService.delete_user(user_id)
+
+
+@user_bp.route('/users/<user_id>', methods=['Get'])
+@swag_from({
+    'tags': ['User'],
+    'summary': 'Get a user by ID (admin only)',
+    'description': 'Get a user by their ID.',
+    'responses': {
+        200: {
+            'description': 'User data',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'user': {
+                        'type': 'object',
+                        'properties': {
+                            'user_id': {'type': 'string'},
+                            'name': {'type': 'string'},
+                            'email': {'type': 'string'},
+                            'role': {'type': 'string'},
+                            'created_at': {'type': 'string', 'format': 'date-time'},
+                            'email_confirmed': {'type': 'boolean'},
+                            'subscription_plan_name': {'type': 'string'}
+                        }
+                    }
+                }
+            }
+        },
+        401: {'description': 'Unauthorized - Authentication required'},
+        422: {'description': 'Unprocessable entity - User not found'},
+        500: {'description': 'Internal server error'}
+    }
+})
+@role_required(['admin'])
+@handle_errors
+def get_user_by_id(user_id):
+    if not user_id:
+        raise ValidationError("User ID is required.")
+    return UserService.get_user(user_id)
 
 
 @user_bp.route('/user', methods=['GET'])
