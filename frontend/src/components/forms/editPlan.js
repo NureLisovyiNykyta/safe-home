@@ -16,10 +16,10 @@ export const EditPlanForm = ({ initialData = null, onBack, onSuccess }) => {
       };
 
       if (initialData) {
-        await api.put(`/admin/update_subscription_plan/plan?plan=${initialData.id}`, formattedData);
+        await api.patch(`/subscription-plans/${initialData.id}`, formattedData);
         setStatus({ message: t("editPlanForm.planUpdatedSuccessfully"), type: "success" });
       } else {
-        await api.post("/admin/create_subscription_plan", formattedData);
+        await api.post("/subscription-plans", formattedData);
         setStatus({ message: t("editPlanForm.planAddedSuccessfully"), type: "success" });
       }
 

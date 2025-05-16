@@ -12,12 +12,12 @@ export const LoginForm = ({ changeLanguage }) => {
 
   const handleLogin = async (data, setStatus) => {
     try {
-      const response = await api.post("/login", data);
+      const response = await api.post("/login/session", data);
       if (response.status === 200) {
         setStatus({ message: t("login.success"), type: "success" });
         setTimeout(() => {
-          login();
-        }, 1000);
+          login();  
+        }, 500);
       }
     } catch (error) {
       setStatus({

@@ -32,6 +32,12 @@ const FormTemplate = ({
     reset(defaultValues);
   }, [fields, reset]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setStatus({ message: null, type: null });
+    }, 3000);
+  }, [status.message]);
+
   const handleFormSubmit = async (data) => {
     try {
       await onSubmit(data, setStatus);

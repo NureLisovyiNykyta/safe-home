@@ -57,7 +57,7 @@ const UserSubscriptions = () => {
 
   const handleCancel = async () => {
     try {
-      await api.put(`/admin/cancel_current_user_subscription/user?user=${userId}`);
+      await api.put(`/subscriptions/current/cancel/${userId}`);
       setNotification({ isOpen: true, message: t("userSubscriptions.subscriptionCanceled") });
       setRefreshKey((prev) => prev + 1);
     } catch (err) {
@@ -69,7 +69,7 @@ const UserSubscriptions = () => {
   return (
     <>
       <TablePage
-        apiEndpoint={`/admin/user_subscriptions/user?user=${userId}`}
+        apiEndpoint={`/subscriptions/${userId}`}
         columnDefs={columnDefs}
         transformData={transformData}
         refreshKey={refreshKey}
