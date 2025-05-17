@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../configs/api';
 
@@ -13,11 +13,31 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const logout = useCallback(async () => {
+    try {
+      await api.post('/logout');
+    } catch (error) {
+      console.error("Logout failed:", error.message);
+    } finally {
+      setIsAuthenticated(false);
+      setUserData(null);
+      navigate('/');
+    }
+  }, [navigate]);
+
+  const login = useCallback((user) => {
+    if (!user || user.role !== 'admin') {
+      logout();
+      return;
+    }
+    setIsAuthenticated(true);
+    setUserData(user);
+  }, [logout]);
+
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         const response = await api.get('/user');
-        
         if (response.status === 401) {
           setIsAuthenticated(false);
           setUserData(null);
@@ -26,12 +46,10 @@ export const AuthProvider = ({ children }) => {
           }
           return;
         }
-
         if (response.status === 200) {
-          setIsAuthenticated(true);
-          setUserData(response.data.user);
+          login(response.data.user);
           if (location.pathname === '/') {
-            navigate('/vets');
+            navigate('/customers');
           }
         }
       } catch (error) {
@@ -44,23 +62,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuthStatus();
-  }, [isAuthenticated, navigate, location.pathname]);
-
-  const login = () => {
-    setIsAuthenticated(true);
-  };
-
-  const logout = async () => {
-    try {
-      await api.post('/logout');
-    } catch (error) {
-      console.error("Logout failed:", error.message);
-    } finally {
-      setIsAuthenticated(false);
-      setUserData(null);
-      navigate('/');
-    }
-  };
+  }, [login, navigate, location.pathname]);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, userData, login, logout }}>
