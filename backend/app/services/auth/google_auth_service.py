@@ -25,7 +25,7 @@ class GoogleAuthService:
         nonce = os.urandom(16).hex()
         session['nonce'] = nonce
         redirect_uri = url_for('auth.google_callback', _external=True)
-        return google.authorize_redirect(redirect_uri, nonce=nonce)
+        return google.authorize_redirect(redirect_uri, nonce=nonce, scope=['openid', 'email', 'profile'])
 
     @staticmethod
     @handle_errors
