@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../configs/api';
 
@@ -13,7 +13,11 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const logout = useCallback(async () => {
+  const login = () => {
+    setIsAuthenticated(true);
+  };
+
+  const logout = async () => {
     try {
       await api.post('/logout');
     } catch (error) {
@@ -23,34 +27,29 @@ export const AuthProvider = ({ children }) => {
       setUserData(null);
       navigate('/');
     }
-  }, [navigate]);
-
-  const login = useCallback((user) => {
-    if (!user || user.role !== 'admin') {
-      logout();
-      return;
-    }
-    setIsAuthenticated(true);
-    setUserData(user);
-  }, [logout]);
+  };
 
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         const response = await api.get('/user');
+
         if (response.status === 401) {
           setIsAuthenticated(false);
           setUserData(null);
-          if (location.pathname !== '/') {
-            navigate('/');
-          }
           return;
         }
+
         if (response.status === 200) {
-          login(response.data.user);
-          if (location.pathname === '/') {
-            navigate('/customers');
+          const user = response.data.user;
+          setUserData(user);
+
+          if (user.role !== 'admin') {
+            await logout();
+            return;
           }
+
+          setIsAuthenticated(true);
         }
       } catch (error) {
         console.error("Authentication check failed:", error.message);
@@ -62,7 +61,17 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuthStatus();
-  }, [login, navigate, location.pathname]);
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (loading) return; 
+
+    if (!isAuthenticated && location.pathname !== '/') {
+      navigate('/');
+    } else if (isAuthenticated && location.pathname === '/') {
+      navigate('/customers');
+    }
+  }, [isAuthenticated, location.pathname, navigate, loading]);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, userData, login, logout }}>
