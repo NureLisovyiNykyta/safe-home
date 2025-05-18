@@ -4,6 +4,10 @@ import uuid
 
 class GeneralUserNotification(db.Model):
     __tablename__ = 'general_user_notifications'
+    __table_args__ = (
+        db.Index('idx_general_notifications_user_id', 'user_id'),
+        db.Index('idx_general_notifications_created_at', 'created_at'),
+    )
 
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)

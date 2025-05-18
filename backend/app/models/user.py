@@ -11,6 +11,9 @@ cipher = Fernet(os.getenv('SECRET_KEY_Fernet'))
 
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
+    __table_args__ = (
+        db.Index('idx_user_role_id', 'role_id'),
+    )
 
     user_id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     role_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('role.role_id', ondelete='CASCADE'), nullable=False)
