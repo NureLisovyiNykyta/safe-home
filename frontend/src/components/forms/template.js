@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import LanguageSwitcher from "../languageSwitcher";
+import api from "../../configs/api";
+import googleLogo from './google-logo.png';
 
 const FormTemplate = ({
   title,
@@ -49,6 +51,10 @@ const FormTemplate = ({
     }
   };
 
+  const handleGoogleLogin = async () => {
+    window.location.href = api.defaults.baseURL + '/login/google';
+  };
+
   return (
     <div className={`form-template ${className}`}>
       <div className='header'>
@@ -87,6 +93,15 @@ const FormTemplate = ({
         )}
         <button type='submit'>{buttonText}</button>
       </form>
+      {isLogin && (
+        <button
+          className='google-btn'
+          onClick={handleGoogleLogin}
+        >
+          <img className='google-icon' src={googleLogo} alt="Google" />
+          {t("login.googleLogin")}
+        </button>
+      )}
     </div>
   );
 };
