@@ -2,7 +2,6 @@
 *.pyc
 *.env
 .venv
-migrations/alembic.ini
 __pycache__/
 *.log
 *.db

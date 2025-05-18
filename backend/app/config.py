@@ -1,4 +1,6 @@
 import os
+import logging
+from logging.handlers import RotatingFileHandler
 from datetime import timedelta
 from dotenv import load_dotenv
 
@@ -9,7 +11,9 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    DEBUG = True
+    DEBUG = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
+
+    AUTO_DB_SETUP = os.getenv('AUTO_DB_SETUP', 'True').lower() == 'true'
 
     # Email configuration
     MAIL_SERVER = 'smtp.gmail.com'
@@ -30,3 +34,42 @@ class Config:
     CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH' 'DELETE']
     CORS_ALLOW_HEADERS = ['Content-Type', 'Authorization']
     CORS_MAX_AGE = 3600
+
+def setup_logging(app):
+    """Configure logging for the application."""
+    log_level = logging.DEBUG if app.debug else logging.INFO
+    log_format = '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+
+    # Clear any existing handlers to avoid duplicates
+    root_logger = logging.getLogger()
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+
+    # Console handler for local development
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(log_level)
+    console_handler.setFormatter(logging.Formatter(log_format))
+    root_logger.addHandler(console_handler)
+
+    # File handler for persistent logs (useful in Azure)
+    log_dir = os.path.join(app.instance_path, 'logs')
+    os.makedirs(log_dir, exist_ok=True)
+    file_handler = RotatingFileHandler(
+        os.path.join(log_dir, 'app.log'),
+        maxBytes=10*1024*1024,  # 10MB
+        backupCount=5
+    )
+    file_handler.setLevel(log_level)
+    file_handler.setFormatter(logging.Formatter(log_format))
+    root_logger.addHandler(file_handler)
+
+    root_logger.setLevel(log_level)
+
+    # Configure loggers for specific libraries
+    for lib in ['apscheduler', 'stripe']:
+        logging.getLogger(lib).setLevel(log_level)
+        logging.getLogger(lib).propagate = True
+    # SQLAlchemy: only warnings, except engine for SQL queries
+    logging.getLogger('sqlalchemy').setLevel(logging.WARNING)
+    logging.getLogger('alembic').setLevel(logging.WARNING)
+    logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
