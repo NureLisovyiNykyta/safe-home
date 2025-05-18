@@ -22,7 +22,8 @@
     "success": "Login successful. Redirecting...",
     "failed": "Login failed",
     "rememberMe": "Remember me?",
-    "forgotPassword": "Forgot password?"
+    "forgotPassword": "Forgot password?",
+    "googleLogin": "Login with Google"
   },
   "error": {
     "generic": "An error occurred. Please try again"
