@@ -30,7 +30,7 @@ Safe Home is designed to enhance home security through a seamless integration of
 ## Architecture
 The project is structured as a distributed system:
 - **Backend**: Flask-based REST API with SQLAlchemy and Flask-Migrate, hosted on Azure App Service.
-- **Frontend**: React SPA, bundled with Webpack, served by Nginx, hosted on Azure Static Web Apps.
+- **Frontend**: React SPA, bundled with Webpack, served by Nginx, hosted on Azure App Service.
 - **Mobile**: Kotlin-based Android app, distributed via Google Play Store.
 - **Database**: PostgreSQL on Azure Database for PostgreSQL.
 - **CI/CD**: Azure Pipelines for automated builds, tests, and deployments.
