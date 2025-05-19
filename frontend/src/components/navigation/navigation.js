@@ -128,34 +128,41 @@ const Navigation = ({ changeLanguage }) => {
       </div>
       <div className='navigation-container'>
         <div className='links'>
-          <div className={`link-container ${getActiveLink('/customers')}`}>
-            <Link to="/customers" className="link" onClick={handleLinkClick}>
+          <Link
+            to="/customers"
+            className={`link ${getActiveLink('/customers')} ${userEmail ? 'email' : ''}`}
+            onClick={handleLinkClick}
+          >
+            <div className='customer-link'>
               {!userEmail ? (
                 <FiUsers className='icon' />
               ) : (
                 <IoArrowBackOutline className='icon arrow' />
               )}
               {t('navigation.customers')}
-            </Link>
+            </div>
             {userEmail && (
               <div className="user-email">
-                <FaRegUser className='icon' />
                 {userEmail}
               </div>
             )}
-          </div>
-          <div className={`link-container ${getActiveLink('/admins')}`}>
-            <Link to="/admins" className="link" onClick={handleLinkClick}>
-              <GrUserAdmin className='icon' />
-              {t('navigation.admins')}
-            </Link>
-          </div>
-          <div className={`link-container ${getActiveLink('/subscriptions')}`}>
-            <Link to="/subscriptions" className="link" onClick={handleLinkClick}>
-              <MdPayment className='icon' />
-              {t('navigation.subscriptions')}
-            </Link>
-          </div>
+          </Link>
+          <Link
+            to="/admins"
+            className={`link ${getActiveLink('/admins')}`}
+            onClick={handleLinkClick}
+          >
+            <GrUserAdmin className='icon' />
+            {t('navigation.admins')}
+          </Link>
+          <Link
+            to="/subscriptions"
+            className={`link ${getActiveLink('/subscriptions')}`}
+            onClick={handleLinkClick}
+          >
+            <MdPayment className='icon' />
+            {t('navigation.subscriptions')}
+          </Link>
         </div>
         <div className='user-panel'>
           <div className='user-header'>
