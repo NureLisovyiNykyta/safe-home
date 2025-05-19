@@ -33,7 +33,8 @@
   padding-right: 1rem;
 }
 
-.navigation .logo .desktop-logo, .desktop-text {
+.navigation .logo .desktop-logo,
+.desktop-text {
   display: block;
 }
 
@@ -52,48 +53,54 @@
   margin-top: 2rem;
 }
 
-.navigation .link-container {
+.navigation .link {
+  font-size: 1.5rem;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  color: #333;
+  text-decoration: none;
   margin-bottom: 1rem;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   transition: background 0.3s;
 }
 
-.navigation .link-container.active,
-.navigation .link-container:hover {
+.navigation .link.email {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.navigation .link.active,
+.navigation .link:hover {
   background: #D9D9D9;
 }
 
-.navigation .link-container .link {
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  color: #333;
-  text-decoration: none;
-  width: 100%;
-}
-
-.navigation .link-container .link .icon {
+.navigation .link .icon {
   margin-right: 1rem;
   font-size: 1.8rem;
 }
 
-.navigation .link-container .link .icon.arrow {
+.navigation .link .customer-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navigation .link .icon.arrow {
   font-size: 2rem;
 }
 
-.navigation .link-container .user-email {
+.navigation .link .user-email {
   font-size: 1.1rem;
   color: #333;
   padding-top: 0.5rem;
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
-.navigation .link-container .user-email .icon {
-  margin: 0 1.5rem 0 0.5rem;
+.navigation .link .user-email .icon {
+  margin: 0;
 }
 
 .navigation .navigation-container .user-panel {
