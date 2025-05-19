@@ -17,7 +17,8 @@ const FormTemplate = ({
   className,
   onForgotPassword,
   onBack,
-  changeLanguage = null
+  changeLanguage = null,
+  isResetPassword = false
 }) => {
   const { t } = useTranslation();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -66,6 +67,11 @@ const FormTemplate = ({
       </div>
       {status.message && <div className={`status ${status.type}`}>{status.message}</div>}
       <form className='form' onSubmit={handleSubmit(handleFormSubmit)}>
+        {isResetPassword && (
+          <div className='reset-password'>
+            <p>{t("resetPassword.instruction")}</p>
+          </div>
+        )}
         {fields.map(({ name, type, label, validation, showLabel = false, placeholder }) => (
           <div className="form-group" key={name}>
             {showLabel && <label htmlFor={name}>{label}</label>}

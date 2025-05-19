@@ -34,7 +34,8 @@
     "emailPlaceholder": "email",
     "emailRequired": "Email is required",
     "success": "Password reset request sent successfully. Redirecting...",
-    "failed": "Failed to send reset password request"
+    "failed": "Failed to send reset password request",
+    "instruction": "Please check your email for instructions to reset your password"
   },
   "editPlanForm": {
     "editPlan": "Edit plan",

@@ -4,7 +4,6 @@ import { MdLogout, MdPayment } from "react-icons/md";
 import { FiUsers } from "react-icons/fi";
 import { GrUserAdmin } from "react-icons/gr";
 import { IoArrowBackOutline } from "react-icons/io5";
-import { FaRegUser } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState, useEffect } from 'react';
