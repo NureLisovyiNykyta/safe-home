@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     alias(libs.plugins.hilt)
+    alias(libs.plugins.google.plugin)
 }
 
 kapt {
@@ -75,4 +76,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.worker)
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.google.firebase)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.play.services.auth)
 }
