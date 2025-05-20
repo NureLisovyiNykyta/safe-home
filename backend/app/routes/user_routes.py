@@ -60,7 +60,7 @@ def get_all_users():
 })
 @role_required(['super_admin'])
 @handle_errors
-def delete_user(user_id):
+def delete_admin(user_id):
     if not user_id:
         raise ValidationError("User ID is required.")
     return UserService.delete_user(user_id, 'admin')
