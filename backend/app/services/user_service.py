@@ -3,7 +3,7 @@ from app.repositories.user_repo import UserRepository
 from app.repositories.role_repo import RoleRepository
 from app.utils import Validator
 from app.models.user import User
-from flask import jsonify
+from flask import jsonify, g
 
 
 class UserService:
@@ -69,7 +69,15 @@ class UserService:
             raise UnprocessableError("User not found.")
 
         if user.role.role_name != role:
-            raise ValidationError("You cannot delete this user.")
+            raise ValidationError("You cannot delete user with this role.")
+
+        g.deleted_data = {
+            'entity': 'user',
+            'user_id': str(user.user_id),
+            'name': user.name,
+            'email': user.email,
+            'role': user.role.role_name
+        }
 
         UserRepository.delete(user)
         return jsonify({"message": "User deleted successfully."}), 200

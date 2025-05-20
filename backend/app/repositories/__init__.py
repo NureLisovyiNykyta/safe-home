@@ -8,3 +8,4 @@ from .sensor_repo import SensorRepository
 from .subscription_repo import SubscriptionRepository
 from .subscription_plan_repo import SubscriptionPlanRepository
 from .user_repo import UserRepository
+from .admin_audit_log_repo import AdminAuditLogRepository

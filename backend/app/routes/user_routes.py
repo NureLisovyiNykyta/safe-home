@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from app.services.user_service import UserService
 from app.utils.auth_decorator import auth_required, role_required
 from app.utils.error_handler import handle_errors, ValidationError
+from app.utils import audit_admin_action
 from flasgger import swag_from
 
 user_bp = Blueprint('user', __name__)
@@ -46,26 +47,6 @@ def get_all_users():
     return UserService.get_all_users()
 
 
-@user_bp.route('/admins/<user_id>', methods=['DELETE'])
-@swag_from({
-    'tags': ['User'],
-    'summary': 'Delete an admin by ID (super admin only)',
-    'description': 'Deletes an admin by their ID.',
-    'responses': {
-        200: {'description': 'Admin deleted successfully'},
-        401: {'description': 'Unauthorized - Super Admin role required'},
-        422: {'description': 'Unprocessable entity - User not found'},
-        500: {'description': 'Internal server error'}
-    }
-})
-@role_required(['super_admin'])
-@handle_errors
-def delete_admin(user_id):
-    if not user_id:
-        raise ValidationError("User ID is required.")
-    return UserService.delete_user(user_id, 'admin')
-
-
 @user_bp.route('/admins', methods=['GET'])
 @swag_from({
     'tags': ['User'],
@@ -104,6 +85,27 @@ def get_all_admins():
     return UserService.get_all_admins()
 
 
+@user_bp.route('/admins/<user_id>', methods=['DELETE'])
+@swag_from({
+    'tags': ['User'],
+    'summary': 'Delete an admin by ID (super admin only)',
+    'description': 'Deletes an admin by their ID.',
+    'responses': {
+        200: {'description': 'Admin deleted successfully'},
+        401: {'description': 'Unauthorized - Super Admin role required'},
+        422: {'description': 'Unprocessable entity - User not found'},
+        500: {'description': 'Internal server error'}
+    }
+})
+@role_required(['super_admin'])
+@handle_errors
+@audit_admin_action("deleted an admin.")
+def delete_admin(user_id):
+    if not user_id:
+        raise ValidationError("User ID is required.")
+    return UserService.delete_user(user_id, 'admin')
+
+
 @user_bp.route('/users/<user_id>', methods=['DELETE'])
 @swag_from({
     'tags': ['User'],
@@ -118,6 +120,7 @@ def get_all_admins():
 })
 @role_required(['admin', 'super_admin'])
 @handle_errors
+@audit_admin_action("deleted a user.")
 def delete_user(user_id):
     if not user_id:
         raise ValidationError("User ID is required.")

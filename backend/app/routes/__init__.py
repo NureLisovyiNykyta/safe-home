@@ -10,6 +10,7 @@ from .security_user_notification_routes import security_notification_bp
 from .subscription_plan_routes import subscription_plan_bp
 from .mobile_devices_routes import mobile_device_bp
 from .subscription_routes import subscription_bp
+from .admin_audit_log_routes import admin_audit_log_bp
 
 def init_routes(app):
     app.register_blueprint(auth_bp, url_prefix='/api')
@@ -22,5 +23,6 @@ def init_routes(app):
     app.register_blueprint(subscription_bp, url_prefix='/api')
     app.register_blueprint(subscription_plan_bp, url_prefix='/api')
     app.register_blueprint(user_bp, url_prefix='/api')
+    app.register_blueprint(admin_audit_log_bp, url_prefix='/api')
     app.register_blueprint(iot_bp, url_prefix='/iot')
     app.register_blueprint(payments_bp,  url_prefix='/payments')

@@ -14,6 +14,7 @@ class Config:
     DEBUG = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
 
     AUTO_DB_SETUP = os.getenv('AUTO_DB_SETUP', 'True').lower() == 'true'
+    SEED_FORCE = os.getenv('SEED_FORCE', 'False').lower() == 'true'
 
     # Email configuration
     MAIL_SERVER = 'smtp.gmail.com'

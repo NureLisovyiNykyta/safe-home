@@ -7,4 +7,5 @@ from .security_user_notification_service import SecurityUserNotificationService
 from .subscription_service import SubscriptionService
 from .subscription_plan_service import SubscriptionPlanService
 from .user_service import UserService
+from .admin_audit_log_service import AdminAuditLogService
 from .auth import AuthService, GoogleAuthService, FirebaseAuthService
