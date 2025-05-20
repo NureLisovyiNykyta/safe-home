@@ -73,7 +73,7 @@ def get_all_subscription_plans():
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
 def create_subscription_plan():
     return SubscriptionPlanService.create_subscription_plan(request.json)
@@ -115,7 +115,7 @@ def create_subscription_plan():
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
 def update_subscription_plan(plan_id):
     return SubscriptionPlanService.update_subscription_plan(plan_id, request.json)

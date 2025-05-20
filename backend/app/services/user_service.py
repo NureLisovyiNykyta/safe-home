@@ -60,13 +60,16 @@ class UserService:
 
     @staticmethod
     @handle_errors
-    def delete_user(user_id):
+    def delete_user(user_id, role):
         if not user_id:
             raise ValidationError("'user_id' is a required parameter.")
 
         user = UserRepository.get_by_id(user_id)
         if not user:
             raise UnprocessableError("User not found.")
+
+        if user.role.role_name != role:
+            raise ValidationError("You cannot delete this user.")
 
         UserRepository.delete(user)
         return jsonify({"message": "User deleted successfully."}), 200
