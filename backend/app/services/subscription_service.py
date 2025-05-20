@@ -77,7 +77,6 @@ class SubscriptionService:
         user = UserRepository.get_by_id(user_id)
 
         g.old_data = {
-            'entity': 'subscription',
             'user_id': str(user.user_id),
             'name': user.name,
             'email': user.email,
@@ -85,7 +84,6 @@ class SubscriptionService:
         }
 
         g.new_data = {
-            'entity': 'subscription',
             'user_id': str(user.user_id),
             'name': user.name,
             'email': user.email,

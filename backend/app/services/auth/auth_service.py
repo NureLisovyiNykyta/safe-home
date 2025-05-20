@@ -57,7 +57,6 @@ class AuthService:
         user = UserService.register_user(data, role_name="admin")
         EmailConfirmService.send_user_registered_email(user, password=data.get('password'))
         g.created_data = {
-            'entity': 'user',
             'user_id': str(user.user_id),
             'name': user.name,
             'email': user.email,

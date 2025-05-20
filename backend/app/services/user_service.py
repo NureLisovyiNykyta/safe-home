@@ -72,7 +72,6 @@ class UserService:
             raise ValidationError("You cannot delete user with this role.")
 
         g.deleted_data = {
-            'entity': 'user',
             'user_id': str(user.user_id),
             'name': user.name,
             'email': user.email,
