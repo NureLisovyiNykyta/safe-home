@@ -73,7 +73,8 @@ def _seed_roles():
     logger.info(f"Existing roles: {existing_roles}")
     roles_to_add = [
         {'role_name': 'user', 'description': None},
-        {'role_name': 'admin', 'description': None}
+        {'role_name': 'admin', 'description': None},
+        {'role_name': 'super_admin', 'description': None}
     ]
 
     for role_data in roles_to_add:
@@ -152,7 +153,7 @@ def _seed_admin_user():
         logger.info(f"Admin user with email {admin_email} already exists")
         return True
 
-    admin_role = RoleRepository.get_by_name('admin')
+    admin_role = RoleRepository.get_by_name('super_admin')
     if not admin_role:
         logger.error("Admin role not found")
         return False

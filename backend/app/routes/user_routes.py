@@ -40,10 +40,30 @@ user_bp = Blueprint('user', __name__)
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
 def get_all_users():
     return UserService.get_all_users()
+
+
+@user_bp.route('/admins/<user_id>', methods=['DELETE'])
+@swag_from({
+    'tags': ['User'],
+    'summary': 'Delete an admin by ID (super admin only)',
+    'description': 'Deletes an admin by their ID.',
+    'responses': {
+        200: {'description': 'Admin deleted successfully'},
+        401: {'description': 'Unauthorized - Super Admin role required'},
+        422: {'description': 'Unprocessable entity - User not found'},
+        500: {'description': 'Internal server error'}
+    }
+})
+@role_required(['super_admin'])
+@handle_errors
+def delete_admin(user_id):
+    if not user_id:
+        raise ValidationError("User ID is required.")
+    return UserService.delete_user(user_id, 'admin')
 
 
 @user_bp.route('/admins', methods=['GET'])
@@ -78,7 +98,7 @@ def get_all_users():
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
 def get_all_admins():
     return UserService.get_all_admins()
@@ -96,12 +116,12 @@ def get_all_admins():
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
 def delete_user(user_id):
     if not user_id:
         raise ValidationError("User ID is required.")
-    return UserService.delete_user(user_id)
+    return UserService.delete_user(user_id, 'user')
 
 
 @user_bp.route('/users/<user_id>', methods=['Get'])
@@ -135,7 +155,7 @@ def delete_user(user_id):
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
 def get_user_by_id(user_id):
     if not user_id:

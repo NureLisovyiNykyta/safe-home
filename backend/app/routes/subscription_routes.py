@@ -152,7 +152,7 @@ def cancel_current_subscription():
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
 def get_user_subscriptions_admin(user_id):
     if not user_id:
@@ -172,7 +172,7 @@ def get_user_subscriptions_admin(user_id):
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
 def cancel_current_user_subscription_admin(user_id):
     if not user_id:
