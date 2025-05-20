@@ -40,6 +40,12 @@ class User(db.Model, UserMixin):
         cascade="all, delete-orphan"
     )
 
+    admin_audit_logs = db.relationship(
+        'AdminAuditLog',
+        back_populates='admin',
+        cascade="all, delete-orphan"
+    )
+
     devices = db.relationship(
         'MobileDevice',
         back_populates='user',
