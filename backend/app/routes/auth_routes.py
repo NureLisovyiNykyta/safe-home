@@ -66,7 +66,7 @@ def register_user():
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
 def register_admin():
     return AuthService.register_admin(request.json)
