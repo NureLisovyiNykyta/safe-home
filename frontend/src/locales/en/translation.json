@@ -116,7 +116,7 @@
   },  
   "tablePage": {
     "loading": "Loading",
-    "error": "Failed to load data.",
+    "error": "Failed to load data",
     "addNew": "add new"
   }
 }

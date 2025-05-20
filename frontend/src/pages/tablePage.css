@@ -44,8 +44,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
+  font-size: 2.5rem;
   color: #333;
+  gap: 1rem;
+  align-self: center;
 }
 
 .page .row-btn {
@@ -66,26 +68,6 @@
 .page .row-btn.edit {
   background: #5cad5e;
   color: white;
-}
-
-.page.loading .spinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.page.loading .spinner-container .spinner {
-  font-size: 50px;
-  animation: spin 1.5s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 @media (max-width: 768px) {
@@ -116,5 +98,10 @@
 
   .page .actions button {
     margin: 0;
+  }
+
+  .page.loading,
+  .page.error {
+    font-size: 1.5rem;
   }
 }

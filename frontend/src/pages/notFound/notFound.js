@@ -7,7 +7,7 @@ const NotFound = () => {
   const { t } = useTranslation();
 
   const handleClick = () => {
-    window.location.href = '/';
+    window.location.href = '/customers';
   };
 
   return (
