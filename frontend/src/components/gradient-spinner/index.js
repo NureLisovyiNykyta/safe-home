@@ -1,8 +1,8 @@
 import "./index.css";
 
-const GradientSpinner = () => {
+const GradientSpinner = ({ forForm=false }) => {
   return (
-    <div className="spinner-container">
+    <div className={`spinner-container ${forForm ? 'form-spinner' : ''}`}>
       <svg className="spinner" viewBox="0 0 100 100">
         <path
           d="M 50 10 A 40 40 0 0 1 90 50"
