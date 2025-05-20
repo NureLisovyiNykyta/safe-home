@@ -71,7 +71,12 @@
   "admins": {
     "name": "Name",
     "email": "Email",
-    "createdAt": "Created at"
+    "createdAt": "Created at",
+    "deleteAdmin": "Delete",
+    "adminDeleted": "Admin deleted successfully",
+    "deleteAdminConfirmation": "Are you sure you want to delete this admin?",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
   },
   "customers": {
     "title": "Customers",
@@ -88,6 +93,7 @@
   },
   "notification": {
     "failedToDeleteUser": "Failed to delete user",
+    "failedToDeleteAdmin": "Failed to delete admin",
     "passwordUpdated": "Password updated successfully",
     "passwordUpdateFailed": "Failed to update password"
   },

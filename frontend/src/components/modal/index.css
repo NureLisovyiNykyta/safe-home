@@ -49,9 +49,13 @@
   flex-direction: column;
 }
 
+.modal.dialog .content p {
+  margin-bottom: 0;
+}
+
 .modal .dialog-buttons {
   display: flex;
-  justify-content: space-between;
+  gap: 1rem;
   margin-top: 1rem;
 }
 
@@ -62,7 +66,6 @@
   cursor: pointer;
   border-radius: 0.5rem;
   font-size: 1rem;
-  width: 47%;
 }
 
 .modal .dialog-buttons .cancel-btn {

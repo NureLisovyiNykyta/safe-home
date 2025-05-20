@@ -70,8 +70,13 @@
   },
   "admins": {
     "name": "Ім'я",
-    "email": "Email",
-    "createdAt": "Дата створення"
+    "email": "Електронна пошта",
+    "createdAt": "Дата створення",
+    "deleteAdmin": "Видалити",
+    "adminDeleted": "Адміністратора успішно видалено",
+    "deleteAdminConfirmation": "Ви впевнені, що хочете видалити цього адміністратора?",
+    "confirm": "Підтвердити",
+    "cancel": "Скасувати"
   },
   "customers": {
     "title": "Користувачі",
@@ -88,6 +93,7 @@
   },
   "notification": {
     "failedToDeleteUser": "Не вдалося видалити користувача",
+    "failedToDeleteAdmin": "Не вдалося видалити адміністратора",
     "passwordUpdated": "Пароль успішно оновлено",
     "passwordUpdateFailed": "Не вдалося оновити пароль"
   },
