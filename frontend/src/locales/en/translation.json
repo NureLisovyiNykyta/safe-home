@@ -9,7 +9,8 @@
     "changePassword": "Change password"
   },
   "notFound": {
-    "title": "404 Page not found"
+    "title": "Page not found",
+    "goBack": "Back to main page"
   },
   "login": {
     "title": "Enter a system",
@@ -114,7 +115,7 @@
     "cancelFailed": "Failed to cancel subscription"
   },  
   "tablePage": {
-    "loading": "Loading...",
+    "loading": "Loading",
     "error": "Failed to load data.",
     "addNew": "add new"
   }

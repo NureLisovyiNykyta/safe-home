@@ -68,6 +68,26 @@
   color: white;
 }
 
+.page.loading .spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page.loading .spinner-container .spinner {
+  font-size: 50px;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 768px) {
   .page {
     display: flex;

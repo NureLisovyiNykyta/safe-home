@@ -5,6 +5,7 @@ import "ag-grid-community/styles/ag-theme-material.css";
 import api from "../configs/api";
 import "./tablePage.css";
 import { IoAdd } from "react-icons/io5";
+import { AiOutlineLoading } from "react-icons/ai";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
 import Card from "../components/card/card";
@@ -38,7 +39,12 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData,
   }, [fetchData, refreshKey]);
 
   if (loading) {
-    return <div className="page loading">{t("tablePage.loading")}</div>;
+    return <div className="page loading">
+      <div className="spinner-container">
+        <AiOutlineLoading className="spinner" />
+      </div>
+      {t("tablePage.loading")}
+    </div>;
   }
 
   if (error) {
