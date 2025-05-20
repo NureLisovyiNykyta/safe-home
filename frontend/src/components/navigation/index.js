@@ -5,11 +5,11 @@ import { FiUsers } from "react-icons/fi";
 import { GrUserAdmin } from "react-icons/gr";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
-import { RxHamburgerMenu } from "react-icons/rx";
+import { RxHamburgerMenu, RxReader } from "react-icons/rx";
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../contexts/authContext';
+import { useAuth } from '../../contexts/auth-context';
 import LanguageSwitcher from '../language-switcher';
 import Modal from '../modal';
 import api from '../../configs/api';
@@ -104,6 +104,7 @@ const Navigation = ({ changeLanguage }) => {
     if (getActiveLink('/customers') === 'active') return t('navigation.customers');
     if (getActiveLink('/admins') === 'active') return t('navigation.admins');
     if (getActiveLink('/subscriptions') === 'active') return t('navigation.subscriptions');
+    if (getActiveLink('/audit-log') === 'active') return t('navigation.auditLog');
     return 'safe home';
   };
 
@@ -161,6 +162,14 @@ const Navigation = ({ changeLanguage }) => {
           >
             <MdPayment className='icon' />
             {t('navigation.subscriptions')}
+          </Link>
+          <Link
+            to="/audit-log"
+            className={`link ${getActiveLink('/audit-log')}`}
+            onClick={handleLinkClick}
+          >
+            <RxReader className='icon' />
+            {t('navigation.auditLog')}
           </Link>
         </div>
         <div className='user-panel'>

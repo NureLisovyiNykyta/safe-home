@@ -3,6 +3,7 @@
     "customers": "клієнти",
     "admins": "адміністратори",
     "subscriptions": "підписки",
+    "auditLog": "журнал аудиту",
     "logout": "вийти",
     "oldPassword": "старий пароль",
     "newPassword": "новий пароль",

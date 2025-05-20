@@ -3,7 +3,7 @@ import TablePage from "./tablePage";
 import RegisterForm from "../components/forms/register";
 import Modal from "../components/modal";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../contexts/authContext";
+import { useAuth } from "../contexts/auth-context";
 import api from "../configs/api";
 
 const Admins = () => {

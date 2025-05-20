@@ -3,6 +3,7 @@
     "customers": "customers",
     "admins": "admins",
     "subscriptions": "subscriptions",
+    "auditLog": "audit log",
     "logout": "logout",
     "oldPassword": "old password",
     "newPassword": "new password",
