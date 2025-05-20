@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import LanguageSwitcher from "../languageSwitcher";
+import LanguageSwitcher from "../language-switcher";
 import api from "../../configs/api";
 import googleLogo from './google-logo.png';
 

@@ -1,4 +1,4 @@
-import './navigation.css';
+import './index.css';
 import logo from './logo.png';
 import { MdLogout, MdPayment } from "react-icons/md";
 import { FiUsers } from "react-icons/fi";
@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/authContext';
-import LanguageSwitcher from '../languageSwitcher';
+import LanguageSwitcher from '../language-switcher';
 import Modal from '../modal';
 import api from '../../configs/api';
 import { useForm } from "react-hook-form";

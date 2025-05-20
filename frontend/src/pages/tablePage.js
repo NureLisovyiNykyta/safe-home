@@ -7,7 +7,7 @@ import "./tablePage.css";
 import { IoAdd } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
-import Card from "../components/card/card";
+import Card from "../components/card";
 import GradientSpinner from "../components/gradient-spinner";
 
 ModuleRegistry.registerModules([AllCommunityModule]);

@@ -1,4 +1,4 @@
-import './notFound.css';
+import './index.css';
 import { useTranslation } from 'react-i18next';
 import { TbError404 } from "react-icons/tb";
 import { FaArrowLeft } from "react-icons/fa6";

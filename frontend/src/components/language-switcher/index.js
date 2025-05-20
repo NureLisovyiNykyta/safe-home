@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import Flag from 'react-world-flags';
-import './languageSwitcher.css';
+import './index.css';
 
 const LanguageSwitcher = ({ changeLanguage }) => {
   const { i18n } = useTranslation();
