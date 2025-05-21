@@ -3,13 +3,15 @@
     "customers": "клієнти",
     "admins": "адміністратори",
     "subscriptions": "підписки",
+    "auditLog": "журнал аудиту",
     "logout": "вийти",
     "oldPassword": "старий пароль",
     "newPassword": "новий пароль",
     "changePassword": "Змінити пароль"
   },
   "notFound": {
-    "title": "404 Сторінка не знайдена"
+    "title": "Сторінка не знайдена",
+    "goBack": "Назад на головну сторінку"
   },
   "login": {
     "title": "Увійти в систему",
@@ -69,8 +71,13 @@
   },
   "admins": {
     "name": "Ім'я",
-    "email": "Email",
-    "createdAt": "Дата створення"
+    "email": "Електронна пошта",
+    "createdAt": "Дата створення",
+    "deleteAdmin": "Видалити",
+    "adminDeleted": "Адміністратора успішно видалено",
+    "deleteAdminConfirmation": "Ви впевнені, що хочете видалити цього адміністратора?",
+    "confirm": "Підтвердити",
+    "cancel": "Скасувати"
   },
   "customers": {
     "title": "Користувачі",
@@ -87,6 +94,7 @@
   },
   "notification": {
     "failedToDeleteUser": "Не вдалося видалити користувача",
+    "failedToDeleteAdmin": "Не вдалося видалити адміністратора",
     "passwordUpdated": "Пароль успішно оновлено",
     "passwordUpdateFailed": "Не вдалося оновити пароль"
   },
@@ -114,8 +122,15 @@
     "cancelFailed": "Не вдалося скасувати підписку"
   },
   "tablePage": {
-    "loading": "Завантаження...",
-    "error": "Не вдалося завантажити дані.",
+    "loading": "Завантаження",
+    "error": "Не вдалося завантажити дані",
     "addNew": "додати нове"
+  },
+  "auditLog": {
+    "admin": "Адмін:",
+    "action": "Дія:",
+    "days": "Дні:",
+    "refresh": "Оновити",
+    "error": "Помилка завантаження логів"
   }
 }

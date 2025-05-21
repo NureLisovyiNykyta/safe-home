@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
 import { useEffect } from "react";
-import "./modal.css";
+import "./index.css";
 
 const Modal = ({
   isOpen,

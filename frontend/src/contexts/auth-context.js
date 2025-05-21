@@ -13,6 +13,8 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const allowedRoles = ['admin', 'super_admin'];
+
   const login = () => {
     setIsAuthenticated(true);
   };
@@ -44,7 +46,7 @@ export const AuthProvider = ({ children }) => {
           const user = response.data.user;
           setUserData(user);
 
-          if (user.role !== 'admin') {
+          if (!allowedRoles.includes(user.role)) {
             await logout();
             return;
           }

@@ -151,9 +151,8 @@
 
 .navigation .user-panel .user-header .accordion-content .form {
   display: flex;
-  width: fit-content;
-  flex-direction: column;
   width: 100%;
+  flex-direction: column;
   margin-top: 1rem;
 }
 
@@ -183,17 +182,17 @@
   color: #333;
   border-radius: 0.5rem;
   height: 2rem;
-  font-size: 1rem;
 }
 
 .navigation .user-panel .user-header .accordion-content button[type="submit"] {
   margin-bottom: 1rem;
-  background: #fcffd9;
+  background: #222;
+  color: white;
+  font-size: 1rem;
 }
 
 .navigation .user-panel .user-header .accordion-content input {
   padding: 0;
-  width: calc(100% - 2.8rem);
 }
 
 .navigation .user-panel .user-header .accordion-content input::placeholder {
