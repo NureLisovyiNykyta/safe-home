@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import request
+from flask import request, g
 from app.utils import JwtUtils
 from app.models import User
 from flask_login import current_user
@@ -42,6 +42,7 @@ def auth_required(f):
     def decorated(*args, **kwargs):
         user = authenticate_user()
         request.current_user = user
+        g.user = user
         return f(*args, **kwargs)
     return decorated
 
@@ -57,6 +58,7 @@ def role_required(roles):
                 raise AuthError(f"User does not have the required role. Required roles: {roles}")
 
             request.current_user = user
+            g.user = user
             return f(*args, **kwargs)
         return decorated
     return decorator
