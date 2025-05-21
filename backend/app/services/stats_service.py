@@ -29,16 +29,39 @@ class StatsService:
         if not plan:
             raise UnprocessableError("Subscription plan not found.")
 
-        stats = SubscriptionPlanStatsRepository.get_subscription_plan_stats_by_days(days, plan_id)
-        subscription_plan_stats = [
-            {
-                'stats_id': str(stat.stats_id),
-                'date': stat.stats_date.isoformat(),
-                'plan_id': str(stat.plan_id),
-                'plan_name': stat.plan.name,
-                'user_count': stat.user_count,
-                'avg_homes': stat.avg_homes,
-                'avg_sensors': stat.avg_sensors
-            } for stat in stats
-        ]
+        stats = SubscriptionPlanStatsRepository.get_subscription_plan_stats_by_days_plan(days, plan_id)
+        subscription_plan_stats = {
+            "plan_id": str(plan.plan_id) if plan else None,
+            "plan_name": plan.name if plan else None,
+            "stats": [
+                {
+                    "stats_id": str(stat.stats_id),
+                    "date": stat.stats_date.isoformat(),
+                    "user_count": stat.user_count,
+                    "avg_homes": stat.avg_homes,
+                    "avg_sensors": stat.avg_sensors
+                } for stat in stats
+            ]
+        }
         return jsonify({"subscription_plan_stats": subscription_plan_stats}), 200
+
+    @staticmethod
+    @handle_errors
+    def get_latest_subscription_plan_stats():
+        plans = SubscriptionPlanRepository.get_all()
+        subscription_plans_stats = []
+
+        for plan in plans:
+            stat = SubscriptionPlanStatsRepository.get_latest_stats_for_plan(plan.plan_id)
+            if stat:
+                subscription_plans_stats.append({
+                    "stats_id": str(stat.stats_id),
+                    "date": stat.stats_date.isoformat(),
+                    "plan_id": str(stat.plan_id),
+                    "plan_name": stat.plan.name,
+                    "user_count": stat.user_count,
+                    "avg_homes": stat.avg_homes,
+                    "avg_sensors": stat.avg_sensors
+                })
+
+        return jsonify({"subscription_plans_stats": subscription_plans_stats}), 200

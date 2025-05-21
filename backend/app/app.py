@@ -57,7 +57,7 @@ def create_app():
     from .models import GeneralUserNotification, SecurityUserNotification, Subscription, AdminAuditLog
     from .models import UserStats, SubscriptionPlanStats
 
-    from .db import init_seed_cli, seed_data
+    from .db_config import init_seed_cli, seed_data
     init_seed_cli(app)
 
     if app.config['AUTO_DB_SETUP']:

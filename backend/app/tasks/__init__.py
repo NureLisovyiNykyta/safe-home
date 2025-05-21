@@ -7,7 +7,7 @@ def init_tasks(app, scheduler):
         id='check_subscription_ending',
         func=lambda: SubscriptionTask.check_subscription_expiration(app),
         trigger='interval',
-        minute=5,
+        minutes=20,
         max_instances=1
     )
     scheduler.add_job(
@@ -21,16 +21,14 @@ def init_tasks(app, scheduler):
     scheduler.add_job(
         id='collect_user_stats',
         func=lambda: UserStatsTask.collect_user_stats(app),
-        trigger='cron',
-        hour=2,
-        minute=0,
+        trigger='interval',
+        hours=2,
         max_instances=1
     )
     scheduler.add_job(
         id='collect_subscription_plan_stats',
         func=lambda: SubscriptionPlanStatsTask.collect_subscription_plan_stats(app),
-        trigger='cron',
-        hour=2,
-        minute=0,
+        trigger='interval',
+        hours=2,
         max_instances=1
     )

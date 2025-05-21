@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 
 class SubscriptionPlanStatsRepository:
     @staticmethod
-    def get_subscription_plan_stats_by_days(days: int, plan_id: str = None):
+    def get_subscription_plan_stats_by_days_plan(days: int, plan_id: str = None):
         end_date = datetime.now(timezone.utc)
         start_date = end_date - timedelta(days=days)
         query = (SubscriptionPlanStats.query
@@ -25,3 +25,10 @@ class SubscriptionPlanStatsRepository:
         db.session.add(stats)
         db.session.commit()
         return stats
+
+    @staticmethod
+    def get_latest_stats_for_plan(plan_id: str):
+        return (SubscriptionPlanStats.query
+                .filter(SubscriptionPlanStats.plan_id == plan_id)
+                .order_by(SubscriptionPlanStats.stats_date.desc())
+                .first())

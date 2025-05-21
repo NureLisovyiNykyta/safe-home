@@ -7,7 +7,7 @@ from flasgger import swag_from
 stats_bp = Blueprint('stats', __name__)
 
 
-@stats_bp.route('/user-stats/<int:days>', methods=['GET'])
+@stats_bp.route('/stats/users/<int:days>', methods=['GET'])
 @swag_from({
     'tags': ['Stats'],
     'summary': 'Get user statistics for a number of days (admin only)',
@@ -52,52 +52,63 @@ def get_user_stats(days):
     return StatsService.get_user_stats(days)
 
 
-@stats_bp.route('/subscription-plan-stats/<plan_id>/<int:days>', methods=['GET'])
+@stats_bp.route('/stats/subscription-plan/<plan_id>/<int:days>', methods=['GET'])
 @swag_from({
     'tags': ['Stats'],
     'summary': 'Get subscription plan statistics for a number of days (admin only)',
-    'description': 'Returns subscription plan statistics (user count, average homes, and sensors) for the specified number of days, optionally filtered by plan_id, ordered from oldest to newest.',
+    'description': 'Returns subscription plan statistics (user count, average homes, and sensors) for the specified number of days, optionally filtered by plan_id, ordered from oldest to newest. Use "all" for plan_id to retrieve stats for all plans.',
     'parameters': [
         {
             'name': 'plan_id',
             'in': 'path',
             'type': 'string',
             'required': True,
-            'description': 'UUID of the subscription plan (or "all" for all plans)'
+            'description': 'UUID of the subscription plan or "all" for all plans'
         },
         {
             'name': 'days',
             'in': 'path',
             'type': 'integer',
             'required': True,
-            'description': 'Number of days to retrieve statistics for'
+            'description': 'Number of days to retrieve statistics for (must be positive)'
         }
     ],
     'responses': {
         200: {
-            'description': 'List of subscription plan statistics',
+            'description': 'Subscription plan statistics',
             'schema': {
                 'type': 'object',
                 'properties': {
                     'subscription_plan_stats': {
-                        'type': 'array',
-                        'items': {
-                            'type': 'object',
-                            'properties': {
-                                'stats_id': {'type': 'string'},
-                                'date': {'type': 'string', 'format': 'date-time'},
-                                'plan_id': {'type': 'string'},
-                                'plan_name': {'type': 'string'},
-                                'user_count': {'type': 'integer'},
-                                'avg_homes': {'type': 'number'},
-                                'avg_sensors': {'type': 'number'}
+                        'type': 'object',
+                        'properties': {
+                            'plan_id': {
+                                'type': 'string',
+                                'description': 'UUID of the subscription plan, null if all plans are requested'
+                            },
+                            'plan_name': {
+                                'type': 'string',
+                                'description': 'Name of the subscription plan, null if all plans are requested'
+                            },
+                            'stats': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'stats_id': {'type': 'string', 'description': 'UUID of the stats record'},
+                                        'date': {'type': 'string', 'format': 'date-time', 'description': 'Date of the stats record'},
+                                        'user_count': {'type': 'integer', 'description': 'Number of users with the plan'},
+                                        'avg_homes': {'type': 'number', 'description': 'Average number of homes per user'},
+                                        'avg_sensors': {'type': 'number', 'description': 'Average number of sensors per user'}
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         },
-        401: {'description': 'Unauthorized - Admin role required'},
+        401: {'description': 'Unauthorized - Admin or Super Admin role required'},
         422: {'description': 'Unprocessable Entity - Invalid days or plan_id'},
         500: {'description': 'Internal server error'}
     }
@@ -106,3 +117,42 @@ def get_user_stats(days):
 @handle_errors
 def get_subscription_plan_stats(plan_id, days):
     return StatsService.get_subscription_plan_stats(days, plan_id)
+
+
+@stats_bp.route('/stats/subscription-plans', methods=['GET'])
+@swag_from({
+    'tags': ['Stats'],
+    'summary': 'Get latest subscription plan statistics for all plans (admin only)',
+    'description': 'Returns the most recent statistics (user count, average homes, and sensors) for each subscription plan.',
+    'responses': {
+        200: {
+            'description': 'List of latest subscription plan statistics',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'subscription_plans_stats': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'stats_id': {'type': 'string', 'description': 'UUID of the stats record'},
+                                'date': {'type': 'string', 'format': 'date-time', 'description': 'Date of the stats record'},
+                                'plan_id': {'type': 'string', 'description': 'UUID of the subscription plan'},
+                                'plan_name': {'type': 'string', 'description': 'Name of the subscription plan'},
+                                'user_count': {'type': 'integer', 'description': 'Number of users with the plan'},
+                                'avg_homes': {'type': 'number', 'description': 'Average number of homes per user'},
+                                'avg_sensors': {'type': 'number', 'description': 'Average number of sensors per user'}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        401: {'description': 'Unauthorized - Admin or Super Admin role required'},
+        500: {'description': 'Internal server error'}
+    }
+})
+@role_required(['admin', 'super_admin'])
+@handle_errors
+def get_latest_subscription_plan_stats():
+    return StatsService.get_latest_subscription_plan_stats()
