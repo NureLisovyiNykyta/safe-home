@@ -8,14 +8,14 @@ def build_create_details(request):
     filtered_data = {k: v for k, v in json_data.items() if k not in ['password']}
     return {
         'action': 'create',
-        'created_data': getattr(g, 'created_data', filtered_data)
+        'details': getattr(g, 'created_data', filtered_data)
     }
 
 def build_delete_details(request):
     """Generates details for DELETE requests."""
     return {
         'action': 'delete',
-        'deleted_data': getattr(g, 'deleted_data', None)
+        'details': getattr(g, 'deleted_data', None)
     }
 
 
@@ -50,5 +50,5 @@ def build_update_details(request):
 
     return {
         'action': 'update',
-        'updated_data': merged_data
+        'details': merged_data
     }
