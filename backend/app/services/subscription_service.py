@@ -3,7 +3,7 @@ from app.repositories.subscription_repo import SubscriptionRepository
 from app.repositories.user_repo import UserRepository
 from app.repositories.subscription_plan_repo import SubscriptionPlanRepository
 from app.models.subscription import Subscription
-from flask import jsonify
+from flask import jsonify, g
 from datetime import datetime, timezone, timedelta
 
 class SubscriptionService:
@@ -73,6 +73,22 @@ class SubscriptionService:
         current_subscription.is_active = False
         current_subscription.end_date = datetime.now(timezone.utc)
         SubscriptionRepository.update(current_subscription)
+
+        user = UserRepository.get_by_id(user_id)
+
+        g.old_data = {
+            'user_id': str(user.user_id),
+            'name': user.name,
+            'email': user.email,
+            'plan': current_subscription.plan.name,
+        }
+
+        g.new_data = {
+            'user_id': str(user.user_id),
+            'name': user.name,
+            'email': user.email,
+            'plan': 'basic',
+        }
 
         SubscriptionService.create_basic_subscription(user_id)
         return jsonify({"message": "Subscription cancelled successfully."}), 200

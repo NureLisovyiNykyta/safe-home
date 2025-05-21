@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from app.services.subscription_service import SubscriptionService
 from app.utils.auth_decorator import auth_required, role_required
 from app.utils.error_handler import handle_errors, ValidationError
+from app.utils import audit_admin_action
 from flasgger import swag_from
 
 subscription_bp = Blueprint('subscription', __name__)
@@ -174,6 +175,7 @@ def get_user_subscriptions_admin(user_id):
 })
 @role_required(['admin', 'super_admin'])
 @handle_errors
+@audit_admin_action("cancelled user subscription to basic.")
 def cancel_current_user_subscription_admin(user_id):
     if not user_id:
         raise ValidationError("User ID is required.")

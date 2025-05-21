@@ -7,7 +7,7 @@ from flask import jsonify
 class GeneralUserNotificationService:
     @staticmethod
     def create_notification(user_id, title, body, importance, type, data=None):
-        if body.get('importance') not in ['low', 'medium', 'high']:
+        if importance not in ['low', 'medium', 'high']:
             raise ValidationError("Importance must be 'low', 'medium', or 'high'.")
 
         new_notification = GeneralUserNotification(

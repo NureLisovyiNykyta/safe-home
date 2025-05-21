@@ -54,17 +54,17 @@ def create_app():
 
     # These imports register models in db.metadata for Flask-Migrate
     from .models import User, Role, SubscriptionPlan, DefaultSecurityMode, Sensor, Home, MobileDevice
-    from .models import GeneralUserNotification, SecurityUserNotification, Subscription
+    from .models import GeneralUserNotification, SecurityUserNotification, Subscription, AdminAuditLog
 
     from .db import init_seed_cli, seed_data
     init_seed_cli(app)
-
 
     if app.config['AUTO_DB_SETUP']:
         with app.app_context():
             from flask_migrate import upgrade
             upgrade()  # Apply migrations
-            seed_data(app, force=False)
+            force = app.config['SEED_FORCE']
+            seed_data(app, force=force)
 
     from .routes import init_routes
     init_routes(app)
