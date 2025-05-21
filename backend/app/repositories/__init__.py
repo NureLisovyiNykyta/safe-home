@@ -9,3 +9,5 @@ from .subscription_repo import SubscriptionRepository
 from .subscription_plan_repo import SubscriptionPlanRepository
 from .user_repo import UserRepository
 from .admin_audit_log_repo import AdminAuditLogRepository
+from .user_stats_repo import UserStatsRepository
+from .subscription_plan_stats_repo import SubscriptionPlanStatsRepository

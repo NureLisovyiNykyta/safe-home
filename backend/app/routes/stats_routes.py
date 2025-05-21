@@ -1,0 +1,108 @@
+from flask import Blueprint, jsonify
+from app.services.stats_service import StatsService
+from app.utils.auth_decorator import auth_required, role_required
+from app.utils.error_handler import handle_errors, UnprocessableError
+from flasgger import swag_from
+
+stats_bp = Blueprint('stats', __name__)
+
+
+@stats_bp.route('/user-stats/<int:days>', methods=['GET'])
+@swag_from({
+    'tags': ['Stats'],
+    'summary': 'Get user statistics for a number of days (admin only)',
+    'description': 'Returns user count statistics for the specified number of days, ordered from oldest to newest.',
+    'parameters': [
+        {
+            'name': 'days',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'Number of days to retrieve statistics for'
+        }
+    ],
+    'responses': {
+        200: {
+            'description': 'List of user statistics',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'user_stats': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'stats_id': {'type': 'string'},
+                                'date': {'type': 'string', 'format': 'date-time'},
+                                'user_count': {'type': 'integer'}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        401: {'description': 'Unauthorized - Admin role required'},
+        422: {'description': 'Unprocessable Entity - Invalid days parameter'},
+        500: {'description': 'Internal server error'}
+    }
+})
+@role_required(['admin', 'super_admin'])
+@handle_errors
+def get_user_stats(days):
+    return StatsService.get_user_stats(days)
+
+
+@stats_bp.route('/subscription-plan-stats/<plan_id>/<int:days>', methods=['GET'])
+@swag_from({
+    'tags': ['Stats'],
+    'summary': 'Get subscription plan statistics for a number of days (admin only)',
+    'description': 'Returns subscription plan statistics (user count, average homes, and sensors) for the specified number of days, optionally filtered by plan_id, ordered from oldest to newest.',
+    'parameters': [
+        {
+            'name': 'plan_id',
+            'in': 'path',
+            'type': 'string',
+            'required': True,
+            'description': 'UUID of the subscription plan (or "all" for all plans)'
+        },
+        {
+            'name': 'days',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'Number of days to retrieve statistics for'
+        }
+    ],
+    'responses': {
+        200: {
+            'description': 'List of subscription plan statistics',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'subscription_plan_stats': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'stats_id': {'type': 'string'},
+                                'date': {'type': 'string', 'format': 'date-time'},
+                                'plan_id': {'type': 'string'},
+                                'plan_name': {'type': 'string'},
+                                'user_count': {'type': 'integer'},
+                                'avg_homes': {'type': 'number'},
+                                'avg_sensors': {'type': 'number'}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        401: {'description': 'Unauthorized - Admin role required'},
+        422: {'description': 'Unprocessable Entity - Invalid days or plan_id'},
+        500: {'description': 'Internal server error'}
+    }
+})
+@role_required(['admin', 'super_admin'])
+@handle_errors
+def get_subscription_plan_stats(plan_id, days):
+    return StatsService.get_subscription_plan_stats(days, plan_id)

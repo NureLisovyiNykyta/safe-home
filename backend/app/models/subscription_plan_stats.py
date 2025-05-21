@@ -17,4 +17,4 @@ class SubscriptionPlanStats(db.Model):
     avg_homes = db.Column(db.Float, nullable=False)
     avg_sensors = db.Column(db.Float, nullable=False)
 
-    plan = db.relationship('SubscriptionPlan', backref='stats')
+    plan = db.relationship('SubscriptionPlan', back_populates='stats')

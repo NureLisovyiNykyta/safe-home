@@ -55,6 +55,7 @@ def create_app():
     # These imports register models in db.metadata for Flask-Migrate
     from .models import User, Role, SubscriptionPlan, DefaultSecurityMode, Sensor, Home, MobileDevice
     from .models import GeneralUserNotification, SecurityUserNotification, Subscription, AdminAuditLog
+    from .models import UserStats, SubscriptionPlanStats
 
     from .db import init_seed_cli, seed_data
     init_seed_cli(app)
