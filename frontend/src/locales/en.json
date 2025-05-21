@@ -125,5 +125,12 @@
     "loading": "Loading",
     "error": "Failed to load data",
     "addNew": "add new"
+  },
+  "auditLog": {
+    "admin": "Admin:",
+    "action": "Action:",
+    "days": "Days:",
+    "refresh": "Refresh",
+    "error": "Error loading logs"
   }
 }
