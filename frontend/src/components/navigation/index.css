@@ -151,7 +151,7 @@
 
 .navigation .user-panel .user-header .accordion-content .form {
   display: flex;
-  width: fit-content;
+  width: 100%;
   flex-direction: column;
   margin-top: 1rem;
 }
@@ -182,13 +182,13 @@
   color: #333;
   border-radius: 0.5rem;
   height: 2rem;
-  font-size: 1rem;
 }
 
 .navigation .user-panel .user-header .accordion-content button[type="submit"] {
   margin-bottom: 1rem;
   background: #222;
   color: white;
+  font-size: 1rem;
 }
 
 .navigation .user-panel .user-header .accordion-content input {

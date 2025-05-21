@@ -1,35 +1,33 @@
 .page.audit-log-container .audit-log-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-}
-
-.page.audit-log-container .audit-log-header h2 {
-  margin: 0;
-  font-size: 2rem;
-  color: #333;
-}
-
-.page.audit-log-container .filters {
-  display: flex;
   gap: 1rem;
+  ;
 }
 
-.page.audit-log-container .filters select {
+.page.audit-log-container .audit-log-header .filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.page.audit-log-container .audit-log-header select,
+.page.audit-log-container .audit-log-header .refresh-btn {
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  height: 2rem;
+  background: #686868;
+}
+
+
+.page.audit-log-container .audit-log-header select {
   padding: 0.5rem;
-  background: #555;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
 }
 
-.page.audit-log-container .refresh-btn {
+.page.audit-log-container .audit-log-header .refresh-btn {
   padding: 0.5rem 1rem;
-  background: #555;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
   cursor: pointer;
   transition: background 0.3s;
   display: flex;
@@ -37,13 +35,14 @@
   gap: 0.5rem;
   justify-content: center;
   font-size: 1rem;
+  margin-left: auto;
 }
 
-.page.audit-log-container .refresh-btn:hover {
+.page.audit-log-container .audit-log-header .refresh-btn:hover {
   background: #555;
 }
 
-.page.audit-log-container .refresh-btn .icon {
+.page.audit-log-container .audit-log-header .refresh-btn .icon {
   font-size: 1.3rem;
 }
 
@@ -64,21 +63,27 @@
   position: relative;
 }
 
-.page.audit-log-container .log-icon {
+.page.audit-log-container .log-list .log-item .log-icon {
   color: #333;
   font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  border: 0.15rem solid white;
 }
 
-.page.audit-log-container .log-icon .add {
-  color: #84cd7f;
+.page.audit-log-container .log-list .log-item .log-icon .add {
+  color: #369731;
 }
 
-.page.audit-log-container .log-icon .edit {
-  color: #f0d160;
+.page.audit-log-container .log-list .log-item .log-icon .update {
+  color: #fa830d;
 }
 
-.page.audit-log-container .log-icon .delete {
-  color: #f58b8b;
+.page.audit-log-container .log-list .log-item .log-icon .delete {
+  color: #e75757;
 }
 
 .page.audit-log-container .log-details {
