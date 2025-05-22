@@ -31,10 +31,20 @@ def create_app():
     logger = logging.getLogger(__name__)
     logger.info("Initializing Flask application")
 
-    CORS(app,
-         methods=app.config['CORS_ALLOW_METHODS'],
-         allow_headers=app.config['CORS_ALLOW_HEADERS'],
-         max_age=app.config['CORS_MAX_AGE'])
+    if app.config['DEV_MODE']:
+        logger.info("Running in development mode")
+        CORS(app,
+             origins=app.config['CORS_ALLOW_ORIGINS'],
+             methods=app.config['CORS_ALLOW_METHODS'],
+             supports_credentials=app.config['CORS_SUPPORTS_CREDENTIALS'],
+             allow_headers=app.config['CORS_ALLOW_HEADERS'],
+             max_age=app.config['CORS_MAX_AGE'])
+    else:
+        logger.info("Running in production mode")
+        CORS(app,
+             methods=app.config['CORS_ALLOW_METHODS'],
+             allow_headers=app.config['CORS_ALLOW_HEADERS'],
+             max_age=app.config['CORS_MAX_AGE'])
 
     db.init_app(app)
     migrate.init_app(app, db)
