@@ -7,6 +7,7 @@ import { useAuth } from "../contexts/auth-context";
 import api from "../configs/api";
 
 const Admins = () => {
+  // This component is responsible for managing the admin users in the system.
   const { t } = useTranslation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
