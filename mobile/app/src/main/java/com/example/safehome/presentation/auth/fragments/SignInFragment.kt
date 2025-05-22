@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -38,6 +39,10 @@ class SignInFragment : Fragment() {
     private val authViewModel: SignInViewModel by viewModels()
 
     private var _isPasswordVisible = false
+
+    private val googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        authViewModel.handleGoogleSignInResult(result.data)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +95,11 @@ class SignInFragment : Fragment() {
             val email = binding.emailEditText.text.toString().trim()
             val password = binding.pswdEditText.text.toString().trim()
             authViewModel.checkUserAuthorization(email, password)
+        }
+
+        binding.googleButton.setOnClickListener {
+            val signInIntent = authViewModel.getGoogleSignInIntent(requireContext())
+            googleSignInLauncher.launch(signInIntent)
         }
 
         binding.resetPswdButton.setOnClickListener {

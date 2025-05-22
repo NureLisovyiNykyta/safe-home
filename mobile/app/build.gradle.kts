@@ -49,6 +49,7 @@ android {
 dependencies {
     implementation (libs.logging.interceptor)
     implementation(libs.hilt.android)
+    implementation(libs.firebase.common.ktx)
     kapt(libs.hilt.compiler)
     implementation (libs.jakewharton.timber)
     implementation (libs.retrofit2.retrofit)

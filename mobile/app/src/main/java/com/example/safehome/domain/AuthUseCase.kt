@@ -21,6 +21,17 @@ class AuthUseCase @Inject constructor(
             is Result.Loading -> Result.Loading
         }
     }
+    suspend fun firebaseGoogleAuth(firebaseToken: String): Result<Boolean> {
+        return when (val result = authRepository.googleLogin(firebaseToken)) {
+            is Result.Success -> {
+                val token = result.data.token
+                tokenRepository.saveToken(token)
+                Result.Success(token.isNotEmpty())
+            }
+            is Result.Error -> result
+            is Result.Loading -> Result.Loading
+        }
+    }
     suspend fun isTokenExpired(): Result<Boolean> {
         val localToken = tokenRepository.getToken() ?: return Result.Error(ErrorType.InternalError("Token is null"))
         return when (val result = authRepository.verifyToken(localToken)) {
