@@ -16,3 +16,4 @@ class SubscriptionPlan(db.Model):
     duration_days = db.Column(db.Integer, nullable=False)
 
     subscriptions = db.relationship('Subscription', back_populates='plan')
+    stats = db.relationship('SubscriptionPlanStats', back_populates='plan')

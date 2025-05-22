@@ -15,6 +15,7 @@ class Config:
 
     AUTO_DB_SETUP = os.getenv('AUTO_DB_SETUP', 'True').lower() == 'true'
     SEED_FORCE = os.getenv('SEED_FORCE', 'False').lower() == 'true'
+    DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
 
     # Email configuration
     MAIL_SERVER = 'smtp.gmail.com'
@@ -32,8 +33,10 @@ class Config:
     PERMANENT_SESSION_LIFETIME = timedelta(hours=3)
 
     # CORS configuration
-    CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH' 'DELETE']
+    CORS_ALLOW_ORIGINS = os.environ.get('CORS_ALLOW_ORIGINS', '*').split(',')
+    CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'DELETE']
     CORS_ALLOW_HEADERS = ['Content-Type', 'Authorization']
+    CORS_SUPPORTS_CREDENTIALS = True
     CORS_MAX_AGE = 3600
 
 def setup_logging(app):

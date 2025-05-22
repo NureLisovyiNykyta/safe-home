@@ -31,10 +31,20 @@ def create_app():
     logger = logging.getLogger(__name__)
     logger.info("Initializing Flask application")
 
-    CORS(app,
-         methods=app.config['CORS_ALLOW_METHODS'],
-         allow_headers=app.config['CORS_ALLOW_HEADERS'],
-         max_age=app.config['CORS_MAX_AGE'])
+    if app.config['DEV_MODE']:
+        logger.info("Running in development mode")
+        CORS(app,
+             origins=app.config['CORS_ALLOW_ORIGINS'],
+             methods=app.config['CORS_ALLOW_METHODS'],
+             supports_credentials=app.config['CORS_SUPPORTS_CREDENTIALS'],
+             allow_headers=app.config['CORS_ALLOW_HEADERS'],
+             max_age=app.config['CORS_MAX_AGE'])
+    else:
+        logger.info("Running in production mode")
+        CORS(app,
+             methods=app.config['CORS_ALLOW_METHODS'],
+             allow_headers=app.config['CORS_ALLOW_HEADERS'],
+             max_age=app.config['CORS_MAX_AGE'])
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -55,8 +65,9 @@ def create_app():
     # These imports register models in db.metadata for Flask-Migrate
     from .models import User, Role, SubscriptionPlan, DefaultSecurityMode, Sensor, Home, MobileDevice
     from .models import GeneralUserNotification, SecurityUserNotification, Subscription, AdminAuditLog
+    from .models import UserStats, SubscriptionPlanStats
 
-    from .db import init_seed_cli, seed_data
+    from .db_config import init_seed_cli, seed_data
     init_seed_cli(app)
 
     if app.config['AUTO_DB_SETUP']:

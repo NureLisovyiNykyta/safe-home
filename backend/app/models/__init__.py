@@ -9,3 +9,5 @@ from .sensor import Sensor
 from .general_user_notification import GeneralUserNotification
 from .security_user_notification import SecurityUserNotification
 from .admin_audit_log import AdminAuditLog
+from .subscription_plan_stats import SubscriptionPlanStats
+from .user_stats import UserStats
