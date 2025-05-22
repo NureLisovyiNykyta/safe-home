@@ -4,6 +4,7 @@
     "admins": "адміністратори",
     "subscriptions": "підписки",
     "auditLog": "журнал аудиту",
+    "statistics": "статистика",
     "logout": "вийти",
     "oldPassword": "старий пароль",
     "newPassword": "новий пароль",
@@ -132,5 +133,10 @@
     "days": "Дні:",
     "refresh": "Оновити",
     "error": "Помилка завантаження логів"
+  },
+  "stats": {
+    "userCount": "Кількість клієнтів",
+    "subscriptionPlans": "Плани підписок",
+    "subscriptionPlan": "Окремий план"
   }
 }

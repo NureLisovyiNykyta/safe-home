@@ -70,9 +70,12 @@
   align-items: flex-start;
 }
 
-.navigation .link.active,
+.navigation .link.active {
+  background: #dedede;
+}
+
 .navigation .link:hover {
-  background: #D9D9D9;
+  background: #e6e6e6;
 }
 
 .navigation .link .icon {
@@ -285,6 +288,7 @@
 }
 
 @media (max-width: 768px) {
+
   .navigation .logo .desktop-logo,
   .navigation .logo .desktop-text {
     display: none;

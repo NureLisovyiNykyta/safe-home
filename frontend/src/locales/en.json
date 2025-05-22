@@ -4,6 +4,7 @@
     "admins": "admins",
     "subscriptions": "subscriptions",
     "auditLog": "audit log",
+    "statistics": "statistics",
     "logout": "logout",
     "oldPassword": "old password",
     "newPassword": "new password",
@@ -132,5 +133,10 @@
     "days": "Days:",
     "refresh": "Refresh",
     "error": "Error loading logs"
+  },
+  "stats": {
+    "userCount": "User count",
+    "subscriptionPlans": "Subscription plans",
+    "subscriptionPlan": "Certain plan"
   }
 }
