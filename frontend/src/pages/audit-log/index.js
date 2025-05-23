@@ -81,7 +81,7 @@ const AuditLog = () => {
     }
 
     if (actionFilter !== "ALL") {
-      filtered = filtered.filter((log) => log.action.includes(actionFilter.toLowerCase()));
+      filtered = filtered.filter((log) => log.actionDetails.action === actionFilter.toLowerCase());
     }
 
     if (daysFilter !== "ALL") {
