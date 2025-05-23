@@ -15,6 +15,13 @@ class SubscriptionPlanStatsRepository:
         return query.order_by(SubscriptionPlanStats.stats_date.asc()).all()
 
     @staticmethod
+    def get_latest_stats_for_plan(plan_id: str):
+        return (SubscriptionPlanStats.query
+                .filter(SubscriptionPlanStats.plan_id == plan_id)
+                .order_by(SubscriptionPlanStats.stats_date.desc())
+                .first())
+
+    @staticmethod
     def add_subscription_plan_stats(plan_id: str, user_count: int, avg_homes: float, avg_sensors: float):
         stats = SubscriptionPlanStats(
             plan_id=plan_id,
@@ -26,9 +33,4 @@ class SubscriptionPlanStatsRepository:
         db.session.commit()
         return stats
 
-    @staticmethod
-    def get_latest_stats_for_plan(plan_id: str):
-        return (SubscriptionPlanStats.query
-                .filter(SubscriptionPlanStats.plan_id == plan_id)
-                .order_by(SubscriptionPlanStats.stats_date.desc())
-                .first())
+
