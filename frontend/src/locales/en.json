@@ -56,7 +56,7 @@
     "planUpdatedSuccessfully": "Plan updated successfully!",
     "planAddedSuccessfully": "Plan added successfully!",
     "failedToSavePlan": "Failed to save plan."
-  },  
+  },
   "registerForm": {
     "addNewAdmin": "Add new admin",
     "register": "Register",
@@ -69,7 +69,7 @@
     "passwordMinLength": "Password must be at least 8 characters",
     "adminAddedSuccessfully": "Admin added successfully!",
     "failedToRegisterAdmin": "Failed to register admin"
-  },  
+  },
   "admins": {
     "name": "Name",
     "email": "Email",
@@ -121,7 +121,7 @@
     "cancel": "Cancel",
     "subscriptionCanceled": "Subscription canceled successfully",
     "cancelFailed": "Failed to cancel subscription"
-  },  
+  },
   "tablePage": {
     "loading": "Loading",
     "error": "Failed to load data",
@@ -138,5 +138,21 @@
     "userCount": "User count",
     "subscriptionPlans": "Subscription plans",
     "subscriptionPlan": "Certain plan"
+  },
+  "charts": {
+    "daysLabel": "Days",
+    "dateAxis": "Date",
+    "userCountAxis": "User count",
+    "planNameAxis": "Plan",
+    "userCount": "User count",
+    "avgHomes": "Average homes",
+    "avgSensors": "Average sensors",
+    "planMaxHomes": "Max homes",
+    "planMaxSensors": "Max sensors",
+    "userCountTitle": "Users count by subscription",
+    "homesComparisonTitle": "Comparison of used resources: average vs max homes",
+    "sensorsComparisonTitle": "Comparison of used resources: average vs max sensors",
+    "homesAxis": "Number of homes",
+    "sensorsAxis": "Number of sensors"
   }
 }

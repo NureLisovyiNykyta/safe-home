@@ -59,6 +59,8 @@ class StatsService:
                     "date": stat.stats_date.isoformat(),
                     "plan_id": str(stat.plan_id),
                     "plan_name": stat.plan.name,
+                    "plan_max_homes": stat.plan.max_homes,
+                    "plan_max_sensors": stat.plan.max_sensors,
                     "user_count": stat.user_count,
                     "avg_homes": stat.avg_homes,
                     "avg_sensors": stat.avg_sensors

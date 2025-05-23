@@ -6,7 +6,7 @@ import { LuUsers } from "react-icons/lu";
 import { PiMoneyWavy } from "react-icons/pi";
 import { FaMoneyCheckAlt } from "react-icons/fa";
 import UserStatsChart from "../../components/charts/user-count";
-import SubscriptionPlansChart from "../../components/charts/subscription-plans";
+import SubscriptionPlansChart from "../../components/charts/plan-chart";
 
 const Statistics = () => {
   const { t } = useTranslation();

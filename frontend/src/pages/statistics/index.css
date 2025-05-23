@@ -36,3 +36,16 @@
 .page .stats-nav-btn:not(.active):hover {
   background: #cdcdcd;
 }
+
+@media screen and (max-width: 768px) {
+  .page .stats-navigation {
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+  }
+
+  .page .stats-nav-btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

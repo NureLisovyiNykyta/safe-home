@@ -4,10 +4,13 @@ import { Chart as ChartJS, LineElement, PointElement, LinearScale, TimeScale, Ti
 import "chartjs-adapter-date-fns";
 import api from "../../../configs/api";
 import GradientSpinner from "../../gradient-spinner";
+import { useTranslation } from "react-i18next";
+import './index.css';
 
 ChartJS.register(LineElement, PointElement, LinearScale, TimeScale, Title, Tooltip, Legend);
 
 const UserStatsChart = () => {
+  const { t } = useTranslation();
   const [chartData, setChartData] = useState(null);
   const [days, setDays] = useState(7);
 
@@ -24,10 +27,9 @@ const UserStatsChart = () => {
           labels,
           datasets: [
             {
-              label: "User Count",
+              label: t("charts.userCount"),
               data,
               borderColor: "rgb(108, 122, 231)",
-              backgroundColor: "rgba(128, 75, 192, 0.2)",
               fill: true,
               tension: 0.3,
             },
@@ -39,7 +41,7 @@ const UserStatsChart = () => {
     };
 
     fetchStats();
-  }, [days]);
+  }, [days, t]);
 
   const handleDaysChange = (e) => {
     const value = parseInt(e.target.value);
@@ -51,20 +53,9 @@ const UserStatsChart = () => {
   if (!chartData) return <div className="page loading"><GradientSpinner /></div>;
 
   return (
-    <div className="p-4">
-      <div className="mb-4">
-        <label className="mr-2">Days:</label>
-        <input
-          type="range"
-          value={days}
-          onChange={handleDaysChange}
-          min="1"
-          max="30"
-          className="border rounded px-2 py-1"
-        />
-        <span className="ml-2">{days}</span>
-      </div>
+    <div className="user-count-chart">
       <Line
+        className="chart"
         data={chartData}
         options={{
           responsive: true,
@@ -82,7 +73,7 @@ const UserStatsChart = () => {
               },
               title: {
                 display: true,
-                text: "Date",
+                text: t("charts.dateAxis"),
               },
             },
             y: {
@@ -92,12 +83,23 @@ const UserStatsChart = () => {
               },
               title: {
                 display: true,
-                text: "User Count",
+                text: t("charts.userCountAxis"),
               },
             },
           },
         }}
       />
+      <div className="action-panel">
+        <label>{t("charts.daysLabel")}</label>
+        <input
+          type="range"
+          value={days}
+          onChange={handleDaysChange}
+          min="1"
+          max="30"
+        />
+        <span>{days}</span>
+      </div>
     </div>
   );
 };

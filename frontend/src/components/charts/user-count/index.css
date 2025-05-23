@@ -1,0 +1,27 @@
+.user-count-chart {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.user-count-chart .chart {
+  max-height: calc(100% - 8rem);
+  max-width: calc(100% - 2rem);
+  padding: 0;
+}
+
+.user-count-chart .action-panel {
+  background: #333;
+  color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  margin: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.user-count-chart .action-panel input {
+  width: 100%;
+}
