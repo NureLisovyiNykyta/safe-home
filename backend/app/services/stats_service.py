@@ -37,9 +37,7 @@ class StatsService:
                             "date": stat.stats_date.isoformat(),
                             "user_count": stat.user_count,
                             "avg_homes": stat.avg_homes,
-                            "avg_sensors": stat.avg_sensors,
-                            "plan_max_homes": plan.max_homes,
-                            "plan_max_sensors": plan.max_sensors
+                            "avg_sensors": stat.avg_sensors
                         } for stat in stats
                     ]
                 }

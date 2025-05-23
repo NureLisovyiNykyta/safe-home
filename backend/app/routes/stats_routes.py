@@ -102,9 +102,7 @@ def get_user_stats(days):
                                             'date': {'type': 'string', 'format': 'date-time', 'description': 'Date of the stats record'},
                                             'user_count': {'type': 'integer', 'description': 'Number of users with the plan'},
                                             'avg_homes': {'type': 'number', 'description': 'Average number of homes per user'},
-                                            'avg_sensors': {'type': 'number', 'description': 'Average number of sensors per user'},
-                                            'plan_max_homes': {'type': 'number', 'description': 'Max number of homes per user'},
-                                            'plan_max_sensors': {'type': 'number', 'description': 'Max number of sensors per user'}
+                                            'avg_sensors': {'type': 'number', 'description': 'Average number of sensors per user'}
                                         }
                                     }
                                 }
@@ -148,7 +146,9 @@ def get_subscription_plan_stats(plan_id, days):
                                 'plan_name': {'type': 'string', 'description': 'Name of the subscription plan'},
                                 'user_count': {'type': 'integer', 'description': 'Number of users with the plan'},
                                 'avg_homes': {'type': 'number', 'description': 'Average number of homes per user'},
-                                'avg_sensors': {'type': 'number', 'description': 'Average number of sensors per user'}
+                                'avg_sensors': {'type': 'number', 'description': 'Average number of sensors per user'},
+                                'plan_max_homes': {'type': 'number', 'description': 'Max number of homes per user'},
+                                'plan_max_sensors': {'type': 'number', 'description': 'Max number of sensors per user'}
                             }
                         }
                     }
