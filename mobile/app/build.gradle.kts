@@ -50,6 +50,7 @@ dependencies {
     implementation (libs.logging.interceptor)
     implementation(libs.hilt.android)
     implementation(libs.firebase.common.ktx)
+    implementation(libs.datastore.preferences)
     kapt(libs.hilt.compiler)
     implementation (libs.jakewharton.timber)
     implementation (libs.retrofit2.retrofit)

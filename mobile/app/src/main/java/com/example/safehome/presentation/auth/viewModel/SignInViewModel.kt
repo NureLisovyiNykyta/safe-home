@@ -5,10 +5,8 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.safehome.R
-import com.example.safehome.data.api.AuthApi
 import com.example.safehome.data.model.ErrorType
 import com.example.safehome.data.model.Result
-import com.example.safehome.data.repo.AuthRepository
 import com.example.safehome.domain.AuthUseCase
 import com.example.safehome.presentation.auth.utils.ValidatorUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn

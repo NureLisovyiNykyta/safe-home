@@ -2,7 +2,6 @@ package com.example.safehome.data.api
 
 import android.content.Context
 import com.example.safehome.data.network.NetworkHandler
-import com.example.safehome.data.repo.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -38,7 +37,7 @@ object HintModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:5000/api/")
+            .baseUrl("https://safe-home-backend-d2f2atb3d0eee9ay.northeurope-01.azurewebsites.net/api/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

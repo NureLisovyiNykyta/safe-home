@@ -1,7 +1,9 @@
 package com.example.safehome.data.api
 
+import com.example.safehome.data.model.AddDeviceRequest
 import com.example.safehome.data.model.FirebaseLoginRequest
 import com.example.safehome.data.model.FirebaseLoginResponse
+import com.example.safehome.data.model.MessageResponse
 import com.example.safehome.data.model.ResetPasswordRequest
 import com.example.safehome.data.model.ResetPasswordResponse
 import com.example.safehome.data.model.SignUpResponse
@@ -45,4 +47,13 @@ interface AuthApi {
         "Content-Type: application/json"
     )
     suspend fun firebaseLogin(@Body request: FirebaseLoginRequest): FirebaseLoginResponse
+
+    @POST("devices")
+    @Headers(
+        "Content-Type: application/json"
+    )
+    suspend fun addDevice(
+        @Header("Authorization") token: String,
+        @Body request: AddDeviceRequest
+    ): MessageResponse
 }
