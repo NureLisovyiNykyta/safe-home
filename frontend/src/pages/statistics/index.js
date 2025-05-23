@@ -3,10 +3,11 @@ import { useState } from "react";
 import { Route, Routes, Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LuUsers } from "react-icons/lu";
+import { BiSolidUserAccount } from "react-icons/bi";
 import { PiMoneyWavy } from "react-icons/pi";
-import { FaMoneyCheckAlt } from "react-icons/fa";
 import UserStatsChart from "../../components/charts/user-count";
 import SubscriptionPlansChart from "../../components/charts/plan-chart";
+import NotFound from "../not-found";
 
 const Statistics = () => {
   const { t } = useTranslation();
@@ -16,7 +17,7 @@ const Statistics = () => {
   const tabs = [
     { id: "user-count", label: t("stats.userCount"), path: "/statistics/user-count", icon: <LuUsers /> },
     { id: "subscription-plans", label: t("stats.subscriptionPlans"), path: "/statistics/subscription-plans", icon: <PiMoneyWavy /> },
-    { id: "subscription-plan", label: t("stats.subscriptionPlan"), path: "/statistics/subscription-plan", icon: <FaMoneyCheckAlt /> },
+    { id: "subscription-plan", label: t("stats.userCountByPlans"), path: "/statistics/user-count-by-plans", icon: <BiSolidUserAccount /> },
   ];
 
   useState(() => {
@@ -46,8 +47,9 @@ const Statistics = () => {
       <Routes>
         <Route path="/user-count" element={<UserStatsChart />} />
         <Route path="/subscription-plans" element={<SubscriptionPlansChart />} />
-        <Route path="/subscription-plan" element={<div>Subscription Plan Placeholder</div>} />
-        <Route index element={<UserStatsChart />} />
+        <Route path="/user-count-by-plans" element={<UserStatsChart multiple={true} />} />
+        <Route index element={<UserStatsChart />} />        
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </div>
   );

@@ -137,7 +137,7 @@
   "stats": {
     "userCount": "Кількість клієнтів",
     "subscriptionPlans": "Плани підписок",
-    "subscriptionPlan": "Окремий план"
+    "userCountByPlans": "Кількість клієнтів за підписками"
   },
   "charts": {
     "daysLabel": "Дні",
