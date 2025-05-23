@@ -4,6 +4,7 @@
     "admins": "адміністратори",
     "subscriptions": "підписки",
     "auditLog": "журнал аудиту",
+    "statistics": "статистика",
     "logout": "вийти",
     "oldPassword": "старий пароль",
     "newPassword": "новий пароль",
@@ -132,5 +133,26 @@
     "days": "Дні:",
     "refresh": "Оновити",
     "error": "Помилка завантаження логів"
+  },
+  "stats": {
+    "userCount": "Кількість клієнтів",
+    "subscriptionPlans": "Плани підписок",
+    "userCountByPlans": "Кількість клієнтів за підписками"
+  },
+  "charts": {
+    "daysLabel": "Дні",
+    "dateAxis": "Дата",
+    "userCountAxis": "Кількість клієнтів",
+    "planNameAxis": "План",
+    "userCount": "Кількість клієнтів",
+    "avgHomes": "Середня кількість будинків",
+    "avgSensors": "Середня кількість сенсорів",
+    "planMaxHomes": "Макс. будинків",
+    "planMaxSensors": "Макс. сенсорів",
+    "userCountTitle": "Кількість клієнтів за підпискою",
+    "homesComparisonTitle": "Порівняння використаних ресурсів: середнє vs макс. домів",
+    "sensorsComparisonTitle": "Порівняння використаних ресурсів: середнє vs макс. сенсорів",
+    "homesAxis": "Кількість будинків",
+    "sensorsAxis": "Кількість сенсорів"
   }
 }

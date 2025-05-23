@@ -12,6 +12,7 @@ import { useCookies } from 'react-cookie';
 import i18n from '../../configs/locale';
 import { AuthContext } from '../../contexts/auth-context';
 import { LoginForm } from '../forms/login';
+import Statistics from '../../pages/statistics';
 
 const App = () => {
   const [cookies, setCookie] = useCookies(['language']);
@@ -33,10 +34,11 @@ const App = () => {
       <Routes>
         <Route path='/' element={<LoginForm changeLanguage={changeLanguage} />} />
         <Route path='/customers' element={<Customers />} />        
-        <Route path="/customers/:userId" element={<UserSubscriptions />} />
+        <Route path="/customers/user/:userId" element={<UserSubscriptions />} />
         <Route path='/admins' element={<Admins />} />
         <Route path='/subscriptions' element={<Subscriptions />} />
         <Route path='/audit-log' element={<AuditLog />} />
+        <Route path='/statistics/*' element={<Statistics />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
     </div>

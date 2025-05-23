@@ -3,7 +3,7 @@ import logo from './logo.png';
 import { MdLogout, MdPayment } from "react-icons/md";
 import { FiUsers } from "react-icons/fi";
 import { GrUserAdmin } from "react-icons/gr";
-import { IoArrowBackOutline } from "react-icons/io5";
+import { IoArrowBackOutline, IoStatsChart } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import { RxHamburgerMenu, RxReader } from "react-icons/rx";
 import { useState, useEffect } from 'react';
@@ -105,6 +105,7 @@ const Navigation = ({ changeLanguage }) => {
     if (getActiveLink('/admins') === 'active') return t('navigation.admins');
     if (getActiveLink('/subscriptions') === 'active') return t('navigation.subscriptions');
     if (getActiveLink('/audit-log') === 'active') return t('navigation.auditLog');
+    if (getActiveLink('/statistics') === 'active') return t('navigation.statistics');
     return 'safe home';
   };
 
@@ -170,6 +171,14 @@ const Navigation = ({ changeLanguage }) => {
           >
             <RxReader className='icon' />
             {t('navigation.auditLog')}
+          </Link>
+          <Link
+            to="/statistics"
+            className={`link ${getActiveLink('/statistics')}`}
+            onClick={handleLinkClick}
+          >
+            <IoStatsChart className='icon' />
+            {t('navigation.statistics')}
           </Link>
         </div>
         <div className='user-panel'>

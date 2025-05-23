@@ -25,25 +25,40 @@ class StatsService:
     def get_subscription_plan_stats(days: int, plan_id: str = None):
         Validator.validate_positive_integer(days, "days")
 
-        plan = SubscriptionPlanRepository.get_by_id(plan_id)
-        if not plan:
-            raise UnprocessableError("Subscription plan not found.")
+        def build_plan_stats(plan):
+            stats = SubscriptionPlanStatsRepository.get_subscription_plan_stats_by_days_plan(days, plan.plan_id)
+            if stats:
+                return {
+                    "plan_id": str(plan.plan_id),
+                    "plan_name": plan.name,
+                    "stats": [
+                        {
+                            "stats_id": str(stat.stats_id),
+                            "date": stat.stats_date.isoformat(),
+                            "user_count": stat.user_count,
+                            "avg_homes": stat.avg_homes,
+                            "avg_sensors": stat.avg_sensors
+                        } for stat in stats
+                    ]
+                }
+            return None
 
-        stats = SubscriptionPlanStatsRepository.get_subscription_plan_stats_by_days_plan(days, plan_id)
-        subscription_plan_stats = {
-            "plan_id": str(plan.plan_id) if plan else None,
-            "plan_name": plan.name if plan else None,
-            "stats": [
-                {
-                    "stats_id": str(stat.stats_id),
-                    "date": stat.stats_date.isoformat(),
-                    "user_count": stat.user_count,
-                    "avg_homes": stat.avg_homes,
-                    "avg_sensors": stat.avg_sensors
-                } for stat in stats
-            ]
-        }
-        return jsonify({"subscription_plan_stats": subscription_plan_stats}), 200
+        subscription_plan_stats = []
+        if plan_id:
+            plan = SubscriptionPlanRepository.get_by_id(plan_id)
+            if not plan:
+                raise UnprocessableError("Subscription plan not found.")
+            plan_stats = build_plan_stats(plan)
+            if plan_stats:
+                subscription_plan_stats.append(plan_stats)
+        else:
+            plans = SubscriptionPlanRepository.get_all()
+            for plan in plans:
+                plan_stats = build_plan_stats(plan)
+                if plan_stats:
+                    subscription_plan_stats.append(plan_stats)
+
+        return jsonify({"subscription_plans_stats": subscription_plan_stats}), 200
 
     @staticmethod
     @handle_errors
@@ -59,7 +74,11 @@ class StatsService:
                     "date": stat.stats_date.isoformat(),
                     "plan_id": str(stat.plan_id),
                     "plan_name": stat.plan.name,
+                    "plan_max_homes": stat.plan.max_homes,
+                    "plan_max_sensors": stat.plan.max_sensors,
                     "user_count": stat.user_count,
+                    "plan_max_homes": stat.plan.max_homes,
+                    "plan_max_sensors": stat.plan.max_sensors,
                     "avg_homes": stat.avg_homes,
                     "avg_sensors": stat.avg_sensors
                 })

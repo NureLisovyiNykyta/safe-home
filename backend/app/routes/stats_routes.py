@@ -56,7 +56,7 @@ def get_user_stats(days):
 @swag_from({
     'tags': ['Stats'],
     'summary': 'Get subscription plan statistics for a number of days (admin only)',
-    'description': 'Returns subscription plan statistics (user count, average homes, and sensors) for the specified number of days, optionally filtered by plan_id, ordered from oldest to newest. Use "all" for plan_id to retrieve stats for all plans.',
+    'description': 'Returns subscription plan statistics (user count, average homes, and sensors) for the specified number of days. If plan_id is a UUID, returns an array with one object for that plan. If plan_id is "all", returns an array of objects for all plans. Stats are ordered from oldest to newest.',
     'parameters': [
         {
             'name': 'plan_id',
@@ -79,27 +79,31 @@ def get_user_stats(days):
             'schema': {
                 'type': 'object',
                 'properties': {
-                    'subscription_plan_stats': {
-                        'type': 'object',
-                        'properties': {
-                            'plan_id': {
-                                'type': 'string',
-                                'description': 'UUID of the subscription plan, null if all plans are requested'
-                            },
-                            'plan_name': {
-                                'type': 'string',
-                                'description': 'Name of the subscription plan, null if all plans are requested'
-                            },
-                            'stats': {
-                                'type': 'array',
-                                'items': {
-                                    'type': 'object',
-                                    'properties': {
-                                        'stats_id': {'type': 'string', 'description': 'UUID of the stats record'},
-                                        'date': {'type': 'string', 'format': 'date-time', 'description': 'Date of the stats record'},
-                                        'user_count': {'type': 'integer', 'description': 'Number of users with the plan'},
-                                        'avg_homes': {'type': 'number', 'description': 'Average number of homes per user'},
-                                        'avg_sensors': {'type': 'number', 'description': 'Average number of sensors per user'}
+                    'subscription_plans_stats': {
+                        'type': 'array',
+                        'description': 'Array of statistics objects, one per plan (single object for specific plan_id, multiple for "all")',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'plan_id': {
+                                    'type': 'string',
+                                    'description': 'UUID of the subscription plan'
+                                },
+                                'plan_name': {
+                                    'type': 'string',
+                                    'description': 'Name of the subscription plan'
+                                },
+                                'stats': {
+                                    'type': 'array',
+                                    'items': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'stats_id': {'type': 'string', 'description': 'UUID of the stats record'},
+                                            'date': {'type': 'string', 'format': 'date-time', 'description': 'Date of the stats record'},
+                                            'user_count': {'type': 'integer', 'description': 'Number of users with the plan'},
+                                            'avg_homes': {'type': 'number', 'description': 'Average number of homes per user'},
+                                            'avg_sensors': {'type': 'number', 'description': 'Average number of sensors per user'}
+                                        }
                                     }
                                 }
                             }
@@ -116,6 +120,7 @@ def get_user_stats(days):
 @role_required(['admin', 'super_admin'])
 @handle_errors
 def get_subscription_plan_stats(plan_id, days):
+    plan_id = None if plan_id.lower() == 'all' else plan_id
     return StatsService.get_subscription_plan_stats(days, plan_id)
 
 
@@ -141,7 +146,9 @@ def get_subscription_plan_stats(plan_id, days):
                                 'plan_name': {'type': 'string', 'description': 'Name of the subscription plan'},
                                 'user_count': {'type': 'integer', 'description': 'Number of users with the plan'},
                                 'avg_homes': {'type': 'number', 'description': 'Average number of homes per user'},
-                                'avg_sensors': {'type': 'number', 'description': 'Average number of sensors per user'}
+                                'avg_sensors': {'type': 'number', 'description': 'Average number of sensors per user'},
+                                'plan_max_homes': {'type': 'number', 'description': 'Max number of homes per user'},
+                                'plan_max_sensors': {'type': 'number', 'description': 'Max number of sensors per user'}
                             }
                         }
                     }

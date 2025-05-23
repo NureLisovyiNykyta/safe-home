@@ -73,6 +73,48 @@
   padding-left: 1rem;
   background: #e9e8e8;
   border-radius: 0.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.page.audit-log-container .log-item:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.page.audit-log-container .log-item:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.page.audit-log-container .log-item:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.page.audit-log-container .log-item:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.page.audit-log-container .log-item:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.page.audit-log-container .log-item:nth-child(6) {
+  animation-delay: 0.5s;
+}
+
+.page.audit-log-container .log-item:nth-child(n+7) {
+  animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page.audit-log-container .log-item-header {
@@ -102,7 +144,7 @@
 }
 
 .page.audit-log-container .log-list .log-item .log-icon .update {
-  color: #fa830d;
+  color: #b3b3b3;
 }
 
 .page.audit-log-container .log-list .log-item .log-icon .delete {
@@ -161,7 +203,7 @@
 }
 
 .page.audit-log-container .log-details-expanded.update {
-  color: #fa830d;
+  color: #b3b3b3;
 }
 
 .page.audit-log-container .log-details-expanded.delete {
