@@ -67,7 +67,7 @@ class AuthService:
     @staticmethod
     @handle_errors
     def session_login_user(data):
-        user = AuthService._login_user(data)
+        user = AuthService.login_user(data)
         if user:
             login_user(user)
             return jsonify({'message': 'Logged in successfully.'}), 200
@@ -76,7 +76,7 @@ class AuthService:
     @staticmethod
     @handle_errors
     def token_login_user(data):
-        user = AuthService._login_user(data)
+        user = AuthService.login_user(data)
         if user:
             token = JwtUtils.generate_jwt({'user_id': str(user.user_id)})
             return jsonify({'message': 'Logged in successfully.', 'token': token}), 200
@@ -107,7 +107,7 @@ class AuthService:
         }), 200
 
     @staticmethod
-    def _login_user(data):
+    def login_user(data):
         email = data.get('email')
         if not email:
             raise ValidationError("Email is required for login.")
