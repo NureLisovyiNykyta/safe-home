@@ -12,7 +12,7 @@ class MobileDeviceService:
         devices_list = [
             {
                 "user_device_id": str(device.user_device_id),
-                "device_token": str(device.get_device_token()),
+                "device_token": str(device.device_token),
                 "device_info": device.device_info,
                 "created_at": device.created_at.isoformat()
             } for device in devices
