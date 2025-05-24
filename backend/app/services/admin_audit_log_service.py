@@ -61,8 +61,8 @@ class AdminAuditLogService:
         """Bild admin audit log for PUT/PATCH requests (update)."""
         admin_id = str(g.user.user_id)
 
-        old_data = getattr(g, 'old_data', None)
-        new_data = getattr(g, 'new_data', None)
+        old_data = getattr(g, 'old_data', {})
+        new_data = getattr(g, 'new_data', {})
 
         # get all unique keys from both dictionaries
         all_keys = set(old_data.keys()) | set(new_data.keys())
