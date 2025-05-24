@@ -10,7 +10,7 @@ class SubscriptionEmailService:
     def send_subscription_expiration_email(user, subscription):
         formatted_end_date = subscription.end_date.strftime('%A, %d %B %Y')
 
-        with open("templates/email_subscription_expiration.html", "r") as html_file:
+        with open("app/templates/email_subscription_expiration.html", "r") as html_file:
             html_template = html_file.read()
 
         html_body = render_template_string(
@@ -45,7 +45,7 @@ class SubscriptionEmailService:
     def send_subscription_canceled_email(user, subscription):
         formatted_end_date = subscription.end_date.strftime('%A, %d %B %Y')
 
-        with open("templates/email_subscription_cancelled.html", "r") as html_file:
+        with open("app/templates/email_subscription_cancelled.html", "r") as html_file:
             html_template = html_file.read()
 
         html_body = render_template_string(
