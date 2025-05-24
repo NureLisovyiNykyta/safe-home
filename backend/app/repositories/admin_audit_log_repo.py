@@ -4,6 +4,19 @@ from app import db
 
 class AdminAuditLogRepository:
     @staticmethod
+    def to_dict(log):
+        return {
+            'log_id': str(log.log_id),
+            'admin_id': str(log.admin_id),
+            'admin_email': log.admin.email,
+            'admin_name': log.admin.name,
+            'action': log.action,
+            'method': log.method,
+            'action_details': log.action_details,
+            'created_at': log.created_at.isoformat()
+        }
+
+    @staticmethod
     def get_all():
         return AdminAuditLog.query.order_by(AdminAuditLog.created_at.desc()).all()
 

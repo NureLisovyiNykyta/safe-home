@@ -21,6 +21,7 @@ oauth = OAuth()
 mail = Mail()
 scheduler = APScheduler()
 migrate = Migrate()
+socketio = SocketIO()
 
 
 def create_app():
@@ -54,8 +55,7 @@ def create_app():
     oauth.init_app(app)
     mail.init_app(app)
     scheduler.init_app(app)
-
-    socketio = SocketIO(app, cors_allowed_origins="*", manage_session=False)
+    socketio.init_app(app, cors_allowed_origins="*", manage_session=False)
 
     stripe.api_key = app.config["STRIPE_SECRET_KEY"]
 
