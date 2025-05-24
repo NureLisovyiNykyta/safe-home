@@ -32,7 +32,7 @@ class AdminAuditLogService:
         admin_id = str(g.user.user_id)
         details = {
             'action': 'create',
-            'created_data': getattr(g, 'created_data', None)
+            'details': getattr(g, 'created_data', None)
         }
         AdminAuditLogRepository.add(
             admin_id=admin_id,
@@ -47,7 +47,7 @@ class AdminAuditLogService:
         admin_id = str(g.user.user_id)
         details = {
             'action': 'delete',
-            'deleted_data': getattr(g, 'deleted_data', None)
+            'details': getattr(g, 'deleted_data', None)
         }
         AdminAuditLogRepository.add(
             admin_id=admin_id,
@@ -87,7 +87,7 @@ class AdminAuditLogService:
 
         details = {
             'action': 'update',
-            'updated_data': merged_data
+            'details': merged_data
         }
         AdminAuditLogRepository.add(
             admin_id=admin_id,
