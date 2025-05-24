@@ -3,13 +3,16 @@
     "customers": "клієнти",
     "admins": "адміністратори",
     "subscriptions": "підписки",
+    "auditLog": "журнал аудиту",
+    "statistics": "статистика",
     "logout": "вийти",
     "oldPassword": "старий пароль",
     "newPassword": "новий пароль",
     "changePassword": "Змінити пароль"
   },
   "notFound": {
-    "title": "404 Сторінка не знайдена"
+    "title": "Сторінка не знайдена",
+    "goBack": "Назад на головну сторінку"
   },
   "login": {
     "title": "Увійти в систему",
@@ -69,8 +72,13 @@
   },
   "admins": {
     "name": "Ім'я",
-    "email": "Email",
-    "createdAt": "Дата створення"
+    "email": "Електронна пошта",
+    "createdAt": "Дата створення",
+    "deleteAdmin": "Видалити",
+    "adminDeleted": "Адміністратора успішно видалено",
+    "deleteAdminConfirmation": "Ви впевнені, що хочете видалити цього адміністратора?",
+    "confirm": "Підтвердити",
+    "cancel": "Скасувати"
   },
   "customers": {
     "title": "Користувачі",
@@ -87,6 +95,7 @@
   },
   "notification": {
     "failedToDeleteUser": "Не вдалося видалити користувача",
+    "failedToDeleteAdmin": "Не вдалося видалити адміністратора",
     "passwordUpdated": "Пароль успішно оновлено",
     "passwordUpdateFailed": "Не вдалося оновити пароль"
   },
@@ -114,8 +123,36 @@
     "cancelFailed": "Не вдалося скасувати підписку"
   },
   "tablePage": {
-    "loading": "Завантаження...",
-    "error": "Не вдалося завантажити дані.",
+    "loading": "Завантаження",
+    "error": "Не вдалося завантажити дані",
     "addNew": "додати нове"
+  },
+  "auditLog": {
+    "admin": "Адмін:",
+    "action": "Дія:",
+    "days": "Дні:",
+    "refresh": "Оновити",
+    "error": "Помилка завантаження логів"
+  },
+  "stats": {
+    "userCount": "Кількість клієнтів",
+    "subscriptionPlans": "Плани підписок",
+    "userCountByPlans": "Кількість клієнтів за підписками"
+  },
+  "charts": {
+    "daysLabel": "Дні",
+    "dateAxis": "Дата",
+    "userCountAxis": "Кількість клієнтів",
+    "planNameAxis": "План",
+    "userCount": "Кількість клієнтів",
+    "avgHomes": "Середня кількість будинків",
+    "avgSensors": "Середня кількість сенсорів",
+    "planMaxHomes": "Макс. будинків",
+    "planMaxSensors": "Макс. сенсорів",
+    "userCountTitle": "Кількість клієнтів за підпискою",
+    "homesComparisonTitle": "Порівняння використаних ресурсів: середнє vs макс. домів",
+    "sensorsComparisonTitle": "Порівняння використаних ресурсів: середнє vs макс. сенсорів",
+    "homesAxis": "Кількість будинків",
+    "sensorsAxis": "Кількість сенсорів"
   }
 }

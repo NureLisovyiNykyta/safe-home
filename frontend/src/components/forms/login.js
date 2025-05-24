@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import FormTemplate from "./template";
 import { ResetPasswordForm } from "./resetPassword";
 import api from "../../configs/api";
-import { useAuth } from "../../contexts/authContext";
+import { useAuth } from "../../contexts/auth-context";
 
 export const LoginForm = ({ changeLanguage }) => {
   const { login } = useAuth();
