@@ -1,27 +1,37 @@
 package com.example.safehome.data.repo
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.core.content.edit
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth_prefs")
+
 @Singleton
 class TokenRepository @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext private val context: Context
 ) {
-    private val prefs: SharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+    private val tokenKey = stringPreferencesKey("token")
 
-    fun saveToken(token: String) {
-        prefs.edit { putString("token", token) }
+    suspend fun saveToken(token: String) {
+        context.dataStore.edit { prefs ->
+            prefs[tokenKey] = token
+        }
     }
 
-    fun getToken(): String? {
-        return prefs.getString("token", null)
+    suspend fun getToken(): String? {
+        return context.dataStore.data.first()[tokenKey]
     }
 
-    fun clearToken() {
-        prefs.edit { remove("token") }
+    suspend fun clearToken() {
+        context.dataStore.edit { prefs ->
+            prefs.remove(tokenKey)
+        }
     }
 }

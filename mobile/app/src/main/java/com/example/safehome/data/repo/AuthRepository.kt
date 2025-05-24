@@ -1,6 +1,8 @@
 package com.example.safehome.data.repo
 
 import com.example.safehome.data.api.AuthApi
+import com.example.safehome.data.model.FirebaseLoginRequest
+import com.example.safehome.data.model.FirebaseLoginResponse
 import com.example.safehome.data.model.ResetPasswordRequest
 import com.example.safehome.data.model.ResetPasswordResponse
 import com.example.safehome.data.model.Result
@@ -21,6 +23,12 @@ class AuthRepository @Inject constructor(
     suspend fun login(email: String, password: String): Result<SignInResponse> {
         return networkHandler.safeApiCall {
             authApi.login(SignInRequest(email, password))
+        }
+    }
+
+    suspend fun googleLogin(firebaseToken: String): Result<FirebaseLoginResponse> {
+        return networkHandler.safeApiCall {
+            authApi.firebaseLogin(FirebaseLoginRequest(firebaseToken))
         }
     }
 
