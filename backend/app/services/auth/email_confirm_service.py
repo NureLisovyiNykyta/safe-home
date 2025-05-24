@@ -15,7 +15,7 @@ class EmailConfirmService:
         token = s.dumps(user.email, salt='email-confirm-salt')
         confirmation_url = url_for('auth.confirm_email', token=token, _external=True)
 
-        with open("templates/email_confirmation.html", "r") as html_file:
+        with open("app/templates/email_confirmation.html", "r") as html_file:
             html_template = html_file.read()
 
         html_body = render_template_string(
@@ -40,7 +40,7 @@ class EmailConfirmService:
         token = s.dumps(user.email, salt='email-confirm-salt')
         confirmation_url = url_for('auth.confirm_email', token=token, _external=True)
 
-        with open("templates/user_registered_notification.html", "r") as html_file:
+        with open("app/templates/user_registered_notification.html", "r") as html_file:
             html_template = html_file.read()
 
         html_body = render_template_string(
@@ -75,7 +75,7 @@ class EmailConfirmService:
         user.email_confirmed = True
         UserRepository.update(user)
 
-        with open("templates/email_confirmation_success.html", "r") as html_file:
+        with open("app/templates/email_confirmation_success.html", "r") as html_file:
             success_html_template = html_file.read()
 
         return render_template_string(

@@ -12,6 +12,7 @@ from .mobile_devices_routes import mobile_device_bp
 from .subscription_routes import subscription_bp
 from .admin_audit_log_routes import admin_audit_log_bp
 from .stats_routes import stats_bp
+from .page_routes import page_bp
 
 def init_routes(app):
     app.register_blueprint(auth_bp, url_prefix='/api')
@@ -28,3 +29,4 @@ def init_routes(app):
     app.register_blueprint(stats_bp, url_prefix='/api')
     app.register_blueprint(iot_bp, url_prefix='/iot')
     app.register_blueprint(payments_bp,  url_prefix='/payments')
+    app.register_blueprint(page_bp)

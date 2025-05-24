@@ -1,8 +1,9 @@
 from flask import Blueprint, request
 from app.services.auth import AuthService, GoogleAuthService, FirebaseAuthService, PasswordResetService, EmailConfirmService
+from app.services import AdminAuditLogService
 from app.utils.auth_decorator import auth_required, role_required
 from app.utils.error_handler import handle_errors
-from app.utils import audit_admin_action
+from app.utils import success_trigger
 from flasgger import swag_from
 
 auth_bp = Blueprint('auth', __name__)
@@ -69,7 +70,7 @@ def register_user():
 })
 @role_required(['admin', 'super_admin'])
 @handle_errors
-@audit_admin_action('registered new admin.')
+@success_trigger(message='registered new admin.', handler=AdminAuditLogService.build_create_audit_log)
 def register_admin():
     return AuthService.register_admin(request.json)
 
