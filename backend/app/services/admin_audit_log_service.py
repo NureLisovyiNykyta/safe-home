@@ -28,7 +28,7 @@ class AdminAuditLogService:
 
     @staticmethod
     def build_create_audit_log(response_data, status_code, request, kwargs, message):
-        """Bild admin audit log for POST requests (create)."""
+        """Build admin audit log for POST requests (create)."""
         admin_id = str(g.user.user_id)
         details = {
             'action': 'create',
