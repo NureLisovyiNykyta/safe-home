@@ -91,6 +91,15 @@ def get_all_admins():
     'tags': ['User'],
     'summary': 'Delete an admin by ID (super admin only)',
     'description': 'Deletes an admin by their ID.',
+    'parameters': [
+        {
+            'name': 'user_id',
+            'in': 'path',
+            'required': True,
+            'type': 'string',
+            'description': 'User ID to delete admin'
+        }
+    ],
     'responses': {
         200: {'description': 'Admin deleted successfully'},
         401: {'description': 'Unauthorized - Super Admin role required'},
@@ -112,6 +121,15 @@ def delete_admin(user_id):
     'tags': ['User'],
     'summary': 'Delete a user by ID (admin only)',
     'description': 'Deletes a user by their ID. Restricted to admin users.',
+    'parameters': [
+        {
+            'name': 'user_id',
+            'in': 'path',
+            'required': True,
+            'type': 'string',
+            'description': 'User ID to delete user'
+        }
+    ],
     'responses': {
         200: {'description': 'User deleted successfully'},
         401: {'description': 'Unauthorized - Admin role required'},
