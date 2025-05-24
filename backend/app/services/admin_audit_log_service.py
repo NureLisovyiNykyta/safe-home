@@ -7,7 +7,7 @@ class AdminAuditLogService:
     @staticmethod
     @handle_errors
     def get_admin_audit_logs(days = None):
-        if days:
+        if days is not None:
             Validator.validate_positive_integer(days, "days")
             logs = AdminAuditLogRepository.get_audit_logs_by_days(days)
         else:
