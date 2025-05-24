@@ -1,12 +1,17 @@
+from flask import jsonify, g, request
+from app.utils import Validator
 from app.utils.error_handler import handle_errors, UnprocessableError
 from app.repositories.admin_audit_log_repo import AdminAuditLogRepository
-from flask import jsonify, g, request
 
 class AdminAuditLogService:
     @staticmethod
     @handle_errors
-    def get_all_admin_audit_logs():
-        logs = AdminAuditLogRepository.get_all()
+    def get_admin_audit_logs(days = None):
+        if days:
+            Validator.validate_positive_integer(days, "days")
+            logs = AdminAuditLogRepository.get_audit_logs_by_days(days)
+        else:
+            logs = AdminAuditLogRepository.get_all()
         admin_audit_logs = [
             {
                 'log_id': str(log.log_id),
@@ -19,7 +24,7 @@ class AdminAuditLogService:
                 'created_at': log.created_at.isoformat()
             } for log in logs
         ]
-        return jsonify({"admin_audit_logs": admin_audit_logs}), 200        
+        return jsonify({"admin_audit_logs": admin_audit_logs}), 200
 
     @staticmethod
     def build_create_audit_log(response_data, status_code, request, kwargs, message):
