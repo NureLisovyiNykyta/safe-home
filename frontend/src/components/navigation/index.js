@@ -88,39 +88,42 @@ const Navigation = ({ changeLanguage }) => {
   }
 
   return (
-    <div className={`navigation ${isMenuOpen ? 'expanded' : ''}`}>
-      <div className='logo'>
-        <RxHamburgerMenu className="burger-menu-icon" onClick={toggleMenu} />
-        <img src={logo} alt='company-logo' className="desktop-logo" />
-        <span className="desktop-text">safe home</span>
-        <span className="mobile-title">{getPageTitle()}</span>
-      </div>
-      <div className='navigation-container'>
-        <div className='links'>
-          {navLinks.map(({ path, icon, label }) => (
-            <Link
-              key={path}
-              to={path}
-              className={`link ${getActiveLink(path)} ${userEmail && path === '/customers' ? 'email' : ''}`}
-              onClick={handleLinkClick}
-            >
-              <div className='customer-link'>
-                {userEmail && path === '/customers' ? (
-                  <IoArrowBackOutline className='icon arrow' />
-                ) : (
-                  icon
-                )}
-                {label}
-              </div>
-              {userEmail && path === '/customers' && (
-                <div className="user-email">
-                  {userEmail}
-                </div>
-              )}
-            </Link>
-          ))}
+    <div className="navigation-wrapper">
+      <div className={`navigation ${isMenuOpen ? 'expanded' : ''}`}>
+        <div className='logo'>
+          <RxHamburgerMenu className="burger-menu-icon" onClick={toggleMenu} />
+          <img src={logo} alt='company-logo' className="desktop-logo" />
+          <span className="desktop-text">safe home</span>
+          <span className="mobile-title">{getPageTitle()}</span>
         </div>
-        <UserPanel changeLanguage={changeLanguage} />
+        <div className="overlay" onClick={toggleMenu}></div>
+        <div className='navigation-container'>
+          <div className='links'>
+            {navLinks.map(({ path, icon, label }) => (
+              <Link
+                key={path}
+                to={path}
+                className={`link ${getActiveLink(path)} ${userEmail && path === '/customers' ? 'email' : ''}`}
+                onClick={handleLinkClick}
+              >
+                <div className='customer-link'>
+                  {userEmail && path === '/customers' ? (
+                    <IoArrowBackOutline className='icon arrow' />
+                  ) : (
+                    icon
+                  )}
+                  {label}
+                </div>
+                {userEmail && path === '/customers' && (
+                  <div className="user-email">
+                    {userEmail}
+                  </div>
+                )}
+              </Link>
+            ))}
+          </div>
+          <UserPanel changeLanguage={changeLanguage} />
+        </div>
       </div>
     </div>
   );
