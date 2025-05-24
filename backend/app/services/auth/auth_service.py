@@ -5,7 +5,7 @@ from app.services.subscription_service import SubscriptionService
 from app.services.auth.email_confirm_service import EmailConfirmService
 from app.utils.jwt_utils import JwtUtils
 from app.utils import Validator
-from flask import jsonify
+from flask import jsonify, g
 from app import login_manager
 from flask_login import login_user, logout_user, current_user
 
@@ -56,12 +56,18 @@ class AuthService:
 
         user = UserService.register_user(data, role_name="admin")
         EmailConfirmService.send_user_registered_email(user, password=data.get('password'))
+        g.created_data = {
+            'user_id': str(user.user_id),
+            'name': user.name,
+            'email': user.email,
+            'role': 'admin'
+        }
         return jsonify({'message': 'Admin registered successfully.'}), 201
 
     @staticmethod
     @handle_errors
     def session_login_user(data):
-        user = AuthService._login_user(data)
+        user = AuthService.login_user(data)
         if user:
             login_user(user)
             return jsonify({'message': 'Logged in successfully.'}), 200
@@ -70,7 +76,7 @@ class AuthService:
     @staticmethod
     @handle_errors
     def token_login_user(data):
-        user = AuthService._login_user(data)
+        user = AuthService.login_user(data)
         if user:
             token = JwtUtils.generate_jwt({'user_id': str(user.user_id)})
             return jsonify({'message': 'Logged in successfully.', 'token': token}), 200
@@ -101,7 +107,7 @@ class AuthService:
         }), 200
 
     @staticmethod
-    def _login_user(data):
+    def login_user(data):
         email = data.get('email')
         if not email:
             raise ValidationError("Email is required for login.")

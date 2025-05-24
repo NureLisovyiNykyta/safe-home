@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.services.auth import auth_service
+from app.services.auth import AuthService
 from app.services.sensor_service import SensorService
 from app.utils.error_handler import handle_errors
 from app.utils.error_handler import UnauthorizedError
@@ -20,6 +20,8 @@ iot_bp = Blueprint('iot', __name__)
             'schema': {
                 'type': 'object',
                 'properties': {
+                    'email': {'type': 'string'},
+                    'password': {'type': 'string'},
                     'sensor_id': {'type': 'string'},
                     'is_closed': {'type': 'string', 'enum': ['true', 'false', '1', '0']}
                 },
@@ -38,7 +40,7 @@ iot_bp = Blueprint('iot', __name__)
 @handle_errors
 def send_sensor_status():
     data = request.get_json()
-    user = auth_service.login_user(data)
+    user = AuthService.login_user(data)
     if user:
         return SensorService.set_sensor_status(user.user_id, request.json)
     else:

@@ -1,7 +1,9 @@
 from flask import Blueprint, request
+from app.services import AdminAuditLogService
 from app.services.subscription_plan_service import SubscriptionPlanService
 from app.utils.auth_decorator import auth_required, role_required
 from app.utils.error_handler import handle_errors
+from app.utils import success_trigger
 from flasgger import swag_from
 
 subscription_plan_bp = Blueprint('subscription_plan', __name__)
@@ -73,8 +75,9 @@ def get_all_subscription_plans():
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
+@success_trigger(message="created a new subscription plan.", handler=AdminAuditLogService.build_create_audit_log)
 def create_subscription_plan():
     return SubscriptionPlanService.create_subscription_plan(request.json)
 
@@ -115,7 +118,8 @@ def create_subscription_plan():
         500: {'description': 'Internal server error'}
     }
 })
-@role_required(['admin'])
+@role_required(['admin', 'super_admin'])
 @handle_errors
+@success_trigger(message="updated a subscription plan.", handler=AdminAuditLogService.build_update_audit_log)
 def update_subscription_plan(plan_id):
     return SubscriptionPlanService.update_subscription_plan(plan_id, request.json)

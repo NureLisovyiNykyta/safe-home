@@ -41,6 +41,7 @@ export const ResetPasswordForm = ({ onBack, changeLanguage }) => {
       onBack={onBack}
       className={"reset-password-form"}
       changeLanguage={changeLanguage}
+      isResetPassword={true}
     />
   );
 };

@@ -111,6 +111,26 @@
   color: #333;
 }
 
+.form-template .form button {
+  background: #222;
+  color: white;
+}
+
+.reset-password-form .form .reset-password {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reset-password-form .form .reset-password p {
+  max-width: 320px;
+  width: 100%;
+  margin: 1rem auto;
+  word-break: break-word;
+  text-align: center;
+  box-sizing: border-box;
+}
+
 .form-template .form .form-group label {
   margin-left: 1rem;
 }
