@@ -25,7 +25,17 @@
   transform: rotate(180deg);
 }
 
-.navigation .user-header p {
+.navigation .user-panel .user-header .accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.8s ease;
+}
+
+.navigation .user-panel .user-header .accordion-content.open {
+  max-height: 300px;
+}
+
+.navigation .user-panel .user-header p {
   color: #333;
   margin: 0;
 }

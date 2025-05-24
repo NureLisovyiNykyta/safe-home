@@ -55,7 +55,7 @@ const UserPanel = ({ changeLanguage }) => {
           onClick={toggleAccordion}
         />
         {isAccordionOpen && (
-          <div className='accordion-content'>
+          <div className={`accordion-content ${isAccordionOpen ? 'open' : ''}`}>
             <form className='form' onSubmit={handleSubmit(onSubmit)}>
               <div className='form-group'>
                 <input
