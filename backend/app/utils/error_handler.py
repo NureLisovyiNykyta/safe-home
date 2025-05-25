@@ -114,37 +114,37 @@ def socketio_handle_errors(f):
         try:
             return f(*args, **kwargs)
         except ValidationError as ve:
-            logger.error(f"Validation error: {ve.message}\n{traceback.format_exc()}")
+            logger.error(f"Validation error: {ve.message}\n")
             emit('error', {'message': ve.message, 'code': ve.status_code})
             disconnect()
             return
         except ResourceNotFoundError as rnf:
-            logger.error(f"Resource not found error: {rnf.message}\n{traceback.format_exc()}")
+            logger.error(f"Resource not found error: {rnf.message}\n")
             emit('error', {'message': rnf.message, 'code': rnf.status_code})
             disconnect()
             return
         except UnprocessableError as ue:
-            logger.error(f"Unprocessable error: {ue.message}\n{traceback.format_exc()}")
+            logger.error(f"Unprocessable error: {ue.message}\n")
             emit('error', {'message': ue.message, 'code': ue.status_code})
             disconnect()
             return
         except DatabaseError as de:
-            logger.error(f"Database error: {de.message}\n{traceback.format_exc()}")
+            logger.error(f"Database error: {de.message}\n")
             emit('error', {'message': de.message, 'code': de.status_code})
             disconnect()
             return
         except AuthError as ae:
-            logger.error(f"Auth error: {ae.message}\n{traceback.format_exc()}")
+            logger.error(f"Auth error: {ae.message}\n")
             emit('error', {'message': ae.message, 'code': ae.status_code})
             disconnect()
             return
         except UnauthorizedError as ue:
-            logger.error(f"Unauthorized error: {ue.message}\n{traceback.format_exc()}")
+            logger.error(f"Unauthorized error: {ue.message}\n")
             emit('error', {'message': ue.message, 'code': ue.status_code})
             disconnect()
             return
         except Exception as e:
-            logger.error(f"Unexpected error: {str(e)}\n{traceback.format_exc()}")
+            logger.error(f"Unexpected error: {str(e)}\n")
             emit('error', {'message': 'An unexpected error occurred', 'code': 500})
             disconnect()
             return
