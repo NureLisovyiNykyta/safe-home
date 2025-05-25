@@ -48,6 +48,14 @@
   margin-top: auto;
   color: white;
   height: 3rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.homepage .content .footer.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .homepage .content .footer p {
@@ -78,6 +86,14 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.homepage .content .main-content .intro.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .homepage .content .main-content .intro .left-column {
@@ -111,6 +127,14 @@
   display: grid;
   grid-template-columns: 3fr 1fr;
   gap: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.homepage .content .main-content .features.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .homepage .content .main-content .features .left-column {
@@ -142,6 +166,14 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.homepage .content .main-content .features .feature.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .homepage .content .main-content .features .feature h3,
@@ -150,7 +182,7 @@
 }
 
 .homepage .content .main-content .features .feature h3 {
-  font-size: 1, 8rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: rgb(6, 28, 87);
 }
@@ -168,6 +200,14 @@
   background-color: rgb(26, 47, 107);
   color: white;
   padding: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.homepage .content .main-content .advantages.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .homepage .content .main-content .advantages h2 {
@@ -190,6 +230,14 @@
   flex-direction: column;
   gap: 1rem;
   flex: 1;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.homepage .content .main-content .advantages .advantage.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .homepage .content .main-content .advantages .advantage .icon {
@@ -214,6 +262,14 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.homepage .content .main-content .about-project.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .homepage .content .main-content .about-project .columns {
@@ -246,6 +302,14 @@
   font-weight: 600;
   color: rgb(5, 22, 68);
   margin: 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.homepage .content .main-content .about-project .columns .right-column h2.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .homepage .content .main-content .about-project .columns .right-column .list {
@@ -257,6 +321,14 @@
   width: 50%;
   display: flex;
   gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.homepage .content .main-content .about-project .columns .right-column .list .item.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .homepage .content .main-content .about-project .columns .right-column .list .item h3 {
@@ -296,11 +368,11 @@
   }
 
   .homepage .content .main-content h1 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 
   .homepage .content .main-content p {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
   }
 
   .homepage .content .main-content .features {
