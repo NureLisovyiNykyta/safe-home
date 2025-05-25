@@ -37,7 +37,6 @@ const Navigation = ({ changeLanguage }) => {
 
   useEffect(() => {
     if (!location.pathname.startsWith("/admin/customers/user")) {
-      console.log("Resetting user email due to path change");
       setUserEmail(null);
     }
   }, [location.pathname]);

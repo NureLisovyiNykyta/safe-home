@@ -25,9 +25,10 @@
   justify-content: center;
   margin: 1rem 0;
   user-select: none;
+  position: relative;
 }
 
-.form-template .header .title .icon {
+.form-template .arrow-icon {
   font-size: 2.2rem;
   cursor: pointer;
   z-index: 1001;
@@ -219,10 +220,9 @@
     height: 1.5rem;
   }
 
-  .form-template .header .title .icon {
-    font-size: 1.5rem;
+  .form-template .arrow-icon {
     left: 0.7rem;
-    top: 2rem;
+    top: 2.3rem;
   }
 
   .form-template .status {
