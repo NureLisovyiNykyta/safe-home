@@ -18,15 +18,15 @@ const Navigation = ({ changeLanguage }) => {
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState(null);
   const location = useLocation();
-  const userId = location.pathname.split('/')[3];
+  const userId = location.pathname.split('/')[4];
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { path: '/customers', icon: <FiUsers className='icon' />, label: t('navigation.customers') },
-    { path: '/admins', icon: <GrUserAdmin className='icon' />, label: t('navigation.admins') },
-    { path: '/subscriptions', icon: <MdPayment className='icon' />, label: t('navigation.subscriptions') },
-    { path: '/audit-log', icon: <RxReader className='icon' />, label: t('navigation.auditLog') },
-    { path: '/statistics', icon: <IoStatsChart className='icon' />, label: t('navigation.statistics') },
+    { path: '/admin/customers', icon: <FiUsers className='icon' />, label: t('navigation.customers') },
+    { path: '/admin/admins', icon: <GrUserAdmin className='icon' />, label: t('navigation.admins') },
+    { path: '/admin/subscriptions', icon: <MdPayment className='icon' />, label: t('navigation.subscriptions') },
+    { path: '/admin/audit-log', icon: <RxReader className='icon' />, label: t('navigation.auditLog') },
+    { path: '/admin/statistics', icon: <IoStatsChart className='icon' />, label: t('navigation.statistics') },
   ];
 
   useEffect(() => {
@@ -36,7 +36,8 @@ const Navigation = ({ changeLanguage }) => {
   }, [t]);
 
   useEffect(() => {
-    if (!location.pathname.startsWith("/customers/user")) {
+    if (!location.pathname.startsWith("/admin/customers/user")) {
+      console.log("Resetting user email due to path change");
       setUserEmail(null);
     }
   }, [location.pathname]);
@@ -69,11 +70,11 @@ const Navigation = ({ changeLanguage }) => {
     if (userEmail) {
       return userEmail;
     }
-    if (getActiveLink('/customers') === 'active') return t('navigation.customers');
-    if (getActiveLink('/admins') === 'active') return t('navigation.admins');
-    if (getActiveLink('/subscriptions') === 'active') return t('navigation.subscriptions');
-    if (getActiveLink('/audit-log') === 'active') return t('navigation.auditLog');
-    if (getActiveLink('/statistics') === 'active') return t('navigation.statistics');
+    if (getActiveLink('/admin/customers') === 'active') return t('navigation.customers');
+    if (getActiveLink('/admin/admins') === 'active') return t('navigation.admins');
+    if (getActiveLink('/admin/subscriptions') === 'active') return t('navigation.subscriptions');
+    if (getActiveLink('/admin/audit-log') === 'active') return t('navigation.auditLog');
+    if (getActiveLink('/admin/statistics') === 'active') return t('navigation.statistics');
     return 'safe home';
   };
 
@@ -103,18 +104,18 @@ const Navigation = ({ changeLanguage }) => {
               <Link
                 key={path}
                 to={path}
-                className={`link ${getActiveLink(path)} ${userEmail && path === '/customers' ? 'email' : ''}`}
+                className={`link ${getActiveLink(path)} ${userEmail && path === '/admin/customers' ? 'email' : ''}`}
                 onClick={handleLinkClick}
               >
                 <div className='customer-link'>
-                  {userEmail && path === '/customers' ? (
+                  {userEmail && path === '/admin/customers' ? (
                     <IoArrowBackOutline className='icon arrow' />
                   ) : (
                     icon
                   )}
                   {label}
                 </div>
-                {userEmail && path === '/customers' && (
+                {userEmail && path === '/admin/customers' && (
                   <div className="user-email">
                     {userEmail}
                   </div>

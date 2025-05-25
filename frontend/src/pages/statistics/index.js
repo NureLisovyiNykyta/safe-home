@@ -15,9 +15,9 @@ const Statistics = () => {
   const [activeTab, setActiveTab] = useState("user-count");
 
   const tabs = [
-    { id: "user-count", label: t("stats.userCount"), path: "/statistics/user-count", icon: <LuUsers /> },
-    { id: "subscription-plans", label: t("stats.subscriptionPlans"), path: "/statistics/subscription-plans", icon: <PiMoneyWavy /> },
-    { id: "subscription-plan", label: t("stats.userCountByPlans"), path: "/statistics/user-count-by-plans", icon: <BiSolidUserAccount /> },
+    { id: "user-count", label: t("stats.userCount"), path: "/admin/statistics/user-count", icon: <LuUsers /> },
+    { id: "subscription-plans", label: t("stats.subscriptionPlans"), path: "/admin/statistics/subscription-plans", icon: <PiMoneyWavy /> },
+    { id: "subscription-plan", label: t("stats.userCountByPlans"), path: "/admin/statistics/user-count-by-plans", icon: <BiSolidUserAccount /> },
   ];
 
   useState(() => {

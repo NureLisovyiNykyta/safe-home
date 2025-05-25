@@ -66,12 +66,12 @@ export const AuthProvider = ({ children }) => {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (loading) return; 
+    if (loading) return;
 
-    if (!isAuthenticated && location.pathname !== '/login') {
-      navigate('/');
-    } else if (isAuthenticated && location.pathname === '/login' && location.pathname === '/') {
-      navigate('/customers');
+    if (!isAuthenticated && location.pathname !== '/login' && location.pathname !== '/') {
+      navigate('/login');
+    } else if (isAuthenticated && location.pathname === '/login') {
+      navigate('/admin/customers');
     }
   }, [isAuthenticated, location.pathname, navigate, loading]);
 

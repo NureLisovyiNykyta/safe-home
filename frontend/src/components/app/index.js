@@ -40,12 +40,14 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Homepage />} />
         <Route path='/login' element={<LoginForm changeLanguage={changeLanguage} />} />
-        <Route path='/customers' element={<Customers />} />
-        <Route path="/customers/user/:userId" element={<UserSubscriptions />} />
-        <Route path='/admins' element={<Admins />} />
-        <Route path='/subscriptions' element={<Subscriptions />} />
-        <Route path='/audit-log' element={<AuditLog />} />
-        <Route path='/statistics/*' element={<Statistics />} />
+        <Route path='/admin/*'>
+          <Route path='customers' element={<Customers />} />
+          <Route path='customers/user/:userId' element={<UserSubscriptions />} />
+          <Route path='admins' element={<Admins />} />
+          <Route path='subscriptions' element={<Subscriptions />} />
+          <Route path='audit-log' element={<AuditLog />} />
+          <Route path='statistics/*' element={<Statistics />} />
+        </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>
     </div>
