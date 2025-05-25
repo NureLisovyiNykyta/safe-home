@@ -110,6 +110,12 @@
   place-self: center;
 }
 
+.homepage .content .main-content .intro .right-column {
+  clip-path: path("M0,0 Q30,150 0,300 Q30,450 0,600 Q30,750 0,900 Q30,1050 0,1100 L600,1100 L600,0 Z");
+  -webkit-clip-path: path("M0,0 Q30,150 0,300 Q30,450 0,600 Q30,750 0,900 Q30,1050 0,1100 L600,1100 L600,0 Z");
+  overflow: hidden;
+}
+
 .homepage .content .main-content .intro .download-mobile-app {
   background-color: #125e99;
   color: white;
@@ -149,6 +155,9 @@
   width: auto;
   height: 600px;
   place-self: center;
+  clip-path: path("M0,0 Q30,150 0,300 Q30,450 0,600 Q30,750 0,900 Q30,1050 0,1100 L600,1100 L600,0 Z");
+  -webkit-clip-path: path("M0,0 Q30,150 0,300 Q30,450 0,600 Q30,750 0,900 Q30,1050 0,1100 L600,1100 L600,0 Z");
+  overflow: hidden;
 }
 
 .homepage .content .main-content .features h2 {
@@ -375,6 +384,12 @@
     font-size: 1.3rem;
   }
 
+  .homepage .content .main-content .intro .right-column {
+    clip-path: none;
+    -webkit-clip-path: none;
+    overflow: visible;
+  }
+
   .homepage .content .main-content .features {
     padding: 0;
   }
@@ -400,6 +415,10 @@
   .homepage .content .main-content .features .right-column .mobile-app-image {
     width: 100%;
     height: auto;
+    clip-path: none;
+    -webkit-clip-path: none;
+    overflow: visible;
+    border-radius: 1rem;
   }
 
   .homepage .content .main-content .advantages h2 {
