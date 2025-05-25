@@ -4,11 +4,13 @@ import FormTemplate from "./template";
 import { ResetPasswordForm } from "./resetPassword";
 import api from "../../configs/api";
 import { useAuth } from "../../contexts/auth-context";
+import { useNavigate } from "react-router-dom";
 
 export const LoginForm = ({ changeLanguage }) => {
   const { login } = useAuth();
   const [isResetPassword, setIsResetPassword] = useState(false);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const handleLogin = async (data, setStatus) => {
     try {
@@ -55,6 +57,7 @@ export const LoginForm = ({ changeLanguage }) => {
       className={"login-form"}
       onForgotPassword={() => setIsResetPassword(true)}
       changeLanguage={changeLanguage}
+      onBack={() => navigate("/")}
     />
   );
 };
