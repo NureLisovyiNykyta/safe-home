@@ -31,14 +31,19 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
-    <!-- SignUpFragment -->
+    <!-- ResetPswdFragment -->
     <string name="title_reset_pswd_fragment">Reset password</string>
     <string name="forgot_description">Enter your email address to reset your password. After confirming your email, you will receive a new password in your mail.</string>
     <string name="email_enter">Enter email address</string>
     <string name="send">Send</string>
 
-    <!-- HomeFragment -->
+    <!-- HomesFragment -->
     <string name="title_homes_fragment">Homes</string>
+    <string name="home_name">My home</string>
+    <string name="address_home">1234 Elm Street, Apt 56B, Los Angeles</string>
+    <string name="status_armed">Armed</string>
+    <string name="status_disarmed">Disarmed</string>
+    <string name="status_custom">Custom</string>
 
     <!-- HomeFragment -->
     <string name="title_home_fragment">Home</string>
@@ -48,5 +53,20 @@
 
     <!-- ProfileFragment -->
     <string name="title_profile_fragment">Profile</string>
+
+
+
+    <!-- DialogAddHome -->
+    <string name="newHome">New home</string>
+    <string name="name">Name</string>
+    <string name="address">Name</string>
+    <string name="save">Save</string>
+
+    <!-- DialogAddSensor -->
+    <string name="newSensor">New sensor</string>
+    <string name="sensor_name">My sensor</string>
+    <string name="type">Type</string>
+    <string name="window">Window</string>
+    <string name="door">Door</string>
 
 </resources>
