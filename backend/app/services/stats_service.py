@@ -4,13 +4,14 @@ from app.utils import Validator
 from app.repositories.user_stats_repo import UserStatsRepository
 from app.repositories.subscription_plan_stats_repo import SubscriptionPlanStatsRepository
 from app.repositories.subscription_plan_repo import SubscriptionPlanRepository
+from app.repositories.subscription_repo import SubscriptionRepository
 
 class StatsService:
     @staticmethod
     @handle_errors
     def get_user_stats(days: int):
         Validator.validate_positive_integer(days, "days")
-        stats = UserStatsRepository.get_user_stats_by_days(days)
+        stats = UserStatsRepository.get_user_stats_by_days(days) or []
         user_stats = [
             {
                 'stats_id': str(stat.stats_id),
@@ -26,22 +27,23 @@ class StatsService:
         Validator.validate_positive_integer(days, "days")
 
         def build_plan_stats(plan):
-            stats = SubscriptionPlanStatsRepository.get_subscription_plan_stats_by_days_plan(days, plan.plan_id)
-            if stats:
-                return {
-                    "plan_id": str(plan.plan_id),
-                    "plan_name": plan.name,
-                    "stats": [
-                        {
-                            "stats_id": str(stat.stats_id),
-                            "date": stat.stats_date.isoformat(),
-                            "user_count": stat.user_count,
-                            "avg_homes": stat.avg_homes,
-                            "avg_sensors": stat.avg_sensors
-                        } for stat in stats
-                    ]
-                }
-            return None
+            stats = SubscriptionPlanStatsRepository.get_subscription_plan_stats_by_days_plan(days, plan.plan_id) or []
+            if not stats:
+                return None
+
+            return {
+                "plan_id": str(plan.plan_id),
+                "plan_name": plan.name,
+                "stats": [
+                    {
+                        "stats_id": str(stat.stats_id),
+                        "date": stat.stats_date.isoformat(),
+                        "user_count": stat.user_count,
+                        "avg_homes": stat.avg_homes,
+                        "avg_sensors": stat.avg_sensors
+                    } for stat in stats
+                ]
+            }
 
         subscription_plan_stats = []
         if plan_id:
@@ -67,16 +69,15 @@ class StatsService:
         subscription_plans_stats = []
 
         for plan in plans:
-            stat = SubscriptionPlanStatsRepository.get_latest_stats_for_plan(plan.plan_id)
+            stat = SubscriptionPlanStatsRepository.get_latest_stats_for_plan(plan.plan_id) or None
+            user_count = SubscriptionRepository.get_count_active_subscriptions_by_plan(plan.plan_id) or 0
             if stat:
                 subscription_plans_stats.append({
                     "stats_id": str(stat.stats_id),
                     "date": stat.stats_date.isoformat(),
                     "plan_id": str(stat.plan_id),
                     "plan_name": stat.plan.name,
-                    "plan_max_homes": stat.plan.max_homes,
-                    "plan_max_sensors": stat.plan.max_sensors,
-                    "user_count": stat.user_count,
+                    "user_count": user_count,
                     "plan_max_homes": stat.plan.max_homes,
                     "plan_max_sensors": stat.plan.max_sensors,
                     "avg_homes": stat.avg_homes,

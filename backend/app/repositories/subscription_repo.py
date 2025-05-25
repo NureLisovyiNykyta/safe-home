@@ -19,6 +19,10 @@ class SubscriptionRepository:
         return Subscription.query.filter_by(user_id=user_id, is_active=True).first()
 
     @staticmethod
+    def get_count_active_subscriptions_by_plan(plan_id):
+        return Subscription.query.filter_by(is_active=True, plan_id=plan_id).count()
+
+    @staticmethod
     def get_active_subscriptions_ending_after(date):
         return Subscription.query.filter(
             Subscription.is_active == True,

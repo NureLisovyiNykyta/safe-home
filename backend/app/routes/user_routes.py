@@ -271,7 +271,7 @@ def update_user():
 })
 @auth_required
 @handle_errors
-def update_user():
+def delete_user_profile():
     user_id = request.current_user.user_id
     return UserService.delete_user(user_id, 'user')
 
