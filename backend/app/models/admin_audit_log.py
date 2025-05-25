@@ -19,3 +19,5 @@ class AdminAuditLog(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     admin = db.relationship('User', back_populates='admin_audit_logs')
+
+

@@ -257,6 +257,25 @@ def update_user():
     return UserService.update_user(user_id, request.json)
 
 
+@user_bp.route('/user', methods=['DELETE'])
+@swag_from({
+    'tags': ['User'],
+    'summary': 'Delete current user profile',
+    'description': 'Delete the profile of the currently authenticated user.',
+    'responses': {
+        200: {'description': 'User profile deleted successfully'},
+        401: {'description': 'Unauthorized - Authentication required'},
+        422: {'description': 'Unprocessable entity - User not found'},
+        500: {'description': 'Internal server error'}
+    }
+})
+@auth_required
+@handle_errors
+def delete_user_profile():
+    user_id = request.current_user.user_id
+    return UserService.delete_user(user_id, 'user')
+
+
 @user_bp.route('/user/password', methods=['PUT'])
 @swag_from({
     'tags': ['User'],

@@ -2,6 +2,7 @@ from flask import jsonify, g, request
 from app.utils import Validator
 from app.utils.error_handler import handle_errors, UnprocessableError
 from app.repositories.admin_audit_log_repo import AdminAuditLogRepository
+from app import socketio
 
 class AdminAuditLogService:
     @staticmethod
@@ -12,18 +13,7 @@ class AdminAuditLogService:
             logs = AdminAuditLogRepository.get_audit_logs_by_days(days)
         else:
             logs = AdminAuditLogRepository.get_all()
-        admin_audit_logs = [
-            {
-                'log_id': str(log.log_id),
-                'admin_id': str(log.admin_id),
-                'admin_email': log.admin.email,
-                'admin_name': log.admin.name,
-                'action': log.action,
-                'method': log.method,
-                'action_details': log.action_details,
-                'created_at': log.created_at.isoformat()
-            } for log in logs
-        ]
+        admin_audit_logs = [AdminAuditLogRepository.to_dict(log) for log in logs]
         return jsonify({"admin_audit_logs": admin_audit_logs}), 200
 
     @staticmethod
@@ -34,31 +24,33 @@ class AdminAuditLogService:
             'action': 'create',
             'details': getattr(g, 'created_data', None)
         }
-        AdminAuditLogRepository.add(
+        audit_log = AdminAuditLogRepository.add(
             admin_id=admin_id,
             action=message,
             method=request.method.lower(),
             action_details=details
         )
+        socketio.emit('admin_audit_log_add', AdminAuditLogRepository.to_dict(audit_log), room='admin_audit_logs')
 
     @staticmethod
     def build_delete_audit_log(response_data, status_code, request, kwargs, message):
-        """Bild admin audit log for DELETE requests."""
+        """Build admin audit log for DELETE requests."""
         admin_id = str(g.user.user_id)
         details = {
             'action': 'delete',
             'details': getattr(g, 'deleted_data', None)
         }
-        AdminAuditLogRepository.add(
+        audit_log = AdminAuditLogRepository.add(
             admin_id=admin_id,
             action=message,
             method=request.method.lower(),
             action_details=details
         )
+        socketio.emit('admin_audit_log_add', AdminAuditLogRepository.to_dict(audit_log), room='admin_audit_logs')
 
     @staticmethod
     def build_update_audit_log(response_data, status_code, request, kwargs, message):
-        """Bild admin audit log for PUT/PATCH requests (update)."""
+        """Build admin audit log for PUT/PATCH requests (update)."""
         admin_id = str(g.user.user_id)
 
         old_data = getattr(g, 'old_data', {})
@@ -89,9 +81,10 @@ class AdminAuditLogService:
             'action': 'update',
             'details': merged_data
         }
-        AdminAuditLogRepository.add(
+        audit_log = AdminAuditLogRepository.add(
             admin_id=admin_id,
             action=message,
             method=request.method.lower(),
             action_details=details
         )
+        socketio.emit('admin_audit_log_add', AdminAuditLogRepository.to_dict(audit_log), room='admin_audit_logs')

@@ -8,6 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def authenticate_user():
     """Common feature for checking authentication via JWT or session."""
     # Check JWT
@@ -22,10 +23,7 @@ def authenticate_user():
             if not user:
                 logger.error(f"User with ID '{payload['user_id']}' not found during authentication")
                 raise UnauthorizedError("User not found or invalid token")
-
             return user
-        except UnauthorizedError:
-            raise
         except Exception as e:
             raise
 
