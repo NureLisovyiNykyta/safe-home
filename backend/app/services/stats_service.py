@@ -70,8 +70,8 @@ class StatsService:
 
         for plan in plans:
             stat = SubscriptionPlanStatsRepository.get_latest_stats_for_plan(plan.plan_id) or None
-            user_count = SubscriptionRepository.get_count_active_subscriptions_by_plan(plan.plan_id) or 0
             if stat:
+                user_count = SubscriptionRepository.get_count_active_subscriptions_by_plan(plan.plan_id) or 0
                 subscription_plans_stats.append({
                     "stats_id": str(stat.stats_id),
                     "date": stat.stats_date.isoformat(),

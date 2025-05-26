@@ -13,15 +13,18 @@ import i18n from '../../configs/locale';
 import { AuthContext } from '../../contexts/auth-context';
 import { LoginForm } from '../forms/login';
 import Statistics from '../../pages/statistics';
+import Homepage from '../../pages/homepage';
+import { useLocation } from 'react-router-dom';
 
 const App = () => {
   const [cookies, setCookie] = useCookies(['language']);
   const { isAuthenticated } = useContext(AuthContext);
+  const location = useLocation();
 
   useEffect(() => {
     const currentLanguage = cookies.language || 'en';
     i18n.changeLanguage(currentLanguage);
-  }, [cookies.language]);
+  }, [cookies.language]); 
 
   const changeLanguage = (language) => {
     i18n.changeLanguage(language);
@@ -30,15 +33,21 @@ const App = () => {
 
   return (
     <div className="app">
-      {isAuthenticated && <Navigation changeLanguage={changeLanguage} />}
+      {isAuthenticated &&
+        location.pathname !== '/' &&
+        location.pathname !== '/login' &&
+        <Navigation changeLanguage={changeLanguage} />}
       <Routes>
-        <Route path='/' element={<LoginForm changeLanguage={changeLanguage} />} />
-        <Route path='/customers' element={<Customers />} />        
-        <Route path="/customers/user/:userId" element={<UserSubscriptions />} />
-        <Route path='/admins' element={<Admins />} />
-        <Route path='/subscriptions' element={<Subscriptions />} />
-        <Route path='/audit-log' element={<AuditLog />} />
-        <Route path='/statistics/*' element={<Statistics />} />
+        <Route path='/' element={<Homepage />} />
+        <Route path='/login' element={<LoginForm changeLanguage={changeLanguage} />} />
+        <Route path='/admin/*'>
+          <Route path='customers' element={<Customers />} />
+          <Route path='customers/user/:userId' element={<UserSubscriptions />} />
+          <Route path='admins' element={<Admins />} />
+          <Route path='subscriptions' element={<Subscriptions />} />
+          <Route path='audit-log' element={<AuditLog />} />
+          <Route path='statistics/*' element={<Statistics />} />
+        </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>
     </div>

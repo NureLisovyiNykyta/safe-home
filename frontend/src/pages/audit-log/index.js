@@ -4,7 +4,7 @@ import { IoMdAddCircle } from "react-icons/io";
 import { MdOutlineUpdate } from "react-icons/md";
 import { MdRemoveCircle } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import api from "../../configs/api";
+import io from "socket.io-client";
 import GradientSpinner from "../../components/gradient-spinner";
 import { useTranslation } from "react-i18next";
 import "./index.css";
@@ -20,18 +20,18 @@ const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp);
   const now = new Date();
   const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-  const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const time = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
   if (diffDays === 0) {
     return `Today at ${time}`;
   } else if (diffDays === 1) {
     return `Yesterday at ${time}`;
   } else if (diffDays < 7) {
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     return `Last ${days[date.getDay() - 1]} at ${time}`;
   } else {
-    const options = { day: 'numeric', month: 'long' };
-    return `${date.toLocaleDateString('en-US', options)} at ${time}`;
+    const options = { day: "numeric", month: "long" };
+    return `${date.toLocaleDateString("en-US", options)} at ${time}`;
   }
 };
 
@@ -45,33 +45,51 @@ const AuditLog = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedLog, setExpandedLog] = useState(null);
+  const [socket, setSocket] = useState(null);
 
-  const fetchLogs = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await api.get("/admin-audit-logs");
-      const transformedLogs = response.data.admin_audit_logs.map(log => ({
-        id: log.log_id,
-        user: log.admin_name,
-        action: log.action,
-        timestamp: formatTimestamp(log.created_at),
-        actionDetail: log.action_details.action,
-        createdAt: new Date(log.created_at),
-        actionDetails: log.action_details,
-      }));
-      setLogs(transformedLogs);
-      setFilteredLogs(transformedLogs);
-    } catch (err) {
-      console.error("Error fetching logs:", err);
-      setError(t("auditLog.error"));
-    } finally {
-      setLoading(false);
-    }
-  }, [t]);
+  const transformLog = useCallback(
+    (log) => ({
+      id: log.log_id,
+      user: log.admin_name,
+      action: log.action,
+      timestamp: formatTimestamp(log.created_at),
+      actionDetail: log.action_details.action,
+      createdAt: new Date(log.created_at),
+      actionDetails: log.action_details,
+    }),
+    []
+  );
 
   useEffect(() => {
-    fetchLogs();
-  }, [fetchLogs]);
+    const newSocket = io('https://safe-home-backend-d2f2atb3d0eee9ay.northeurope-01.azurewebsites.net', {
+      withCredentials: true,
+    });
+    setSocket(newSocket);
+
+    newSocket.emit("subscribe_admin_audit_logs", { days: daysFilter !== "ALL" ? parseInt(daysFilter) : null });
+
+    newSocket.on("admin_audit_logs_init", (data) => {
+      const transformedLogs = data.admin_audit_logs.map(transformLog);
+      setLogs(transformedLogs);
+      setFilteredLogs(transformedLogs);
+      setLoading(false);
+    });
+
+    newSocket.on("admin_audit_log_add", (log) => {
+      const transformedLog = transformLog(log);
+      setLogs((prevLogs) => [transformedLog, ...prevLogs]);
+    });
+
+    newSocket.on("connect_error", (err) => {
+      console.error("WebSocket connection error:", err);
+      setError(t("auditLog.error"));
+      setLoading(false);
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [t, transformLog]);
 
   useEffect(() => {
     let filtered = logs;
@@ -96,8 +114,17 @@ const AuditLog = () => {
     setFilteredLogs(filtered);
   }, [logs, userFilter, actionFilter, daysFilter]);
 
+  useEffect(() => {
+    if (socket) {
+      socket.emit("subscribe_admin_audit_logs", { days: daysFilter !== "ALL" ? parseInt(daysFilter) : null });
+    }
+  }, [socket, daysFilter]);
+
   const handleRefresh = () => {
-    fetchLogs();
+    if (socket) {
+      setLoading(true);
+      socket.emit("subscribe_admin_audit_logs", { days: daysFilter !== "ALL" ? parseInt(daysFilter) : null });
+    }
   };
 
   const toggleExpand = (logId) => {

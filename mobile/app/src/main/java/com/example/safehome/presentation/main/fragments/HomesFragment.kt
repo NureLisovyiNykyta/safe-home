@@ -1,31 +1,29 @@
 package com.example.safehome.presentation.main.fragments
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.example.safehome.R
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.safehome.databinding.FragmentHomesBinding
+import com.example.safehome.presentation.main.adapter.HomesAdapter
+import com.example.safehome.presentation.main.viewModel.HomesViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+    private val viewModel: HomesViewModel by viewModels()
     private lateinit var binding: FragmentHomesBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var homesAdapter: HomesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,23 +33,52 @@ class HomesFragment : Fragment() {
         return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        observeHomesState()
+
+        binding.addButton.setOnClickListener {
+            showAddHomeDialog()
+        }
+    }
+
+    private fun observeHomesState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.homesState.collect { homes ->
+                    if (homes.isNotEmpty()) {
+                        homesAdapter.submitList(homes)
+                    }
                 }
             }
+        }
+    }
+
+    private fun setupRecyclerView() {
+        homesAdapter = HomesAdapter { home ->
+            Toast.makeText(context, "Clicked home: ${home.name}", Toast.LENGTH_LONG).show()
+        }
+        binding.homesRecyclerView.adapter = homesAdapter
+    }
+
+    private fun showAddHomeDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_add_home, null)
+        val nameEditText = dialogView.findViewById<EditText>(R.id.nameEditText)
+        val addressEditText = dialogView.findViewById<EditText>(R.id.addressEditText)
+
+        MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogStyle)
+            .setView(dialogView)
+            .setPositiveButton("Save") { _, _ ->
+                val name = nameEditText.text.toString()
+                if (name.isBlank()){
+                    Toast.makeText(requireContext(), "Name is empty", Toast.LENGTH_LONG).show()
+                    return@setPositiveButton
+                }
+                //viewModel.addHome(name, address)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 }

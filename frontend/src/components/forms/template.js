@@ -62,15 +62,15 @@ const FormTemplate = ({
 
   return (
     <div className={`form-template ${className}`}>
+      <IoArrowBackOutline className='arrow-icon' onClick={onBack} />
       <div className='header'>
         {changeLanguage && <LanguageSwitcher changeLanguage={changeLanguage} />}
         <div className='title'>
-          <IoArrowBackOutline className='icon' onClick={onBack} />
           {title}
           {isLoading && <GradientSpinner forForm={true} />}
         </div>
       </div>
-      {status.message && <div className={`status ${status.type}`}>{status.message}</div>}      
+      {status.message && <div className={`status ${status.type}`}>{status.message}</div>}
       <form className='form' onSubmit={handleSubmit(handleFormSubmit)}>
         {isResetPassword && (
           <div className='reset-password'>

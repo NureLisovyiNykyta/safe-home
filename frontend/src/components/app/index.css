@@ -10,7 +10,7 @@ body {
 .app {
   min-height: 100vh;
   width: 100vw;
-  background: #C7DBFF;
+  background: #e7efff;
   overflow: hidden;
   display: flex;
 }

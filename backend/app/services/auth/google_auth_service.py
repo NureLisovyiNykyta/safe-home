@@ -58,4 +58,5 @@ class GoogleAuthService:
             login_user(user)
 
         flash('Logged in with Google successfully.', 'success')
-        return redirect(os.getenv('FRONTEND_LINK'))
+        link = os.getenv('FRONTEND_LINK') + '/admin/customers'
+        return redirect(link)

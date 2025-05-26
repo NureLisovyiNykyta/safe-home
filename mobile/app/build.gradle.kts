@@ -2,8 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("kotlin-kapt")
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.google.plugin)
+    id("kotlin-kapt")
 }
 
 kapt {
@@ -46,8 +48,16 @@ android {
 }
 
 dependencies {
+    ksp(libs.androidx.room.compiler)
+    kapt(libs.hilt.compiler)
+    testImplementation(libs.junit)
+    implementation (libs.androidx.room.runtime)
+    implementation (libs.androidx.room.ktx)
+    implementation (libs.androidx.security.crypto)
     implementation (libs.logging.interceptor)
     implementation(libs.hilt.android)
+    implementation(libs.firebase.common.ktx)
+    implementation(libs.datastore.preferences)
     kapt(libs.hilt.compiler)
     implementation (libs.jakewharton.timber)
     implementation (libs.retrofit2.retrofit)
@@ -68,7 +78,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
+    implementation(libs.androidx.worker)
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.google.firebase)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.play.services.auth)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
