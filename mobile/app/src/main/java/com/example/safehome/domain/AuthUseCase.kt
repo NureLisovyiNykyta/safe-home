@@ -14,4 +14,8 @@ class AuthUseCase @Inject constructor(
     suspend fun isTokenExpired(): Result<Boolean> {
         return authRepository.verifyToken()
     }
+
+    suspend fun firebaseGoogleAuth(firebaseToken: String): Result<Boolean> {
+        return authRepository.googleLogin(firebaseToken)
+    }
 }

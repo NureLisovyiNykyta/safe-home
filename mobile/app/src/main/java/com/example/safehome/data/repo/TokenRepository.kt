@@ -26,14 +26,14 @@ class TokenRepository @Inject constructor(
     }
 
     fun saveToken(token: String) {
-        prefs.edit { putString("user_token", token) }
+        prefs.edit { putString("auth_token", token) }
     }
 
     fun getToken(): String? {
-        return prefs.getString("user_token", null)
+        return prefs.getString("auth_token", null)
     }
 
     fun clearToken() {
-        prefs.edit { remove("user_token") }
+        prefs.edit { remove("auth_token") }
     }
 }
