@@ -1,37 +1,39 @@
 package com.example.safehome.data.repo
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
+import androidx.core.content.edit
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth_prefs")
-
 @Singleton
 class TokenRepository @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext context: Context
 ) {
-    private val tokenKey = stringPreferencesKey("token")
+    private val prefs by lazy {
+        val keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC
+        val masterKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec)
 
-    suspend fun saveToken(token: String) {
-        context.dataStore.edit { prefs ->
-            prefs[tokenKey] = token
-        }
+        EncryptedSharedPreferences.create(
+            "auth_prefs",
+            masterKeyAlias,
+            context,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
     }
 
-    suspend fun getToken(): String? {
-        return context.dataStore.data.first()[tokenKey]
+    fun saveToken(token: String) {
+        prefs.edit { putString("auth_token", token) }
     }
 
-    suspend fun clearToken() {
-        context.dataStore.edit { prefs ->
-            prefs.remove(tokenKey)
-        }
+    fun getToken(): String? {
+        return prefs.getString("auth_token", null)
+    }
+
+    fun clearToken() {
+        prefs.edit { remove("auth_token") }
     }
 }

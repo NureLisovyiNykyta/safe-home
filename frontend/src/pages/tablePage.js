@@ -7,7 +7,8 @@ import "./tablePage.css";
 import { IoAdd } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
-import Card from "../components/card/card";
+import Card from "../components/card";
+import GradientSpinner from "../components/gradient-spinner";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -38,7 +39,9 @@ const TablePage = ({ apiEndpoint, columnDefs, transformData,
   }, [fetchData, refreshKey]);
 
   if (loading) {
-    return <div className="page loading">{t("tablePage.loading")}</div>;
+    return <div className="page loading">
+      <GradientSpinner />
+    </div>;
   }
 
   if (error) {

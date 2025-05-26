@@ -24,7 +24,7 @@ class PasswordResetService:
         token = s.dumps(email, salt='reset-password-confirm-salt')
         confirmation_url = url_for('auth.confirm_reset_password', token=token, _external=True)
 
-        with open("templates/reset_password_confirmation.html", "r") as html_file:
+        with open("app/templates/reset_password_confirmation.html", "r") as html_file:
             html_template = html_file.read()
 
         html_body = render_template_string(
@@ -54,7 +54,7 @@ class PasswordResetService:
 
         PasswordResetService._send_reset_email(user)
 
-        with open("templates/reset_password_confirmation_success.html", "r") as html_file:
+        with open("app/templates/reset_password_confirmation_success.html", "r") as html_file:
             success_html_template = html_file.read()
 
         return render_template_string(
@@ -67,7 +67,7 @@ class PasswordResetService:
         new_password = PasswordResetService._generate_random_password()
         UserService.reset_password(user, new_password)
 
-        with open("templates/password_reset_email.html", "r") as html_file:
+        with open("app/templates/password_reset_email.html", "r") as html_file:
             html_template = html_file.read()
 
         html_body = render_template_string(

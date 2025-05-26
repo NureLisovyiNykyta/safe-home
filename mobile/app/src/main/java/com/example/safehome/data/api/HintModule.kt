@@ -1,6 +1,9 @@
 package com.example.safehome.data.api
 
 import android.content.Context
+import androidx.room.Room
+import com.example.safehome.data.local.AppDatabase
+import com.example.safehome.data.local.dao.HomeDao
 import com.example.safehome.data.network.NetworkHandler
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
@@ -47,6 +50,28 @@ object HintModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeApi(retrofit: Retrofit): HomeApi {
+        return retrofit.create(HomeApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeDao(appDatabase: AppDatabase): HomeDao {
+        return appDatabase.homeDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "safehome_database"
+        ).build()
     }
 
     @Provides

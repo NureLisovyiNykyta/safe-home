@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import LanguageSwitcher from "../languageSwitcher";
+import LanguageSwitcher from "../language-switcher";
 import api from "../../configs/api";
 import googleLogo from './google-logo.png';
+import GradientSpinner from '../gradient-spinner';
 
 const FormTemplate = ({
   title,
@@ -17,12 +18,14 @@ const FormTemplate = ({
   className,
   onForgotPassword,
   onBack,
-  changeLanguage = null
+  changeLanguage = null,
+  isResetPassword = false
 }) => {
   const { t } = useTranslation();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState({ message: null, type: null });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const defaultValues = {};
@@ -41,6 +44,7 @@ const FormTemplate = ({
   }, [status.message]);
 
   const handleFormSubmit = async (data) => {
+    setIsLoading(true);
     try {
       await onSubmit(data, setStatus);
     } catch (error) {
@@ -49,6 +53,7 @@ const FormTemplate = ({
         type: "error",
       });
     }
+    setIsLoading(false);
   };
 
   const handleGoogleLogin = async () => {
@@ -57,15 +62,21 @@ const FormTemplate = ({
 
   return (
     <div className={`form-template ${className}`}>
+      <IoArrowBackOutline className='arrow-icon' onClick={onBack} />
       <div className='header'>
         {changeLanguage && <LanguageSwitcher changeLanguage={changeLanguage} />}
         <div className='title'>
-          <IoArrowBackOutline className='icon' onClick={onBack} />
           {title}
+          {isLoading && <GradientSpinner forForm={true} />}
         </div>
       </div>
       {status.message && <div className={`status ${status.type}`}>{status.message}</div>}
       <form className='form' onSubmit={handleSubmit(handleFormSubmit)}>
+        {isResetPassword && (
+          <div className='reset-password'>
+            <p>{t("resetPassword.instruction")}</p>
+          </div>
+        )}
         {fields.map(({ name, type, label, validation, showLabel = false, placeholder }) => (
           <div className="form-group" key={name}>
             {showLabel && <label htmlFor={name}>{label}</label>}
@@ -91,7 +102,7 @@ const FormTemplate = ({
             <span className='forgot' onClick={onForgotPassword}>{t("login.forgotPassword")}</span>
           </div>
         )}
-        <button type='submit'>{buttonText}</button>
+        <button type='submit' disabled={isLoading}>{buttonText}</button>
       </form>
       {isLogin && (
         <button

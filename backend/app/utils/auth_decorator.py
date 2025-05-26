@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import request
+from flask import request, g
 from app.utils import JwtUtils
 from app.models import User
 from flask_login import current_user
@@ -7,6 +7,7 @@ from app.utils.error_handler import UnauthorizedError, AuthError, handle_errors
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 def authenticate_user():
     """Common feature for checking authentication via JWT or session."""
@@ -22,10 +23,7 @@ def authenticate_user():
             if not user:
                 logger.error(f"User with ID '{payload['user_id']}' not found during authentication")
                 raise UnauthorizedError("User not found or invalid token")
-
             return user
-        except UnauthorizedError:
-            raise
         except Exception as e:
             raise
 
@@ -42,6 +40,7 @@ def auth_required(f):
     def decorated(*args, **kwargs):
         user = authenticate_user()
         request.current_user = user
+        g.user = user
         return f(*args, **kwargs)
     return decorated
 
@@ -57,6 +56,7 @@ def role_required(roles):
                 raise AuthError(f"User does not have the required role. Required roles: {roles}")
 
             request.current_user = user
+            g.user = user
             return f(*args, **kwargs)
         return decorated
     return decorator

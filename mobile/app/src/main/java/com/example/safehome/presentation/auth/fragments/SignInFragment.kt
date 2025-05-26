@@ -77,7 +77,8 @@ class SignInFragment : Fragment() {
                         is Result.Error -> {
                             val message = when (val error = result.errorType) {
                                 is ErrorType.ServerError -> {
-                                    if (error.code == 403) "Incorrect login or password"
+                                    if (error.code == 422) "Wrong login or password"
+                                    else if (error.code == 403) "Server is closed"
                                     else error.message
                                 }
                                 is ErrorType.NetworkError -> error.message
