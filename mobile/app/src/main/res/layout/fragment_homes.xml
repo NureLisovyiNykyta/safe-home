@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/main_container"/>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,6 +29,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <ImageButton
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="15dp"
+            android:padding="7dp"
+            android:background="@drawable/rounded_all_small_background"
+            android:backgroundTint="@color/primary"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/error_image"
+            android:src="@drawable/ic_plus"
+            android:clickable="true"
+            android:focusable="true" />
 
-    </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/homesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:nestedScrollingEnabled="false"
+            android:layout_gravity="bottom"/>
+
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

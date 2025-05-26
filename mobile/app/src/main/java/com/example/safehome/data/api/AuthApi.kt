@@ -1,12 +1,12 @@
 package com.example.safehome.data.api
 
+import com.example.safehome.data.model.SignInRequest
+import com.example.safehome.data.model.SignInResponse
+import com.example.safehome.data.model.SignUpResponse
+import com.example.safehome.data.model.SignUpRequest
 import com.example.safehome.data.model.ResetPasswordRequest
 import com.example.safehome.data.model.ResetPasswordResponse
-import com.example.safehome.data.model.SignUpResponse
 import com.example.safehome.data.model.VerifyTokenResponse
-import com.example.safehome.data.model.SignInRequest
-import com.example.safehome.data.model.SignUpRequest
-import com.example.safehome.data.model.SignInResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -14,13 +14,13 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface AuthApi {
-    @POST("token_login")
+    @POST("login/token")
     @Headers(
         "Content-Type: application/json"
     )
     suspend fun login(@Body request: SignInRequest): SignInResponse
 
-    @GET("verify_token")
+    @GET("verify-token")
     @Headers(
         "Content-Type: application/json"
     )
@@ -32,7 +32,7 @@ interface AuthApi {
     )
     suspend fun signUp(@Body request: SignUpRequest): SignUpResponse
 
-    @POST("reset_password")
+    @POST("reset-password")
     @Headers(
         "Content-Type: application/json"
     )

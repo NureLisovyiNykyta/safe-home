@@ -1,7 +1,9 @@
 package com.example.safehome.data.model
 
 sealed class ErrorType {
-    data class InternalError(val message: String) : ErrorType()
-    data class NetworkError(val message: String) : ErrorType()
-    data class ServerError(val message: String, val code: Int) : ErrorType()
+    abstract val message: String
+
+    data class InternalError(override val message: String) : ErrorType()
+    data class NetworkError(override val message: String) : ErrorType()
+    data class ServerError(override val message: String, val code: Int) : ErrorType()
 }

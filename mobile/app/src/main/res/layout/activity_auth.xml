@@ -2,9 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_auth"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primary">
+    style="@style/Activity" >
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
@@ -16,17 +14,6 @@
 
     <ImageButton
         android:id="@+id/backButton"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="start|top"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        android:rotation="90"
-        android:contentDescription="@string/error_image"
-        android:src="@drawable/ic_arrow"
-        android:clickable="true"
-        android:focusable="true"
-        app:tint="@color/white" />
+        style="@style/BackButton"
+        android:contentDescription="@string/error_image"/>
 </FrameLayout>
