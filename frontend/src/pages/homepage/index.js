@@ -100,18 +100,18 @@ const Homepage = () => {
               </div>
               <div className='advantage' ref={addToRefs}>
                 <div className='icon'><TbViewportWide /></div>
-                <h3>Maximum Reliability</h3>
-                <p>Advanced technologies to protect your home.</p>
-              </div>
-              <div className='advantage' ref={addToRefs}>
-                <div className='icon'><IoPersonOutline /></div>
                 <h3>Flexible Scalability</h3>
                 <p>Suitable for any size and type of dwelling.</p>
               </div>
               <div className='advantage' ref={addToRefs}>
-                <div className='icon'><GoLock /></div>
+                <div className='icon'><IoPersonOutline /></div>
                 <h3>Ease of Use</h3>
                 <p>User-friendly interface accessible to all users.</p>
+              </div>
+              <div className='advantage' ref={addToRefs}>
+                <div className='icon'><GoLock /></div>
+                <h3>Data Security</h3>
+                <p>Encryption and protection against unauthorized access.</p>
               </div>
               <div className='advantage' ref={addToRefs}>
                 <div className='icon'><MdOutlineSavings /></div>
