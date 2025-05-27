@@ -24,16 +24,9 @@
 .navigation .logo {
   display: flex;
   justify-content: center;
-  font-family: Kreon;
   font-size: 2rem;
   user-select: none;
   position: relative;
-}
-
-.navigation .logo .desktop-logo {
-  width: 48px;
-  height: 40px;
-  padding-right: 1rem;
 }
 
 .navigation .logo .desktop-logo,
@@ -49,11 +42,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
+}
+
+.navigation .navigation-container .mobile-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  background-color: rgb(167, 207, 255);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0;
+  gap: 0.5rem;
+  transition: none;
+}
+
+.navigation .navigation-container .mobile-title span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 100%;
+  color: white;
+  font-weight: 650;
+  font-size: 1.6rem;
+  text-wrap: nowrap;
+}
+
+.navigation .desktop-logo {
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
 }
 
 .navigation .links {
-  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -91,7 +114,7 @@
 .navigation .link .customer-link {
   display: flex;
   align-items: center;
-  justify-content: center;  
+  justify-content: center;
   gap: 1rem;
   text-wrap: nowrap;
 }
@@ -182,7 +205,7 @@
   }
 
   .navigation.expanded .navigation-container {
-    max-width: 80%;
+    max-width: 70%;
     padding: 1rem;
   }
 

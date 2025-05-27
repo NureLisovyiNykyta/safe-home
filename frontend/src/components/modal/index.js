@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import { useEffect } from "react";
 import "./index.css";
+import { IoCloseOutline } from "react-icons/io5";
 
 const Modal = ({
   isOpen,
@@ -38,7 +39,7 @@ const Modal = ({
           </div>
         )}
         {showCloseButton && (
-          <button className="close-btn" onClick={onClose}>&times;</button>
+          <button className="close-btn" onClick={onClose}><IoCloseOutline className="icon" /></button>
         )}
       </div>
     </div>,

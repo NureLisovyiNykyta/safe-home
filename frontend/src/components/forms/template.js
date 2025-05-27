@@ -110,7 +110,7 @@ const FormTemplate = ({
           onClick={handleGoogleLogin}
         >
           <img className='google-icon' src={googleLogo} alt="Google" />
-          {t("login.googleLogin")}
+          <span>{t("login.googleLogin")}</span>
         </button>
       )}
     </div>

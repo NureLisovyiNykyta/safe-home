@@ -87,26 +87,44 @@
   z-index: 1002;
 }
 
+.modal.notification p {
+  margin: 0;
+  line-height: 100%;
+  font-size: 1.2rem;
+}
+
 .modal.notification .content {
   background: #333;
-  color: white;
-  padding: 1.5rem;
+  color: white;  
+  padding: 1rem;
   border-radius: 1rem;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: unset;
   text-align: center;
   max-width: 400px;
   width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .modal .close-btn {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
   color: rgb(255, 255, 255);
   cursor: pointer;
   background: none;
   border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.modal .close-btn:hover {
+  transform: scale(1.4);
 }
 
 @keyframes fadeIn {
@@ -137,9 +155,7 @@
   .modal.notification .content {
     background: #333;
     color: white;
-    padding: 0.5rem;
     border-radius: 1rem;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     text-align: center;
     width: calc(100vw - 5rem);
   }

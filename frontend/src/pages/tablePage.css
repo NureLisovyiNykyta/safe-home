@@ -78,7 +78,7 @@
     padding: 1rem;
     gap: 1rem;
     width: calc(100% - 2rem);
-    height: calc(100vh - 7.5rem);
+    height: calc(100vh - 7rem);
   }
 
   .page .card-list {
