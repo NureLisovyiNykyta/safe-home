@@ -8,9 +8,15 @@
   background-color: white;
 }
 
+.homepage img {
+  object-fit: cover;
+}
+
 .homepage .header,
 .homepage .content {
-  margin: 0 15%;
+  width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
 .homepage .header {
@@ -18,7 +24,6 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
 }
 
 .homepage .header h3 {
@@ -28,6 +33,7 @@
 
 .homepage .header .login-link {
   margin-left: auto;
+  margin-right: 1rem;
   background-color: #1b8ce2;
   color: white;
   padding: 0.5rem 1rem;
@@ -64,7 +70,6 @@
 }
 
 .homepage .content .main-content {
-  padding: 1rem;
   color: #333;
   display: flex;
   flex-direction: column;
@@ -105,28 +110,26 @@
 
 .homepage .content .main-content .intro .home-logo {
   border-radius: 1rem;
-  width: 600px;
-  height: auto;
-  place-self: center;
-}
-
-.homepage .content .main-content .intro .right-column {
-  clip-path: path("M0,0 Q30,150 0,300 Q30,450 0,600 Q30,750 0,900 Q30,1050 0,1100 L600,1100 L600,0 Z");
-  -webkit-clip-path: path("M0,0 Q30,150 0,300 Q30,450 0,600 Q30,750 0,900 Q30,1050 0,1100 L600,1100 L600,0 Z");
-  overflow: hidden;
+  width: 100%;
+  /* Занимает всю ширину контейнера */
+  max-height: 50vh;
+  /* Ограничивает максимальную высоту */
+  object-fit: cover;
+  /* Сохраняет пропорции, обрезая лишнее */
+  place-self: end;
 }
 
 .homepage .content .main-content .intro .download-mobile-app {
-  background-color: #125e99;
+  background-color: #0f2671;
   color: white;
   padding: 0.5rem 1rem;
-  border-radius: 1.3rem;
+  border-radius: 0.5rem;
   font-size: 1.5rem;
   transition: background-color 0.3s ease;
 }
 
 .homepage .content .main-content .intro .download-mobile-app:hover {
-  background-color: #0d3b5c;
+  background-color: #0b1a4d;
 }
 
 .homepage .content .main-content .features {
@@ -153,7 +156,7 @@
 .homepage .content .main-content .features .right-column .mobile-app-image {
   border-radius: 1rem;
   width: auto;
-  height: 600px;
+  height: 100%;
   place-self: center;
   clip-path: path("M0,0 Q30,150 0,300 Q30,450 0,600 Q30,750 0,900 Q30,1050 0,1100 L600,1100 L600,0 Z");
   -webkit-clip-path: path("M0,0 Q30,150 0,300 Q30,450 0,600 Q30,750 0,900 Q30,1050 0,1100 L600,1100 L600,0 Z");
@@ -360,34 +363,59 @@
   color: rgb(89, 127, 232);
 }
 
+@media screen and (max-width: 1200px) {
+  .homepage .header,
+  .homepage .content {
+    width: stretch;
+    padding: 0 1rem;
+    margin: 1rem;
+  }
+}
+
 @media screen and (max-width: 1000px) {
   .homepage .content .main-content {
     gap: 2rem;
   }
 
-  .homepage .header,
+  .homepage .header {
+    margin-bottom: 0;
+  }
+
+  .homepage .header .login-link {
+    margin-right: 0;
+  }
+
   .homepage .content {
-    margin: 0;
+    padding: 0;
+  }
+
+  .homepage .content .main-content {
+    padding: 1rem;
   }
 
   .homepage .content .main-content .intro {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1rem;
   }
 
   .homepage .content .main-content h1 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
 
   .homepage .content .main-content p {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .homepage .content .main-content .intro .right-column {
-    clip-path: none;
-    -webkit-clip-path: none;
-    overflow: visible;
+    justify-content: center;
+    align-items: flex-start;
+    display: none;
+  }
+
+  .homepage .content .main-content .intro .home-logo {
+    width: auto;
+    max-height: 40vh;
   }
 
   .homepage .content .main-content .features {
@@ -409,30 +437,26 @@
   .homepage .content .main-content .features {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
   }
 
-  .homepage .content .main-content .features .right-column .mobile-app-image {
-    width: 100%;
-    height: auto;
-    clip-path: none;
-    -webkit-clip-path: none;
-    overflow: visible;
-    border-radius: 1rem;
+  .homepage .content .main-content .features .right-column {
+    display: none;
   }
 
   .homepage .content .main-content .advantages h2 {
-    font-size: 1.6rem;
-    align-self: center;
+    font-size: 1.3rem;
     margin: 0;
+    margin-left: 1rem;
   }
 
   .homepage .content .main-content .advantages .advantage .icon {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
 
   .homepage .content .main-content .advantages .advantage h3 {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
+    font-weight: 700;
   }
 
   .homepage .content .main-content .advantages .advantage p {

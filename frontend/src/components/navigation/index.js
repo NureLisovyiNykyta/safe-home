@@ -92,12 +92,14 @@ const Navigation = ({ changeLanguage }) => {
       <div className={`navigation ${isMenuOpen ? 'expanded' : ''}`}>
         <div className='logo'>
           <RxHamburgerMenu className="burger-menu-icon" onClick={toggleMenu} />
-          <img src={logo} alt='company-logo' className="desktop-logo" />
-          <span className="desktop-text">safe home</span>
           <span className="mobile-title">{getPageTitle()}</span>
         </div>
         <div className="overlay" onClick={toggleMenu}></div>
         <div className='navigation-container'>
+          <Link to={'/'} className='mobile-title'>
+            <img src={logo} alt='company-logo' className="desktop-logo" />
+            <span className="desktop-text">safe home</span>
+          </Link>
           <div className='links'>
             {navLinks.map(({ path, icon, label }) => (
               <Link
