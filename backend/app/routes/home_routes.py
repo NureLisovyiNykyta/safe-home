@@ -46,6 +46,51 @@ def get_all_homes():
     return HomeService.get_all_homes(user_id)
 
 
+@home_bp.route('/homes/<home_id>', methods=['GET'])
+@swag_from({
+    'tags': ['Home'],
+    'summary': 'Get home by id for the authenticated user',
+    'parameters': [
+            {
+                'name': 'home_id',
+                'in': 'path',
+                'required': True,
+                'type': 'string',
+                'description': 'Home ID to retrieve sensors for'
+            }
+    ],
+    'responses': {
+        200: {
+            'description': 'Home details',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'home': {
+                        'type': 'object',
+                        'properties': {
+                            'home_id': {'type': 'string'},
+                            'name': {'type': 'string'},
+                            'address': {'type': 'string'},
+                            'created_at': {'type': 'string'},
+                            'default_mode_id': {'type': 'string'},
+                            'default_mode_name': {'type': 'string'},
+                            'is_archived': {'type': 'boolean'}
+                        }
+                    }
+                }
+            }
+        },
+        401: {'description': 'Unauthorized'},
+        500: {'description': 'Internal server error'}
+    }
+})
+@role_required(['user'])
+@handle_errors
+def get_home(home_id):
+    user_id = request.current_user.user_id
+    return HomeService.get_home(user_id, home_id)
+
+
 @home_bp.route('/homes', methods=['POST'])
 @swag_from({
     'tags': ['Home'],
