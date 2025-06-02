@@ -27,6 +27,22 @@ class HomeService:
 
     @staticmethod
     @handle_errors
+    def get_home(user_id, home_id):
+        home = HomeRepository.get_by_user_and_id(user_id, home_id)
+        home_data = {
+                "home_id": str(home.home_id),
+                "name": home.name,
+                "address": home.address,
+                "created_at": home.created_at.isoformat(),
+                "default_mode_id": str(home.default_mode_id),
+                "default_mode_name": home.default_mode.mode_name,
+                "is_archived": home.is_archived
+            }
+
+        return jsonify({"home": home_data}), 200
+
+    @staticmethod
+    @handle_errors
     def add_home(user_id, body):
         Validator.validate_required_fields(body, ['name', 'address'])
 
