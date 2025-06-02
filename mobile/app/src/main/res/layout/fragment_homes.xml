@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/main_container"/>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageButton
-            android:id="@+id/addButton"
+            android:id="@+id/addHomeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
@@ -46,12 +46,13 @@
             android:focusable="true" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/homesRecyclerView"
+            android:id="@+id/homeRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="10dp"
             android:nestedScrollingEnabled="false"
             android:layout_gravity="bottom"/>
 
-    </FrameLayout>
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

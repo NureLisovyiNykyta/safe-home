@@ -2,8 +2,9 @@ package com.example.safehome.presentation.main.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.safehome.data.api.SensorApi
 import com.example.safehome.data.model.Result
-import com.example.safehome.domain.HomeUseCase
+import com.example.safehome.data.repo.TokenRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,8 +14,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val homeUseCase: HomeUseCase
+class SensorViewModel @Inject constructor(
+    private var tokenRepository: TokenRepository,
+    private val sensorApi: SensorApi
 ) : ViewModel() {
     private val _state = MutableSharedFlow<Result<Boolean>>(
         replay = 0,

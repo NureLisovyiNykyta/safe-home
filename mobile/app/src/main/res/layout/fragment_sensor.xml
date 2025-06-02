@@ -2,18 +2,28 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".presentation.main.fragments.HomeFragment"
-    android:id="@+id/homeFragment"
+    tools:context=".presentation.main.fragments.SensorFragment"
+    android:id="@+id/sensorFragment"
     style="@style/Fragment" >
 
     <TextView
         android:id="@+id/title_textView"
         style="@style/TitleTextView"
-        android:text="@string/title_home_fragment"
+        android:text="@string/title_sensor_fragment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/main_container"/>
+
+    <ImageButton
+        android:id="@+id/backButton"
+        style="@style/BackButton"
+        android:layout_margin="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/error_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/main_container"

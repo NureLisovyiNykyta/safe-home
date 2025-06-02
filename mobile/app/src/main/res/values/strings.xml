@@ -29,7 +29,6 @@
     <string name="terms_and_policy">By continuing, you agree to \nTerms of Use and Privacy Policy.</string>
     <string name="select_date">Choose your date of birth</string>
     <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
 
     <!-- ResetPswdFragment -->
     <string name="title_reset_pswd_fragment">Reset password</string>
@@ -45,8 +44,10 @@
     <string name="status_disarmed">Disarmed</string>
     <string name="status_custom">Custom</string>
 
-    <!-- HomeFragment -->
-    <string name="title_home_fragment">Home</string>
+    <!-- SensorFragment -->
+    <string name="title_sensor_fragment">Sensor</string>
+    <string name="archive">Archive</string>
+    <string name="paring_code">2S83J6d</string>
 
     <!-- SubscriptionsFragment -->
     <string name="title_subscriptions_fragment">Subscriptions</string>
@@ -59,8 +60,7 @@
     <!-- DialogAddHome -->
     <string name="newHome">New home</string>
     <string name="name">Name</string>
-    <string name="address">Name</string>
-    <string name="save">Save</string>
+    <string name="address">Address</string>
 
     <!-- DialogAddSensor -->
     <string name="newSensor">New sensor</string>
@@ -68,5 +68,10 @@
     <string name="type">Type</string>
     <string name="window">Window</string>
     <string name="door">Door</string>
+
+    <!-- Also -->
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
