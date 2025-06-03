@@ -45,7 +45,8 @@
     <string name="status_custom">Custom</string>
 
     <!-- SensorFragment -->
-    <string name="title_sensor_fragment">Sensor</string>
+    <string name="title_sensor_fragment">Home</string>
+    <string name="my_sensors">My sensors</string>
     <string name="archive">Archive</string>
     <string name="paring_code">2S83J6d</string>
 
@@ -68,6 +69,13 @@
     <string name="type">Type</string>
     <string name="window">Window</string>
     <string name="door">Door</string>
+
+
+
+    <!-- ItemSensor -->
+    <string name="status">Status</string>
+
+
 
     <!-- Also -->
     <string name="delete">Delete</string>

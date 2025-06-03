@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.safehome.R
 import com.google.android.material.button.MaterialButton
+import timber.log.Timber
 
 class HomeAdapter(
     private val onItemClick: (HomeDto) -> Unit,
@@ -27,20 +28,46 @@ class HomeAdapter(
         private val onDeleteClick: (String) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(home: HomeDto) {
-            binding.nameTextView.text = home.name
-            binding.addressTextView.text = home.address
-            binding.propertiesImageView.setOnClickListener {
-                showPropertiesHomeDialog(home.home_id, home.name, home.is_archived)
-            }
-            binding.root.setOnClickListener { onItemClick(home) }
+            with (binding) {
+                fun updateStatus(status: String) {
+                    val statusImageName = when (status) {
+                        "armed" -> "ic_lock_close"
+                        "disarmed" -> "ic_lock_open"
+                        "custom" -> "ic_custom"
+                        "alert", "alarm" -> "ic_alarm"
+                        else -> "ic_error"
+                    }
 
-            binding.homeImageView.backgroundTintList =
-                ColorStateList.valueOf(
-                    if (home.is_archived)
-                        ContextCompat.getColor(binding.root.context, R.color.grey)
-                    else
-                        ContextCompat.getColor(binding.root.context, R.color.primary)
-                )
+                    val resId = binding.root.context.resources.getIdentifier(
+                        statusImageName,
+                        "drawable",
+                        binding.root.context.packageName
+                    )
+                    if (resId != 0) {
+                        statusImageView.setImageResource(resId)
+                    } else {
+                        Timber.tag("SensorFragment").e("Drawable resource not found: $statusImageName")
+                    }
+
+                    statusTextView.text = status.replaceFirstChar { it.uppercaseChar() }
+                }
+                updateStatus(home.default_mode_name)
+
+                nameTextView.text = home.name
+                addressTextView.text = home.address
+                propertiesImageView.setOnClickListener {
+                    showPropertiesHomeDialog(home.home_id, home.name, home.is_archived)
+                }
+                root.setOnClickListener { onItemClick(home) }
+
+                homeImageView.backgroundTintList =
+                    ColorStateList.valueOf(
+                        if (home.is_archived)
+                            ContextCompat.getColor(binding.root.context, R.color.grey)
+                        else
+                            ContextCompat.getColor(binding.root.context, R.color.primary)
+                    )
+            }
         }
 
         private fun showPropertiesHomeDialog(homeId: String, name: String, isArchived: Boolean) {

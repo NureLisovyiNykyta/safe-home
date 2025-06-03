@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomesFragment : Fragment() {
-    private val homesViewModel: HomesViewModel by viewModels()
+    private val homesViewModel: HomesViewModel by activityViewModels()
     private lateinit var binding: FragmentHomesBinding
     private lateinit var homeAdapter: HomeAdapter
 
@@ -41,8 +41,10 @@ class HomesFragment : Fragment() {
         setupRecyclerView()
         observeHomesState()
 
-        binding.addHomeButton.setOnClickListener {
-            showAddHomeDialog()
+        with(binding){
+            addHomeButton.setOnClickListener {
+                showAddHomeDialog()
+            }
         }
     }
 
@@ -60,7 +62,10 @@ class HomesFragment : Fragment() {
         homeAdapter = HomeAdapter(
             onItemClick = { home ->
                 val bundle = Bundle().apply {
-                    putString("car_id", home.home_id)
+                    putString("home_id", home.home_id)
+                    putString("home_name", home.name)
+                    putString("home_address", home.address)
+                    putString("home_default_mode_name", home.default_mode_name)
                 }
                 findNavController().navigate(R.id.action_navigation_homes_to_navigation_sensor, bundle)
             },

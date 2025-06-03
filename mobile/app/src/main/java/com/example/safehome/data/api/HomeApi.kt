@@ -1,7 +1,7 @@
 package com.example.safehome.data.api
 
 import com.example.safehome.data.model.AddHomeRequest
-import com.example.safehome.data.model.HomesResponse
+import com.example.safehome.data.model.GetHomesResponse
 import com.example.safehome.data.model.MessageResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -19,7 +19,7 @@ interface HomeApi {
     )
     suspend fun getHomes(
         @Header("Authorization") token: String?
-    ): Response<HomesResponse>
+    ): Response<GetHomesResponse>
 
     @POST("homes")
     @Headers(

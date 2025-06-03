@@ -1,7 +1,5 @@
 package com.example.safehome.presentation.main.viewModel
 
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.safehome.data.api.HomeApi
@@ -12,7 +10,6 @@ import com.example.safehome.data.repo.TokenRepository
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +20,6 @@ import timber.log.Timber
 
 @HiltViewModel
 class HomesViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private var tokenRepository: TokenRepository,
     private val homeApi: HomeApi
 ) : ViewModel() {
@@ -114,7 +110,7 @@ class HomesViewModel @Inject constructor(
             } else {
                 val errorBody = response.errorBody()?.string()
                 val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home deleted successfully")
+                    Timber.tag("HomeViewModel").d("Home archived successfully")
                     Gson().fromJson(errorBody, ErrorResponse::class.java).message
                 } catch (e: JsonSyntaxException) {
                     "Failed to get home details: $e"
@@ -137,7 +133,53 @@ class HomesViewModel @Inject constructor(
             } else {
                 val errorBody = response.errorBody()?.string()
                 val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home deleted successfully")
+                    Timber.tag("HomeViewModel").d("Home unarchived successfully")
+                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
+                } catch (e: JsonSyntaxException) {
+                    "Failed to get home details: $e"
+                }
+                Timber.tag("TireViewModel").e(errorMessage)
+                null
+            }
+        } catch (e: Exception) {
+            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
+            null
+        }
+    }
+
+    suspend fun armedHome(homeId: String){
+        try {
+            val token = tokenRepository.getToken()
+            val response = homeApi.armedHome(token, homeId)
+            if (response.isSuccessful) {
+                loadHomes()
+            } else {
+                val errorBody = response.errorBody()?.string()
+                val errorMessage = try {
+                    Timber.tag("HomeViewModel").d("Home armed successfully")
+                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
+                } catch (e: JsonSyntaxException) {
+                    "Failed to get home details: $e"
+                }
+                Timber.tag("TireViewModel").e(errorMessage)
+                null
+            }
+        } catch (e: Exception) {
+            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
+            null
+        }
+    }
+
+    suspend fun disarmedHome(homeId: String){
+        try {
+            val token = tokenRepository.getToken()
+            val response = homeApi.disarmedHome(token, homeId)
+            if (response.isSuccessful) {
+                loadHomes()
+            } else {
+                val errorBody = response.errorBody()?.string()
+                val errorMessage = try {
+                    Timber.tag("HomeViewModel").d("Home disarmed successfully")
                     Gson().fromJson(errorBody, ErrorResponse::class.java).message
                 } catch (e: JsonSyntaxException) {
                     "Failed to get home details: $e"
