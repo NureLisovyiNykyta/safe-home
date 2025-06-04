@@ -54,6 +54,12 @@ object HintModule {
 
     @Provides
     @Singleton
+    fun provideUserApi(retrofit: Retrofit): UserApi {
+        return retrofit.create(UserApi::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideHomeApi(retrofit: Retrofit): HomeApi {
         return retrofit.create(HomeApi::class.java)
     }

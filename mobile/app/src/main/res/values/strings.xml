@@ -55,7 +55,12 @@
 
     <!-- ProfileFragment -->
     <string name="title_profile_fragment">Profile</string>
+    <string name="profile_name">Vladislav</string>
+    <string name="profile_date">21 / 02 / 2005</string>
 
+    <!-- ProfileFragment -->
+    <string name="title_change_password_fragment">Change Password</string>
+    <string name="subscribe_type">Basic</string>
 
 
     <!-- DialogAddHome -->
@@ -71,15 +76,15 @@
     <string name="door">Door</string>
 
 
-
     <!-- ItemSensor -->
     <string name="status">Status</string>
-
 
 
     <!-- Also -->
     <string name="delete">Delete</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
