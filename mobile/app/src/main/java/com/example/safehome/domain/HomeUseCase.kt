@@ -10,10 +10,10 @@ class HomeUseCase @Inject constructor(
     private val homeRepo: HomeRepository,
     private val homeMapper: HomeMapper
 ) {
-    suspend fun getHomes(): Result<List<Home>> {
+    /*suspend fun getHomes(): Result<List<Home>> {
         val homes = homeRepo.getHomes()
         return Result.Success(
             homes.map { homeMapper.toUi(it) }
         )
-    }
+    }*/
 }

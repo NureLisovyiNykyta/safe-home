@@ -2,10 +2,11 @@ package com.example.safehome.presentation.main.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.safehome.data.api.HomeApi
-import com.example.safehome.data.model.AddHomeRequest
-import com.example.safehome.data.model.HomeDto
+import com.example.safehome.com.example.safehome.data.model.ActiveSensorRequest
+import com.example.safehome.data.api.SensorApi
+import com.example.safehome.data.model.AddSensorRequest
 import com.example.safehome.data.model.ErrorResponse
+import com.example.safehome.data.model.SensorDto
 import com.example.safehome.data.repo.TokenRepository
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -14,30 +15,31 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import timber.log.Timber
-
+import javax.inject.Inject
 
 @HiltViewModel
-class HomesViewModel @Inject constructor(
+class SensorViewModel @Inject constructor(
     private var tokenRepository: TokenRepository,
-    private val homeApi: HomeApi
+    private val sensorApi: SensorApi
 ) : ViewModel() {
-    private val _homesState = MutableStateFlow<List<HomeDto>>(emptyList())
-    val homesState: StateFlow<List<HomeDto>> = _homesState.asStateFlow()
+    private val _sensorsState = MutableStateFlow<List<SensorDto>>(emptyList())
+    val sensorsState: StateFlow<List<SensorDto>> = _sensorsState.asStateFlow()
+    private var homeId: String? = null
 
-    init {
-        loadHomes()
+    fun setHomeId(homeId: String) {
+        this.homeId = homeId
+        loadSensors()
     }
 
-    fun loadHomes() {
+    fun loadSensors() {
         viewModelScope.launch {
             try {
                 val token = tokenRepository.getToken()
-                val response = homeApi.getHomes(token)
+                val response = sensorApi.getSensors(token, homeId!!)
 
                 if (response.isSuccessful) {
-                    _homesState.value = response.body()?.homes!!
+                    _sensorsState.value = response.body()?.sensors!!
                 } else {
                     val errorBody = response.errorBody()?.string()
                     val errorMessage = try {
@@ -45,24 +47,24 @@ class HomesViewModel @Inject constructor(
                     } catch (e: JsonSyntaxException) {
                         "Unknown error: $e"
                     }
-                    _homesState.value = emptyList()
-                    Timber.tag("HomeViewModel").e(errorMessage)
+                    _sensorsState.value = emptyList()
+                    Timber.tag("SensorViewModel").e(errorMessage)
                 }
             } catch (e: Exception) {
-                Timber.tag("HomeViewModel").e("Network error: ${e.message}")
+                Timber.tag("SensorViewModel").e("Network error: ${e.message}")
             }
         }
     }
 
-    fun addHome(name: String, address: String) {
+    fun addSensor(homeId: String, name: String, type: String) {
         viewModelScope.launch {
             try {
                 val token = tokenRepository.getToken()
-                val request = AddHomeRequest(name, address)
-                val response = homeApi.addHome(token, request)
+                val request = AddSensorRequest(homeId, name, type)
+                val response = sensorApi.addSensor(token, request)
 
                 if (response.isSuccessful) {
-                    loadHomes()
+                    loadSensors()
                 } else {
                     val errorBody = response.errorBody()?.string()
                     val errorMessage = try {
@@ -70,27 +72,27 @@ class HomesViewModel @Inject constructor(
                     } catch (e: JsonSyntaxException) {
                         "Unknown error: $e"
                     }
-                    Timber.tag("HomeViewModel").e(errorMessage)
+                    Timber.tag("SensorViewModel").e(errorMessage)
                 }
             } catch (e: Exception) {
-                Timber.tag("HomeViewModel").e("Network error: ${e.message}")
+                Timber.tag("SensorViewModel").e("Network error: ${e.message}")
             }
         }
     }
 
-    suspend fun deleteHome(homeId: String){
+    suspend fun deleteSensor(sensorId: String){
         try {
             val token = tokenRepository.getToken()
-            val response = homeApi.deleteHome(token, homeId)
+            val response = sensorApi.deleteSensor(token, sensorId)
             if (response.isSuccessful) {
-                loadHomes()
+                loadSensors()
             } else {
                 val errorBody = response.errorBody()?.string()
                 val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home deleted successfully")
+                    Timber.tag("SensorViewModel").d("Sensor deleted successfully")
                     Gson().fromJson(errorBody, ErrorResponse::class.java).message
                 } catch (e: JsonSyntaxException) {
-                    "Failed to get home details: $e"
+                    "Failed to get sensor details: $e"
                 }
                 Timber.tag("TireViewModel").e(errorMessage)
                 null
@@ -101,19 +103,19 @@ class HomesViewModel @Inject constructor(
         }
     }
 
-    suspend fun archiveHome(homeId: String){
+    suspend fun archiveSensor(sensorId: String){
         try {
             val token = tokenRepository.getToken()
-            val response = homeApi.archiveHome(token, homeId)
+            val response = sensorApi.archiveSensor(token, sensorId)
             if (response.isSuccessful) {
-                loadHomes()
+                loadSensors()
             } else {
                 val errorBody = response.errorBody()?.string()
                 val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home archived successfully")
+                    Timber.tag("SensorViewModel").d("Sensor deleted successfully")
                     Gson().fromJson(errorBody, ErrorResponse::class.java).message
                 } catch (e: JsonSyntaxException) {
-                    "Failed to get home details: $e"
+                    "Failed to get sensor details: $e"
                 }
                 Timber.tag("TireViewModel").e(errorMessage)
                 null
@@ -124,19 +126,19 @@ class HomesViewModel @Inject constructor(
         }
     }
 
-    suspend fun unArchiveHome(homeId: String){
+    suspend fun unArchiveSensor(sensorId: String){
         try {
             val token = tokenRepository.getToken()
-            val response = homeApi.unArchiveHome(token, homeId)
+            val response = sensorApi.unArchiveSensor(token, sensorId)
             if (response.isSuccessful) {
-                loadHomes()
+                loadSensors()
             } else {
                 val errorBody = response.errorBody()?.string()
                 val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home unarchived successfully")
+                    Timber.tag("SensorViewModel").d("Sensor deleted successfully")
                     Gson().fromJson(errorBody, ErrorResponse::class.java).message
                 } catch (e: JsonSyntaxException) {
-                    "Failed to get home details: $e"
+                    "Failed to get sensor details: $e"
                 }
                 Timber.tag("TireViewModel").e(errorMessage)
                 null
@@ -147,42 +149,21 @@ class HomesViewModel @Inject constructor(
         }
     }
 
-    suspend fun armedHome(homeId: String){
+    suspend fun setActiveSensor(sensorId: String, isActive: Boolean){
         try {
             val token = tokenRepository.getToken()
-            val response = homeApi.armedHome(token, homeId)
-            if (response.isSuccessful) {
-                loadHomes()
-            } else {
-                val errorBody = response.errorBody()?.string()
-                val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home armed successfully")
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                } catch (e: JsonSyntaxException) {
-                    "Failed to get home details: $e"
-                }
-                Timber.tag("TireViewModel").e(errorMessage)
-                null
-            }
-        } catch (e: Exception) {
-            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
-            null
-        }
-    }
+            val request = ActiveSensorRequest(isActive)
+            val response = sensorApi.setActiveSensor(token, sensorId, request)
 
-    suspend fun disarmedHome(homeId: String){
-        try {
-            val token = tokenRepository.getToken()
-            val response = homeApi.disarmedHome(token, homeId)
             if (response.isSuccessful) {
-                loadHomes()
+                loadSensors()
             } else {
                 val errorBody = response.errorBody()?.string()
                 val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home disarmed successfully")
+                    Timber.tag("SensorViewModel").d("Sensor deleted successfully")
                     Gson().fromJson(errorBody, ErrorResponse::class.java).message
                 } catch (e: JsonSyntaxException) {
-                    "Failed to get home details: $e"
+                    "Failed to get sensor details: $e"
                 }
                 Timber.tag("TireViewModel").e(errorMessage)
                 null

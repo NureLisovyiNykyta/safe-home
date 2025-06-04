@@ -40,7 +40,7 @@ object HintModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://safe-home-backend-d2f2atb3d0eee9ay.northeurope-01.azurewebsites.net/api/")
+            .baseUrl("http://10.0.2.2:5000/api/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -56,6 +56,12 @@ object HintModule {
     @Singleton
     fun provideHomeApi(retrofit: Retrofit): HomeApi {
         return retrofit.create(HomeApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSensorApi(retrofit: Retrofit): SensorApi {
+        return retrofit.create(SensorApi::class.java)
     }
 
     @Provides

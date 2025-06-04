@@ -17,7 +17,7 @@ class HomeRepository @Inject constructor(
     private val homeDao: HomeDao,
     private val homeMapper: HomeMapper,
 ) {
-    suspend fun getHomes(): List<HomeDto> {
+    /*suspend fun getHomes(): List<HomeDto> {
         val cachedHomes = homeDao.getAllHomes()
         return if (cachedHomes.isNotEmpty()) {
             cachedHomes.map { homeMapper.entityToDto(it) }
@@ -29,7 +29,7 @@ class HomeRepository @Inject constructor(
         }
     }
 
-    /*suspend fun addHome(): Result<Response> {
+    suspend fun addHome(): Result<Response> {
         return networkHandler.safeApiCall {
             homeApi.addHome(Request())
         }
@@ -63,7 +63,7 @@ class HomeRepository @Inject constructor(
         return networkHandler.safeApiCall {
             homeApi.disarmedHome(Request())
         }
-    }*/
+    }
 
     private suspend fun fetchAndCacheHomes(): Result<List<HomeDto>> {
         val result = networkHandler.safeApiCall {
@@ -80,5 +80,5 @@ class HomeRepository @Inject constructor(
             is Result.Error -> result
             is Result.Loading -> Result.Loading
         }
-    }
+    }*/
 }
