@@ -58,8 +58,10 @@
     <string name="profile_name">Vladislav</string>
     <string name="profile_date">21 / 02 / 2005</string>
 
-    <!-- ProfileFragment -->
+    <!-- ChangePasswordFragment -->
     <string name="title_change_password_fragment">Change Password</string>
+    <string name="new_pswd">New password</string>
+    <string name="current_pswd">Current password</string>
     <string name="subscribe_type">Basic</string>
 
 
