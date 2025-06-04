@@ -56,6 +56,10 @@ class SensorViewModel @Inject constructor(
         }
     }
 
+    fun updateSensorsState(updatedSensors: List<SensorDto>) {
+        _sensorsState.value = updatedSensors
+    }
+
     fun addSensor(homeId: String, name: String, type: String) {
         viewModelScope.launch {
             try {
@@ -156,7 +160,10 @@ class SensorViewModel @Inject constructor(
             val response = sensorApi.setActiveSensor(token, sensorId, request)
 
             if (response.isSuccessful) {
-                loadSensors()
+                val updatedSensors = _sensorsState.value.map {
+                    if (it.sensor_id == sensorId) it.copy(is_active = isActive) else it
+                }
+                _sensorsState.value = updatedSensors
             } else {
                 val errorBody = response.errorBody()?.string()
                 val errorMessage = try {

@@ -10,6 +10,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -41,7 +42,7 @@ interface SensorApi {
         @Path("sensor_id") sensorId: String
     ): Response<MessageResponse>
 
-    @POST("sensors/{sensor_id}/activity")
+    @PATCH("sensors/{sensor_id}/activity")
     @Headers(
         "Content-Type: application/json"
     )

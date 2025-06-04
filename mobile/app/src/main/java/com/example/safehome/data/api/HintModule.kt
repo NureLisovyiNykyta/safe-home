@@ -40,7 +40,7 @@ object HintModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:5000/api/")
+            .baseUrl("https://safe-home-backend-d2f2atb3d0eee9ay.northeurope-01.azurewebsites.net/api/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

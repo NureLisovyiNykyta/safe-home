@@ -36,6 +36,7 @@ class SensorFragment : Fragment() {
     private lateinit var binding: FragmentSensorBinding
     private lateinit var sensorAdapter: SensorAdapter
     private lateinit var homeId: String
+    private var initialStatus: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,18 +70,17 @@ class SensorFragment : Fragment() {
     private fun initUI() {
         val name = arguments?.getString("home_name") ?: "Unknown Name"
         val address = arguments?.getString("home_address") ?: "Unknown Address"
-        val status = arguments?.getString("home_default_mode_name") ?: "unknown"
+        initialStatus = arguments?.getString("home_default_mode_name") ?: "unknown"
 
         binding.apply {
             homeNameTextView.text = name
             homeAddressTextView.text = address
-            updateStatusUI(status)
+            // Не викликаємо updateStatusUI тут, чекаємо першого оновлення з sensorsState
         }
     }
 
     private fun setupListeners() {
         binding.apply {
-            setupHomeSwitch()
             backButton.setOnClickListener {
                 findNavController().popBackStack(R.id.navigation_homes, false)
             }
@@ -90,9 +90,7 @@ class SensorFragment : Fragment() {
         }
     }
 
-    private fun setupHomeSwitch() {
-        val status = arguments?.getString("home_default_mode_name") ?: "unknown"
-
+    private fun setupHomeSwitch(status: String) {
         binding.apply {
             when (status) {
                 "armed" -> {
@@ -118,6 +116,7 @@ class SensorFragment : Fragment() {
                     Timber.tag("SensorFragment").d("SwitchCompat re-enabled")
                     homeArmedSwitch.isChecked = true
                     updateStatusUI("armed")
+                    updateAllSensorsActiveState(true) // Активуємо всі сенсори
                     viewLifecycleOwner.lifecycleScope.launch {
                         homesViewModel.armedHome(homeId)
                     }
@@ -129,6 +128,7 @@ class SensorFragment : Fragment() {
                     val newStatus = if (isChecked) "armed" else "disarmed"
                     Timber.tag("SensorFragment").d("SwitchCompat state changed to: $isChecked, new status: $newStatus")
                     updateStatusUI(newStatus)
+                    updateAllSensorsActiveState(isChecked) // Оновлюємо стан усіх сенсорів
                     viewLifecycleOwner.lifecycleScope.launch {
                         if (isChecked) {
                             homesViewModel.armedHome(homeId)
@@ -167,10 +167,39 @@ class SensorFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sensorViewModel.sensorsState.collect { sensors ->
                     sensorAdapter.submitList(sensors)
-                    updateHomeStatusBasedOnSensors(sensors)
+                    val effectiveStatus = determineEffectiveStatus(sensors)
+                    updateStatusUI(effectiveStatus)
+                    setupHomeSwitch(effectiveStatus) // Ініціалізуємо SwitchCompat після першого оновлення
                 }
             }
         }
+    }
+
+    private fun determineEffectiveStatus(sensors: List<SensorDto>): String {
+        // Якщо список сенсорів порожній, повертаємо початковий статус
+        if (sensors.isEmpty()) {
+            return initialStatus?.takeIf { it != "unknown" } ?: "disarmed"
+        }
+
+        val allActive = sensors.all { it.is_active }
+        val allInactive = sensors.all { !it.is_active }
+
+        return when {
+            allActive -> "armed"
+            allInactive -> "disarmed"
+            else -> "custom"
+        }
+    }
+
+    private fun updateAllSensorsActiveState(isActive: Boolean) {
+        val currentSensors = sensorViewModel.sensorsState.value
+        if (currentSensors.isEmpty()) return
+
+        val updatedSensors = currentSensors.map { sensor ->
+            sensor.copy(is_active = isActive)
+        }
+        sensorViewModel.updateSensorsState(updatedSensors) // Оновлюємо локальний стан у ViewModel
+        sensorAdapter.submitList(updatedSensors) // Оновлюємо UI у RecyclerView
     }
 
     private fun setupRecyclerView() {
@@ -189,51 +218,16 @@ class SensorFragment : Fragment() {
             onActiveChange = { sensorId, isActive ->
                 viewLifecycleOwner.lifecycleScope.launch {
                     sensorViewModel.setActiveSensor(sensorId, isActive)
-
                     val sensors = sensorViewModel.sensorsState.value
-                    updateHomeStatusBasedOnSensors(sensors)
+                    val newStatus = determineEffectiveStatus(sensors)
+                    updateStatusUI(newStatus)
+                    setupHomeSwitch(newStatus)
                 }
             }
         )
         binding.sensorRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = sensorAdapter
-        }
-    }
-
-    private fun updateHomeStatusBasedOnSensors(sensors: List<SensorDto>) {
-        if (sensors.isEmpty()) {
-            updateStatusUI("disarmed")
-            return
-        }
-
-        val allActive = sensors.all { it.is_active }
-        val allInactive = sensors.all { !it.is_active }
-
-        val newStatus = when {
-            allActive -> "armed"
-            allInactive -> "disarmed"
-            else -> "custom"
-        }
-
-        Timber.tag("SensorFragment").d("Updating home status based on sensors: $newStatus")
-        updateStatusUI(newStatus)
-
-        binding.apply {
-            when (newStatus) {
-                "armed" -> {
-                    homeArmedSwitch.isEnabled = true
-                    homeArmedSwitch.isChecked = true
-                }
-                "disarmed" -> {
-                    homeArmedSwitch.isEnabled = true
-                    homeArmedSwitch.isChecked = false
-                }
-                "custom" -> {
-                    homeArmedSwitch.isEnabled = false
-                    homeArmedSwitch.isChecked = false
-                }
-            }
         }
     }
 
@@ -278,7 +272,7 @@ class SensorFragment : Fragment() {
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
                 val name = nameEditText.text.toString()
-                if (name.isBlank()){
+                if (name.isBlank()) {
                     Toast.makeText(requireContext(), "Name is empty", Toast.LENGTH_LONG).show()
                     return@setPositiveButton
                 }
