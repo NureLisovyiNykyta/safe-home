@@ -19,18 +19,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.safehome.R
 import com.example.safehome.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
@@ -45,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                         "The permission has been rejected. Turn on notifications in the app settings",
                         Toast.LENGTH_LONG
                     ).show()
-                    //redirectToAppSettings()
+                    redirectToAppSettings()
                 }
             }
         }
@@ -71,6 +66,17 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.bottomNav
         navView.setupWithNavController(navController)
 
+        navView.setOnItemSelectedListener { item ->
+            if (navController.currentDestination?.id == item.itemId) {
+                navController.popBackStack(item.itemId, true)
+                navController.navigate(item.itemId)
+                true
+            } else {
+                navController.navigate(item.itemId)
+                true
+            }
+        }
+
         requestNotificationPermission()
 
 //        navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -78,7 +84,6 @@ class MainActivity : AppCompatActivity() {
 //                if (destination.id == R.id.signInFragment) View.GONE
 //                else View.VISIBLE
 //        }
-
     }
 
     override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {

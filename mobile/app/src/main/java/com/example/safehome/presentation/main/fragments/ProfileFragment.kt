@@ -1,5 +1,6 @@
 package com.example.safehome.presentation.main.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.safehome.R
 import com.example.safehome.databinding.FragmentProfileBinding
+import com.example.safehome.presentation.auth.AuthActivity
 import com.example.safehome.presentation.main.viewModel.ProfileViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlin.getValue
@@ -49,9 +52,29 @@ class ProfileFragment : Fragment() {
                         changePswdConstraintLayout.setOnClickListener {
                             findNavController().navigate(R.id.action_navigation_profile_to_changePasswordFragment)
                         }
+
+                        logoutConstraintLayout.setOnClickListener {
+                            showLogoutDialog()
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun showLogoutDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_logout, null)
+
+        MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogStyle)
+            .setView(dialogView)
+            .setPositiveButton("Exit") { _, _ ->
+                profileViewModel.logout()
+
+                val intent = Intent(requireContext(), AuthActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 }

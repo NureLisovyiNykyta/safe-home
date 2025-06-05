@@ -65,7 +65,6 @@ class SignInFragment : Fragment() {
 
         navController = findNavController()
 
-        authViewModel.checkUserAuthorization("belousvladislav7@gmail.com", "12345678")
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authViewModel.authState.collect { result ->

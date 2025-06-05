@@ -42,6 +42,10 @@ class ChangePasswordFragment : Fragment() {
 
     private fun initUI() {
         with(binding){
+            binding.backButton.setOnClickListener {
+                findNavController().popBackStack()
+            }
+
             binding.eyeCurrentButton.setOnClickListener {
                 isCurrentPasswordVisible = !isCurrentPasswordVisible
                 PasswordVisibilityUtils.togglePasswordVisibility(

@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private var tokenRepository: TokenRepository,
-    private val userApi: UserApi
+    private val userApi: UserApi,
 ) : ViewModel() {
     private val _userState = MutableStateFlow<GetUserResponse?>(null)
     val userState: StateFlow<GetUserResponse?> = _userState.asStateFlow()
@@ -50,5 +50,9 @@ class ProfileViewModel @Inject constructor(
                 Timber.tag("SensorViewModel").e("Network error: ${e.message}")
             }
         }
+    }
+
+    fun logout(){
+        tokenRepository.clearToken()
     }
 }
