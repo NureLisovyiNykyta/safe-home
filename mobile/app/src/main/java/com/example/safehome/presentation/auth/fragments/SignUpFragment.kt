@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import android.widget.EditText
 import android.widget.NumberPicker
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -23,6 +24,7 @@ import com.example.safehome.databinding.FragmentSignUpBinding
 import com.example.safehome.presentation.auth.utils.PasswordVisibilityUtils
 import com.example.safehome.presentation.auth.viewModel.SignUpViewModel
 import com.example.safehome.presentation.common.viewModel.DatePickerViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -137,10 +139,11 @@ class SignUpFragment : Fragment() {
 
     private fun showDatePickerDialog(editText: EditText) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_date_picker, null)
-
         val monthPicker = dialogView.findViewById<NumberPicker>(R.id.monthPicker)
         val dayPicker = dialogView.findViewById<NumberPicker>(R.id.dayPicker)
         val yearPicker = dialogView.findViewById<NumberPicker>(R.id.yearPicker)
+        val cancelButton = dialogView.findViewById<TextView>(R.id.cancelButton)
+        val saveButton = dialogView.findViewById<TextView>(R.id.saveButton)
 
         monthPicker.minValue = 0
         monthPicker.maxValue = DateModel.months.size - 1
@@ -177,14 +180,8 @@ class SignUpFragment : Fragment() {
             updateDaysInMonth(newYear, monthPicker.value)
         }
 
-        AlertDialog.Builder(requireContext(), R.style.RoundedDialog)
-            .setTitle(getString(R.string.select_date))
+        MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogStyle)
             .setView(dialogView)
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                datePickerViewModel.setDate(monthPicker.value, dayPicker.value, yearPicker.value)
-                editText.setText(datePickerViewModel.selectedDate.value?.toFormattedString() ?: DateModel.DEFAULT.toFormattedString())
-            }
-            .setNegativeButton(getString(R.string.cancel), null)
             .create()
             .apply {
                 show()
@@ -194,6 +191,14 @@ class SignUpFragment : Fragment() {
                 getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
                     ContextCompat.getColor(context, android.R.color.holo_red_light)
                 )
+                cancelButton.setOnClickListener {
+                    dismiss()
+                }
+                saveButton.setOnClickListener {
+                    datePickerViewModel.setDate(monthPicker.value, dayPicker.value, yearPicker.value)
+                    editText.setText(datePickerViewModel.selectedDate.value?.toFormattedString() ?: DateModel.DEFAULT.toFormattedString())
+                    dismiss()
+                }
             }
     }
 
