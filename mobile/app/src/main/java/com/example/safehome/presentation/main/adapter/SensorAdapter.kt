@@ -119,6 +119,7 @@ class SensorAdapter(
             val archiveButton = dialogView.findViewById<MaterialButton>(R.id.archiveButton)
             val deleteButton = dialogView.findViewById<MaterialButton>(R.id.deleteButton)
             val paringCode = dialogView.findViewById<TextView>(R.id.paringCodeTextView)
+            val cancelButton = dialogView.findViewById<TextView>(R.id.cancelButton)
 
             titleTextView.text = name
             archiveButton.text = if (isArchived) "UnArchived" else "Archived"
@@ -126,7 +127,6 @@ class SensorAdapter(
 
             MaterialAlertDialogBuilder(binding.root.context, R.style.CustomDialogStyle)
                 .setView(dialogView)
-                .setNegativeButton("Cancel", null)
                 .create()
                 .apply {
                     show()
@@ -136,6 +136,9 @@ class SensorAdapter(
                     }
                     deleteButton.setOnClickListener {
                         onDeleteClick(sensorId)
+                        dismiss()
+                    }
+                    cancelButton.setOnClickListener {
                         dismiss()
                     }
                 }

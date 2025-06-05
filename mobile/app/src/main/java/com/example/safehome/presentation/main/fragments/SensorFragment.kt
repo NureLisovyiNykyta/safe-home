@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -75,7 +75,6 @@ class SensorFragment : Fragment() {
         binding.apply {
             homeNameTextView.text = name
             homeAddressTextView.text = address
-            // Не викликаємо updateStatusUI тут, чекаємо першого оновлення з sensorsState
         }
     }
 
@@ -116,7 +115,7 @@ class SensorFragment : Fragment() {
                     Timber.tag("SensorFragment").d("SwitchCompat re-enabled")
                     homeArmedSwitch.isChecked = true
                     updateStatusUI("armed")
-                    updateAllSensorsActiveState(true) // Активуємо всі сенсори
+                    updateAllSensorsActiveState(true)
                     viewLifecycleOwner.lifecycleScope.launch {
                         homesViewModel.armedHome(homeId)
                     }
@@ -128,7 +127,7 @@ class SensorFragment : Fragment() {
                     val newStatus = if (isChecked) "armed" else "disarmed"
                     Timber.tag("SensorFragment").d("SwitchCompat state changed to: $isChecked, new status: $newStatus")
                     updateStatusUI(newStatus)
-                    updateAllSensorsActiveState(isChecked) // Оновлюємо стан усіх сенсорів
+                    updateAllSensorsActiveState(isChecked)
                     viewLifecycleOwner.lifecycleScope.launch {
                         if (isChecked) {
                             homesViewModel.armedHome(homeId)
@@ -169,7 +168,7 @@ class SensorFragment : Fragment() {
                     sensorAdapter.submitList(sensors)
                     val effectiveStatus = determineEffectiveStatus(sensors)
                     updateStatusUI(effectiveStatus)
-                    setupHomeSwitch(effectiveStatus) // Ініціалізуємо SwitchCompat після першого оновлення
+                    setupHomeSwitch(effectiveStatus)
                 }
             }
         }
@@ -258,6 +257,8 @@ class SensorFragment : Fragment() {
         val nameEditText = dialogView.findViewById<EditText>(R.id.nameEditText)
         val doorButton = dialogView.findViewById<MaterialButton>(R.id.doorButton)
         val windowButton = dialogView.findViewById<MaterialButton>(R.id.windowButton)
+        val cancelButton = dialogView.findViewById<TextView>(R.id.cancelButton)
+        val addButton = dialogView.findViewById<TextView>(R.id.saveButton)
 
         var selectedUnit: String = toggleUnitButton(doorButton, doorButton, windowButton)
 
@@ -270,15 +271,17 @@ class SensorFragment : Fragment() {
 
         MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogStyle)
             .setView(dialogView)
-            .setPositiveButton("Save") { _, _ ->
-                val name = nameEditText.text.toString()
-                if (name.isBlank()) {
-                    Toast.makeText(requireContext(), "Name is empty", Toast.LENGTH_LONG).show()
-                    return@setPositiveButton
+            .create()
+            .apply {
+                show()
+                cancelButton.setOnClickListener {
+                    dismiss()
                 }
-                sensorViewModel.addSensor(homeId, name, selectedUnit)
+                addButton.setOnClickListener {
+                    val name = nameEditText.text.toString()
+                    sensorViewModel.addSensor(homeId, name, selectedUnit)
+                    dismiss()
+                }
             }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 }

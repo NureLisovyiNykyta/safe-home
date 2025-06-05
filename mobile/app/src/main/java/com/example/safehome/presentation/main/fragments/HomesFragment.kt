@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -91,19 +92,26 @@ class HomesFragment : Fragment() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_home, null)
         val nameEditText = dialogView.findViewById<EditText>(R.id.nameEditText)
         val addressEditText = dialogView.findViewById<EditText>(R.id.addressEditText)
+        val cancelButton = dialogView.findViewById<TextView>(R.id.cancelButton)
+        val addButton = dialogView.findViewById<TextView>(R.id.saveButton)
 
         MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogStyle)
             .setView(dialogView)
-            .setPositiveButton("Save") { _, _ ->
-                val name = nameEditText.text.toString()
-                val address = addressEditText.text.toString()
-                if (name.isBlank()){
-                    Toast.makeText(requireContext(), "Name is empty", Toast.LENGTH_LONG).show()
-                    return@setPositiveButton
+            .create()
+            .apply {
+                show()
+                cancelButton.setOnClickListener {
+                    dismiss()
                 }
-                homesViewModel.addHome(name, address)
+                addButton.setOnClickListener {
+                    val name = nameEditText.text.toString()
+                    val address = addressEditText.text.toString()
+                    if (name.isBlank()){
+                        Toast.makeText(requireContext(), "Name is empty", Toast.LENGTH_LONG).show()
+                    }
+                    homesViewModel.addHome(name, address)
+                    dismiss()
+                }
             }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 }
