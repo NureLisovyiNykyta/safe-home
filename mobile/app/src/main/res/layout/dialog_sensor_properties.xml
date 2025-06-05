@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dialog_sensor_properties"
-    android:background="@color/onPrimaryVariant"
+    android:background="#D1E0FB"
     style="@style/dialog" >
 
     <TextView
@@ -17,8 +17,8 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/archiveButton"
         android:text="@string/archive"
-        android:textColor="@color/black"
-        android:backgroundTint="#E0DFDF"
+        android:textColor="#3A3A3A"
+        android:backgroundTint="#F8F8F8"
         android:layout_marginTop="10dp"
         style="@style/CustomMaterialButton" />
 

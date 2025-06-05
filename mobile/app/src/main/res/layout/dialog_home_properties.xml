@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dialog_home_properties"
-    android:background="@color/onPrimaryVariant"
+    android:background="#D1E0FB"
     style="@style/dialog" >
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/archive"
         android:textColor="#3A3A3A"
-        android:backgroundTint="#E0DFDF"
+        android:backgroundTint="#F8F8F8"
         style="@style/CustomMaterialButton" />
 
     <com.google.android.material.button.MaterialButton

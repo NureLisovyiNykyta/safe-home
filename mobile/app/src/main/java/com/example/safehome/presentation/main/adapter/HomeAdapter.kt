@@ -77,10 +77,7 @@ class HomeAdapter(
             val deleteButton = dialogView.findViewById<MaterialButton>(R.id.deleteButton)
             val cancelButton = dialogView.findViewById<TextView>(R.id.cancelButton)
 
-            dialogView.setBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.onPrimaryVariant))
-            Timber.d("Dialog background set to onPrimaryVariant")
             titleTextView.text = name
-
             archiveButton.text = if (isArchived) "UnArchived" else "Archived"
 
             MaterialAlertDialogBuilder(binding.root.context, R.style.CustomDialogStyle)
