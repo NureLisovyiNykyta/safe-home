@@ -10,6 +10,7 @@ import com.example.safehome.data.model.VerifyTokenResponse
 import com.example.safehome.data.model.SignInRequest
 import com.example.safehome.data.model.SignUpRequest
 import com.example.safehome.data.model.SignInResponse
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.Headers
@@ -20,31 +21,49 @@ interface AuthApi {
     @Headers(
         "Content-Type: application/json"
     )
-    suspend fun login(@Body request: SignInRequest): SignInResponse
+    suspend fun login(
+        @Body request: SignInRequest
+    ): SignInResponse
+
+    @POST("logout")
+    @Headers(
+        "Content-Type: application/json"
+    )
+    suspend fun logout(
+        @Header("Authorization") token: String?
+    ): Response<MessageResponse>
 
     @POST("verify-token")
     @Headers(
         "Content-Type: application/json"
     )
-    suspend fun checkToken(@Header("Authorization") token: String): VerifyTokenResponse
+    suspend fun checkToken(
+        @Header("Authorization") token: String
+    ): VerifyTokenResponse
 
     @POST("register")
     @Headers(
         "Content-Type: application/json"
     )
-    suspend fun signUp(@Body request: SignUpRequest): SignUpResponse
+    suspend fun signUp(
+        @Body request: SignUpRequest
+    ): SignUpResponse
 
     @POST("reset-password")
     @Headers(
         "Content-Type: application/json"
     )
-    suspend fun resetPassword(@Body request: ResetPasswordRequest): ResetPasswordResponse
+    suspend fun resetPassword(
+        @Body request: ResetPasswordRequest
+    ): ResetPasswordResponse
 
     @POST("login/firebase")
     @Headers(
         "Content-Type: application/json"
     )
-    suspend fun firebaseLogin(@Body request: FirebaseLoginRequest): SignInResponse
+    suspend fun firebaseLogin(
+        @Body request: FirebaseLoginRequest
+    ): SignInResponse
 
     @POST("devices")
     @Headers(

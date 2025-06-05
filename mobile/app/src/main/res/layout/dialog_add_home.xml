@@ -10,8 +10,6 @@
 
     <TextView
         style="@style/TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textStyle="bold"
         android:text="@string/newHome"
@@ -66,11 +64,5 @@
                 android:inputType="textPostalAddress" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-    <!--com.google.android.material.button.MaterialButton
-        android:id="@+id/saveButton"
-        android:layout_marginTop="40dp"
-        android:text="@string/save"
-        style="@style/Button" /-->
 
 </LinearLayout>
