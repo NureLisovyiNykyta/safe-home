@@ -10,7 +10,6 @@ import com.example.safehome.data.model.VerifyTokenResponse
 import com.example.safehome.data.model.SignInRequest
 import com.example.safehome.data.model.SignUpRequest
 import com.example.safehome.data.model.SignInResponse
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.Headers
@@ -24,14 +23,6 @@ interface AuthApi {
     suspend fun login(
         @Body request: SignInRequest
     ): SignInResponse
-
-    @POST("logout")
-    @Headers(
-        "Content-Type: application/json"
-    )
-    suspend fun logout(
-        @Header("Authorization") token: String?
-    ): Response<MessageResponse>
 
     @POST("verify-token")
     @Headers(

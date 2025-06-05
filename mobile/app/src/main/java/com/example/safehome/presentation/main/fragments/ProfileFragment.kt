@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -69,20 +68,11 @@ class ProfileFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogStyle)
             .setView(dialogView)
             .setPositiveButton("Exit") { _, _ ->
-                viewLifecycleOwner.lifecycleScope.launch {
-                    val messageResponse = profileViewModel.logout()
-                    if (messageResponse != null) {
-                        Toast.makeText(context, messageResponse.message, Toast.LENGTH_LONG).show()
-                        if (messageResponse.message.contains("successfully")) {
-                            val intent = Intent(requireContext(), AuthActivity::class.java)
-                            startActivity(intent)
-                            requireActivity().finish()
-                        }
-                    } else {
-                        Toast.makeText(context, "Unexpected error occurred", Toast.LENGTH_LONG).show()
-                    }
-                    return@launch
-                }
+                profileViewModel.logout()
+
+                val intent = Intent(requireContext(), AuthActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
             }
             .setNegativeButton("Cancel", null)
             .show()
