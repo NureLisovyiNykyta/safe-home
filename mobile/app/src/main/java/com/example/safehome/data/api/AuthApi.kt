@@ -11,7 +11,6 @@ import com.example.safehome.data.model.SignInRequest
 import com.example.safehome.data.model.SignUpRequest
 import com.example.safehome.data.model.SignInResponse
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
