@@ -10,6 +10,8 @@ import com.example.safehome.data.repo.TokenRepository
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,9 +27,20 @@ class HomesViewModel @Inject constructor(
 ) : ViewModel() {
     private val _homesState = MutableStateFlow<List<HomeDto>>(emptyList())
     val homesState: StateFlow<List<HomeDto>> = _homesState.asStateFlow()
+    private var refreshJob: Job? = null
 
     init {
-        loadHomes()
+        startAutoRefresh()
+    }
+
+    private fun startAutoRefresh() {
+        refreshJob?.cancel()
+        refreshJob = viewModelScope.launch {
+            while (true) {
+                loadHomes()
+                delay(3000)
+            }
+        }
     }
 
     fun loadHomes() {
@@ -191,5 +204,10 @@ class HomesViewModel @Inject constructor(
             Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
             null
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        refreshJob?.cancel()
     }
 }

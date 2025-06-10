@@ -107,7 +107,7 @@
             app:layout_constraintTop_toTopOf="@+id/statusImageView"
             app:layout_constraintBottom_toBottomOf="@+id/statusImageView" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.example.safehome.presentation.main.components.CustomSwitchCompat
             android:id="@+id/homeArmedSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

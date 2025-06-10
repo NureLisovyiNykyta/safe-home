@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -27,7 +28,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import kotlin.getValue
 
 @AndroidEntryPoint
 class SensorFragment : Fragment() {
@@ -36,7 +36,6 @@ class SensorFragment : Fragment() {
     private lateinit var binding: FragmentSensorBinding
     private lateinit var sensorAdapter: SensorAdapter
     private lateinit var homeId: String
-    private var initialStatus: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +45,7 @@ class SensorFragment : Fragment() {
             findNavController().popBackStack(R.id.navigation_homes, false)
             return
         }
+        sensorViewModel.setContext(requireContext())
         sensorViewModel.setHomeId(homeId)
     }
 
@@ -63,18 +63,24 @@ class SensorFragment : Fragment() {
 
         setupRecyclerView()
         observeSensorsState()
-        initUI()
+        observeHomeState()
         setupListeners()
     }
 
-    private fun initUI() {
-        val name = arguments?.getString("home_name") ?: "Unknown Name"
-        val address = arguments?.getString("home_address") ?: "Unknown Address"
-        initialStatus = arguments?.getString("home_default_mode_name") ?: "unknown"
-
-        binding.apply {
-            homeNameTextView.text = name
-            homeAddressTextView.text = address
+    private fun observeHomeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homesViewModel.homesState.collect { homes ->
+                    val home = homes.find { it.home_id == homeId }
+                    home?.let {
+                        binding.homeNameTextView.text = it.name
+                        binding.homeAddressTextView.text = it.address
+                        val initialStatus = it.default_mode_name
+                        setupHomeSwitch(initialStatus)
+                        updateStatusUI(initialStatus)
+                    }
+                }
+            }
         }
     }
 
@@ -109,11 +115,8 @@ class SensorFragment : Fragment() {
                 }
             }
 
-            homeArmedSwitch.setOnClickListener {
-                if (!homeArmedSwitch.isEnabled) {
-                    homeArmedSwitch.isEnabled = true
-                    Timber.tag("SensorFragment").d("SwitchCompat re-enabled")
-                    homeArmedSwitch.isChecked = true
+            homeArmedSwitch.setOnSwitchEnabledListener { isChecked ->
+                if (isChecked) {
                     updateStatusUI("armed")
                     updateAllSensorsActiveState(true)
                     viewLifecycleOwner.lifecycleScope.launch {
@@ -164,9 +167,12 @@ class SensorFragment : Fragment() {
     private fun observeSensorsState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sensorViewModel.sensorsState.collect { sensors ->
-                    sensorAdapter.submitList(sensors)
-                    val effectiveStatus = determineEffectiveStatus(sensors)
+                sensorViewModel.sensorsState.collect { newSensors ->
+                    val currentSensors = sensorAdapter.currentList
+                    if (currentSensors != newSensors) {
+                        sensorAdapter.submitList(newSensors)
+                    }
+                    val effectiveStatus = determineEffectiveStatus(newSensors)
                     updateStatusUI(effectiveStatus)
                     setupHomeSwitch(effectiveStatus)
                 }
@@ -175,15 +181,16 @@ class SensorFragment : Fragment() {
     }
 
     private fun determineEffectiveStatus(sensors: List<SensorDto>): String {
-        // Якщо список сенсорів порожній, повертаємо початковий статус
         if (sensors.isEmpty()) {
-            return initialStatus?.takeIf { it != "unknown" } ?: "disarmed"
+            return homesViewModel.homesState.value.find { it.home_id == homeId }?.default_mode_name ?: "disarmed"
         }
 
-        val allActive = sensors.all { it.is_active }
-        val allInactive = sensors.all { !it.is_active }
+        val hasSecurityBreach = sensors.any { it.is_security_breached }
+        val allActive = sensors.all { it.is_active && !it.is_security_breached }
+        val allInactive = sensors.all { !it.is_active && !it.is_security_breached }
 
         return when {
+            hasSecurityBreach -> "alarm"
             allActive -> "armed"
             allInactive -> "disarmed"
             else -> "custom"
@@ -197,8 +204,8 @@ class SensorFragment : Fragment() {
         val updatedSensors = currentSensors.map { sensor ->
             sensor.copy(is_active = isActive)
         }
-        sensorViewModel.updateSensorsState(updatedSensors) // Оновлюємо локальний стан у ViewModel
-        sensorAdapter.submitList(updatedSensors) // Оновлюємо UI у RecyclerView
+        sensorViewModel.updateSensorsState(updatedSensors)
+        sensorAdapter.submitList(updatedSensors)
     }
 
     private fun setupRecyclerView() {
@@ -214,13 +221,20 @@ class SensorFragment : Fragment() {
                     sensorViewModel.deleteSensor(sensorId)
                 }
             },
-            onActiveChange = { sensorId, isActive ->
+            onActiveChange = { sensorId, isActive, callback ->
                 viewLifecycleOwner.lifecycleScope.launch {
-                    sensorViewModel.setActiveSensor(sensorId, isActive)
-                    val sensors = sensorViewModel.sensorsState.value
-                    val newStatus = determineEffectiveStatus(sensors)
-                    updateStatusUI(newStatus)
-                    setupHomeSwitch(newStatus)
+                    val success = sensorViewModel.setActiveSensor(sensorId, isActive)
+                    callback(success)
+                    if (!success) {
+                        val currentHomeStatus = homesViewModel.homesState.value.find { it.home_id == homeId }?.default_mode_name ?: "disarmed"
+                        val revertToActive = currentHomeStatus == "armed"
+                        val updatedSensors = sensorViewModel.sensorsState.value.map {
+                            if (it.sensor_id == sensorId) it.copy(is_active = revertToActive) else it
+                        }
+                        sensorViewModel.updateSensorsState(updatedSensors)
+                        sensorAdapter.submitList(updatedSensors)
+                        Toast.makeText(context, "Failed to update sensor status", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         )
