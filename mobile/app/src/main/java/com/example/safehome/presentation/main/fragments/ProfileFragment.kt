@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -64,17 +65,24 @@ class ProfileFragment : Fragment() {
 
     private fun showLogoutDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_logout, null)
+        val cancelButton = dialogView.findViewById<TextView>(R.id.cancelButton)
+        val exitButton = dialogView.findViewById<TextView>(R.id.exitButton)
 
         MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogStyle)
             .setView(dialogView)
-            .setPositiveButton("Exit") { _, _ ->
-                profileViewModel.logout()
+            .create()
+            .apply {
+                show()
+                cancelButton.setOnClickListener {
+                    dismiss()
+                }
+                exitButton.setOnClickListener {
+                    profileViewModel.logout()
 
-                val intent = Intent(requireContext(), AuthActivity::class.java)
-                startActivity(intent)
-                requireActivity().finish()
+                    val intent = Intent(requireContext(), AuthActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }
             }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 }

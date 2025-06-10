@@ -1,6 +1,6 @@
 package com.example.safehome.data.api
 
-import com.example.safehome.com.example.safehome.data.model.ActiveSensorRequest
+import com.example.safehome.data.model.ActiveSensorRequest
 import com.example.safehome.data.model.AddSensorRequest
 import com.example.safehome.data.model.GetSensorsResponse
 import com.example.safehome.data.model.MessageResponse

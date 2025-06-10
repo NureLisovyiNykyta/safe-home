@@ -18,15 +18,17 @@ import timber.log.Timber
 class SensorAdapter(
     private val onArchiveClick: (String, Boolean) -> Unit,
     private val onDeleteClick: (String) -> Unit,
-    private val onActiveChange: (String, Boolean) -> Unit,
+    private val onActiveChange: (String, Boolean, (Boolean) -> Unit) -> Unit,
 ) : ListAdapter<SensorDto, SensorAdapter.SensorViewHolder>(SensorDiffCallback()) {
 
     class SensorViewHolder(
         private val binding: ItemSensorBinding,
         private val onArchiveClick: (String, Boolean) -> Unit,
         private val onDeleteClick: (String) -> Unit,
-        private val onActiveChange: (String, Boolean) -> Unit,
+        private val onActiveChange: (String, Boolean, (Boolean) -> Unit) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
+        private var previousActiveState: Boolean? = null
+
         fun bind(sensor: SensorDto) {
             val status = when {
                 sensor.is_security_breached -> "alarm"
@@ -34,10 +36,10 @@ class SensorAdapter(
                 else -> "open"
             }
 
-            val typeImageName = when(sensor.type){
+            val typeImageName = when (sensor.type) {
                 "window" -> "ic_window"
                 "door" -> "ic_door"
-                else ->  "ic_error"
+                else -> "ic_error"
             }
 
             with(binding) {
@@ -65,8 +67,27 @@ class SensorAdapter(
                     showPropertiesSensorDialog(sensor.sensor_id, sensor.name, sensor.is_archived)
                 }
 
+                previousActiveState = sensor.is_active
+                activitySwitch.isChecked = sensor.is_active
+                activitySwitch.isEnabled = true
+
                 activitySwitch.setOnCheckedChangeListener { _, isChecked ->
-                    onActiveChange(sensor.sensor_id, isChecked)
+                    Timber.tag("SensorAdapter").d("Switch changed: sensorId=${sensor.sensor_id}, isChecked=$isChecked, previousActiveState=$previousActiveState")
+                    if (previousActiveState != isChecked) {
+                        activitySwitch.isEnabled = false
+                        onActiveChange(sensor.sensor_id, isChecked) { success ->
+                            Timber.tag("SensorAdapter").d("onActiveChange callback: sensorId=${sensor.sensor_id}, success=$success")
+                            if (success) {
+                                previousActiveState = isChecked
+                                activitySwitch.isEnabled = true
+                            } else {
+                                activitySwitch.isChecked = previousActiveState ?: sensor.is_active
+                                activitySwitch.isEnabled = true
+                            }
+                        }
+                    } else {
+                        Timber.tag("SensorAdapter").w("No change detected: sensorId=${sensor.sensor_id}, isChecked=$isChecked, previousActiveState=$previousActiveState")
+                    }
                 }
 
                 sensorImageView.backgroundTintList = ColorStateList.valueOf(
@@ -74,14 +95,6 @@ class SensorAdapter(
                         root.context,
                         if (sensor.is_archived) R.color.grey else R.color.primary
                     )
-                )
-
-                sensorImageView.backgroundTintList =
-                ColorStateList.valueOf(
-                    if (sensor.is_archived)
-                        ContextCompat.getColor(binding.root.context, R.color.grey)
-                    else
-                        ContextCompat.getColor(binding.root.context, R.color.primary)
                 )
             }
         }
