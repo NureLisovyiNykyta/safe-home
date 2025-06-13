@@ -3,6 +3,8 @@ import logo from '../navigation/logo.png';
 import { useAuth } from '../../contexts/auth-context';
 import { BiCoinStack } from "react-icons/bi";
 import { BiDollarCircle } from "react-icons/bi";
+import { MdOutlineSensors } from "react-icons/md";
+import { FiHome } from "react-icons/fi";
 
 const ManageSubscriptionForm = () => {
   const { logout } = useAuth();
@@ -43,19 +45,49 @@ const ManageSubscriptionForm = () => {
         <h2>Plans</h2>
         <div className='container'>
           <div className='item'>
-            <h3 className='name'>Basic</h3>
-            <p className='price'>$10/month</p>
-            <button className='subscribe'>Buy</button>
+            <div className='info'>
+              <h3 className='name'>Basic</h3>
+              <div>
+                <MdOutlineSensors className='icon' />
+                <span>1 Sensor</span>
+              </div>
+              <div>
+                <FiHome className='icon' />
+                <span>1 Home</span>
+              </div>
+            </div>
+            <h3 className='duration'>10 Days</h3>
+            <button className='subscribe'>free</button>
           </div>
           <div className='item'>
-            <h3>VIP</h3>
-            <p>$20/month</p>
-            <button className='subscribe'>Buy</button>
+            <div className='info'>
+              <h3 className='name'>Basic</h3>
+              <div>
+                <MdOutlineSensors className='icon' />
+                <span>1 Sensor</span>
+              </div>
+              <div>
+                <FiHome className='icon' />
+                <span>1 Home</span>
+              </div>
+            </div>
+            <h3 className='duration'>10 Days</h3>
+            <button className='subscribe'>10$ / Buy</button>
           </div>
           <div className='item'>
-            <h3>Premium</h3>
-            <p>$30/month</p>
-            <button className='subscribe'>Buy</button>
+            <div className='info'>
+              <h3 className='name'>VIP</h3>
+              <div>
+                <MdOutlineSensors className='icon' />
+                <span>10 Sensors</span>
+              </div>
+              <div>
+                <FiHome className='icon' />
+                <span>1 Home</span>
+              </div>
+            </div>
+            <h3 className='duration'>10 Days</h3>
+            <button className='subscribe active'>20$ / Extend</button>
           </div>
         </div>
       </div>
