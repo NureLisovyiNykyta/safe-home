@@ -114,6 +114,7 @@ class SubscriptionService:
         )
         user = UserRepository.get_by_id(user_id)
         user.subscription_plan_name = plan.name
+        UserRepository.update(user)
 
         SubscriptionRepository.add(new_subscription)
 
@@ -202,6 +203,7 @@ class SubscriptionService:
         )
         user = UserRepository.get_by_id(user_id)
         user.subscription_plan_name = plan.name
+        UserRepository.update(user)
 
         SubscriptionRepository.add(new_subscription)
 
