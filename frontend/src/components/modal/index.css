@@ -51,6 +51,7 @@
 
 .modal.dialog .content p {
   margin-bottom: 0;
+  text-align: center;
 }
 
 .modal .dialog-buttons {

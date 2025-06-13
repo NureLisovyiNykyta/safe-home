@@ -34,10 +34,7 @@ const App = () => {
 
   return (
     <div className="app">
-      {isAuthenticated &&
-        location.pathname !== '/' &&
-        location.pathname !== '/login' &&
-        !location.pathname.startsWith('/user/') &&
+      {isAuthenticated && location.pathname.startsWith('/admin/') &&
         <Navigation changeLanguage={changeLanguage} />}
       <Routes>
         <Route path='/' element={<Homepage />} />

@@ -118,6 +118,10 @@
   font-size: 1rem;
 }
 
+.sub-form .active-sub .info-container .cancel.hidden {
+  opacity: 0;
+}
+
 .sub-form .plans-list {
   display: flex;
   flex-direction: column;
