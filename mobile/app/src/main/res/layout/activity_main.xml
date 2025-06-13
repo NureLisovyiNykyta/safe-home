@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     style="@style/Activity" >
@@ -20,12 +20,14 @@
 
     <ImageButton
         android:id="@+id/notifyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_gravity="top|end"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="15dp"
-        android:background="@null"
+        android:padding="5dp"
+        android:background="@drawable/rounded_all_small_background"
+        android:backgroundTint="#ADC5F1"
         android:clickable="true"
         android:contentDescription="@string/error_image"
         android:focusable="true"
@@ -33,6 +35,8 @@
         android:src="@drawable/ic_notify"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.08"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,4 +56,4 @@
         app:menu="@menu/bottom_nav_menu" />
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

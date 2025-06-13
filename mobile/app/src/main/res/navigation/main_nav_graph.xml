@@ -11,8 +11,8 @@
         android:label="@string/title_homes_fragment"
         tools:layout="@layout/fragment_homes" >
         <action
-            android:id="@+id/action_navigation_homes_to_navigation_subscriptions"
-            app:destination="@id/navigation_subscriptions" />
+            android:id="@+id/action_navigation_homes_to_navigation_notification"
+            app:destination="@id/navigation_notification" />
         <action
             android:id="@+id/action_navigation_homes_to_navigation_profile"
             app:destination="@id/navigation_profile" />
@@ -28,10 +28,10 @@
         tools:layout="@layout/fragment_sensor" />
 
     <fragment
-        android:id="@+id/navigation_subscriptions"
-        android:name="com.example.safehome.presentation.main.fragments.SubscriptionsFragment"
-        android:label="@string/title_subscriptions_fragment"
-        tools:layout="@layout/fragment_subscriptions" />
+        android:id="@+id/navigation_notification"
+        android:name="com.example.safehome.presentation.main.fragments.NotificationFragment"
+        android:label="@string/title_notification_fragment"
+        tools:layout="@layout/fragment_notification" />
 
     <fragment
         android:id="@+id/navigation_profile"
