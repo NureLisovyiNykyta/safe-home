@@ -85,7 +85,7 @@ class SubscriptionEmailService:
         )
 
         msg = Message(
-            subject="Your Subscription has been Canceled",
+            subject="Subscription Payment Failed",
             recipients=[user.email],
             body=f"Hello {user.name},\n\n"
                  f"We wanted to inform you that your payment of subscription plan { plan_name } has been failed.\n"
