@@ -69,3 +69,31 @@ class SubscriptionEmailService:
         )
 
         mail.send(msg)
+
+    @staticmethod
+    @handle_errors
+    def send_subscription_payment_failed_email(user, plan_name):
+
+        with open("app/templates/email_subscription_payment_failed.html", "r") as html_file:
+            html_template = html_file.read()
+
+        html_body = render_template_string(
+            html_template,
+            name=user.name,
+            plan_name=plan_name,
+            website_url=os.getenv('FRONTEND_LINK') + '/user/subscriptions'
+        )
+
+        msg = Message(
+            subject="Your Subscription has been Canceled",
+            recipients=[user.email],
+            body=f"Hello {user.name},\n\n"
+                 f"We wanted to inform you that your payment of subscription plan { plan_name } has been failed.\n"
+                 f"Your account stayed on previous plan.\n\n"
+                 f"Visit our website to try to pay again: {os.getenv('FRONTEND_LINK')}\n\n"
+                 f"Thank you for being a part of our service!",
+            html=html_body
+        )
+
+        mail.send(msg)
+

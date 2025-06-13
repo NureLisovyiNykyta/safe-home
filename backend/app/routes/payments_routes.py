@@ -1,107 +1,160 @@
-from flask import Blueprint, request, jsonify, render_template, current_app, url_for
-import stripe
-from app.models import SubscriptionPlan, Subscription
+from flask import Blueprint, request, jsonify, render_template, current_app
 from app.utils.auth_decorator import role_required
-from app.utils import ErrorHandler
+from app.services.subscription_service import SubscriptionService
+from app.utils.error_handler import handle_errors, ValidationError
+import stripe
+import os
+from flasgger import swag_from
 
 payments_bp = Blueprint('payments', __name__)
 
 
-@payments_bp.route('/create-checkout-session', methods=['POST'])
-@role_required(['user']) 
-def create_checkout_session():
-    try:
-        data = request.json
-        plan_id = data.get('plan_id')
-        user = request.current_user
+@payments_bp.route('/create-checkout-session/<plan_id>', methods=['POST'])
+@role_required(['user'])
+@handle_errors
+@swag_from({
+    'tags': ['Payments'],
+    'summary': 'Create Stripe checkout session',
+    'description': 'Initiates a Stripe checkout session for a subscription plan.',
+    'parameters': [
+        {
+            'name': 'plan_id',
+            'in': 'path',
+            'required': True,
+            'type': 'string'
+        },
+    ],
+    'responses': {
+        200: {
+            'description': 'Checkout session created',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'url': {'type': 'string', 'example': 'https://checkout.stripe.com/pay/cs_test_...'}
+                }
+            }
+        },
+        401: {'description': 'Unauthorized'},
+        422: {
+            'description': 'Validation or unprocessable entity error',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'error': {'type': 'string', 'example': 'Plan ID is required.'}
+                }
+            }
+        },
+        500: {'description': 'Internal server error'}
+    }
+})
+def create_checkout_session(plan_id):
+    user = request.current_user
+    session_url = SubscriptionService.create_stripe_checkout_session(user.user_id, plan_id)
+    return jsonify({"url": session_url}), 200
 
-        if not plan_id:
-            raise ValueError("Plan id required for subscription payment.")
-
-        plan = SubscriptionPlan.query.filter_by(plan_id=plan_id).first()
-        if not plan:
-            return ErrorHandler.handle_error(
-                None,
-                message=f"Subscription plan with ID '{plan_id}' not found.",
-                status_code=404
-            )
-
-        if plan.name == 'basic':
-            raise ValueError("Cannot purchase a basic plan as a paid subscription.")
-
-        current_subscription = Subscription.get_current_subscription(user.user_id)
-        if not current_subscription:
-            raise ValueError("User does not have an active subscription..")
-
-        if current_subscription.plan.name not in ['basic', plan.name]:
-            raise ValueError(f"You already have '{current_subscription.plan.name}' subscription. "
-                             f"Canceled it first to purchase another paid subscription!")
-
-        session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=[{
-                'price_data': {
-                    'currency': 'usd',
-                    'product_data': {
-                        'name': plan.name,
-                        'description': plan.description,
-                    },
-                    'unit_amount': int(plan.price * 100),
-                },
-                'quantity': 1,
-            }],
-            mode='payment',
-            success_url=url_for('payments.payment_success', _external=True),
-            cancel_url=url_for('payments.payment_cancel', _external=True),
-            metadata={'user_id': user.user_id, 'plan_id': plan_id}
-        )
-
-        return jsonify({"url": session.url}), 200
-
-    except ValueError as ve:
-        return ErrorHandler.handle_validation_error(str(ve))
-    except RuntimeError as re:
-        return ErrorHandler.handle_error(re, message=str(re), status_code=500)
-    except Exception as e:
-        return ErrorHandler.handle_error(
-            e,
-            message="Internal Server Error while creating checkout session",
-            status_code=500
-        )
 
 @payments_bp.route('/success', methods=['GET'])
-@role_required(['user']) 
+@role_required(['user'])
+@swag_from({
+    'tags': ['Payments'],
+    'summary': 'Payment success page',
+    'description': 'Renders a success page after Stripe checkout redirection.',
+    'security': [{'BearerAuth': []}],
+    'responses': {
+        200: {'description': 'Success page rendered'},
+        401: {'description': 'Unauthorized'}
+    }
+})
 def payment_success():
-    try:
-        session_id = request.args.get('session_id')
+    frontend_url = os.getenv('FRONTEND_LINK') + '/user/subscriptions'
+    return render_template('payment_success.html', frontend_url=frontend_url)
 
-        session = stripe.checkout.Session.retrieve(session_id)
-
-        user_id = session.metadata.get('user_id')
-        plan_id = session.metadata.get('plan_id')
-
-        plan = SubscriptionPlan.query.filter_by(plan_id=plan_id).first()
-
-        current_subscription = Subscription.get_current_subscription(user_id)
-        if current_subscription.plan.name == 'basic':
-            Subscription.purchase_paid_subscription(user_id, plan_id)
-
-        if current_subscription.plan.name == plan.name:
-            Subscription.extend_current_subscription(user_id)
-
-    except ValueError as ve:
-        return ErrorHandler.handle_validation_error(str(ve))
-    except RuntimeError as re:
-        return ErrorHandler.handle_error(re, message=str(re), status_code=500)
-    except Exception as e:
-        return ErrorHandler.handle_error(
-            e,
-            message="Internal Server Error while creating checkout session",
-            status_code=500
-        )
 
 @payments_bp.route('/cancel', methods=['GET'])
-@role_required(['user']) 
+@role_required(['user'])
+@swag_from({
+    'tags': ['Payments'],
+    'summary': 'Payment cancel page',
+    'description': 'Renders a cancel page after Stripe checkout cancellation.',
+    'security': [{'BearerAuth': []}],
+    'responses': {
+        200: {'description': 'Cancel page rendered'},
+        401: {'description': 'Unauthorized'}
+    }
+})
 def payment_cancel():
-    return render_template('cancelled.html',
-                           message="Payment was cancelled. Please try again if needed.")
+    frontend_url = os.getenv('FRONTEND_LINK') + '/user/subscriptions'
+    return render_template('payment_cancelled.html', frontend_url=frontend_url)
+
+
+@payments_bp.route('/webhook', methods=['POST'])
+@handle_errors
+@swag_from({
+    'tags': ['Payments'],
+    'summary': 'Handle Stripe webhook',
+    'description': 'Processes Stripe webhook events for payment confirmation.',
+    'requestBody': {
+        'required': True,
+        'content': {
+            'application/json': {
+                'schema': {
+                    'type': 'object',
+                    'properties': {
+                        'type': {'type': 'string', 'example': 'checkout.session.completed'},
+                        'data': {
+                            'type': 'object',
+                            'properties': {
+                                'object': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'metadata': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'user_id': {'type': 'string', 'example': 'user_123'},
+                                                'plan_id': {'type': 'string', 'example': 'plan_123'}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    'responses': {
+        200: {
+            'description': 'Webhook processed',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'status': {'type': 'string', 'example': 'success'}
+                }
+            }
+        },
+        422: {
+            'description': 'Invalid payload or signature',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'error': {'type': 'string', 'example': 'Invalid signature'}
+                }
+            }
+        }
+    }
+})
+def stripe_webhook():
+    payload = request.data
+    sig_header = request.headers.get('Stripe-Signature')
+    endpoint_secret = current_app.config['STRIPE_WEBHOOK_SECRET']
+
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+    except ValueError:
+        raise ValidationError("Invalid payload")
+    except stripe.error.SignatureVerificationError:
+        raise ValidationError("Invalid signature")
+
+    SubscriptionService.handle_stripe_webhook(event)
+    return jsonify({"status": "success"}), 200
