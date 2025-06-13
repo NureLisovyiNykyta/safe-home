@@ -88,7 +88,7 @@ class SubscriptionEmailService:
             subject="Subscription Payment Failed",
             recipients=[user.email],
             body=f"Hello {user.name},\n\n"
-                 f"We wanted to inform you that your payment of subscription plan { plan_name } has been failed.\n"
+                 f"We wanted to inform you that your payment of subscription plan { plan_name } has failed.\n"
                  f"Your account stayed on previous plan.\n\n"
                  f"Visit our website to try to pay again: {os.getenv('FRONTEND_LINK')}\n\n"
                  f"Thank you for being a part of our service!",
