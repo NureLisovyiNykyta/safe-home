@@ -96,4 +96,3 @@ class SubscriptionEmailService:
         )
 
         mail.send(msg)
-
