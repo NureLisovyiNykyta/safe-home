@@ -41,6 +41,7 @@ class HomesFragment : Fragment() {
 
         setupRecyclerView()
         observeHomesState()
+        observeErrorMessage()
 
         with(binding){
             addHomeButton.setOnClickListener {
@@ -54,6 +55,23 @@ class HomesFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homesViewModel.homesState.collect { homes ->
                     homeAdapter.submitList(homes)
+                    binding.emptyTextView.visibility =
+                        if (homes.isEmpty())
+                            View.VISIBLE
+                        else
+                            View.GONE
+                }
+            }
+        }
+    }
+
+    private fun observeErrorMessage() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homesViewModel.errorMessage.collect { errorMessage ->
+                    errorMessage?.let {
+                        Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }

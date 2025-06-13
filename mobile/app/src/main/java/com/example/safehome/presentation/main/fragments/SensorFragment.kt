@@ -64,6 +64,7 @@ class SensorFragment : Fragment() {
         setupRecyclerView()
         observeSensorsState()
         observeHomeState()
+        observeErrorMessage()
         setupListeners()
     }
 
@@ -78,6 +79,40 @@ class SensorFragment : Fragment() {
                         val initialStatus = it.default_mode_name
                         setupHomeSwitch(initialStatus)
                         updateStatusUI(initialStatus)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeSensorsState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sensorViewModel.sensorsState.collect { newSensors ->
+                    val currentSensors = sensorAdapter.currentList
+                    if (currentSensors != newSensors) {
+                        sensorAdapter.submitList(newSensors)
+                    }
+                    val effectiveStatus = determineEffectiveStatus(newSensors)
+                    updateStatusUI(effectiveStatus)
+                    setupHomeSwitch(effectiveStatus)
+
+                    binding.emptyTextView.visibility =
+                        if (newSensors.isEmpty())
+                            View.VISIBLE
+                        else
+                            View.GONE
+                }
+            }
+        }
+    }
+
+    private fun observeErrorMessage() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sensorViewModel.errorMessage.collect { errorMessage ->
+                    errorMessage?.let {
+                        Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -161,22 +196,6 @@ class SensorFragment : Fragment() {
             }
 
             statusTextView.text = status.replaceFirstChar { it.uppercaseChar() }
-        }
-    }
-
-    private fun observeSensorsState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sensorViewModel.sensorsState.collect { newSensors ->
-                    val currentSensors = sensorAdapter.currentList
-                    if (currentSensors != newSensors) {
-                        sensorAdapter.submitList(newSensors)
-                    }
-                    val effectiveStatus = determineEffectiveStatus(newSensors)
-                    updateStatusUI(effectiveStatus)
-                    setupHomeSwitch(effectiveStatus)
-                }
-            }
         }
     }
 

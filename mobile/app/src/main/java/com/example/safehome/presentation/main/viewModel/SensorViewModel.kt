@@ -1,7 +1,6 @@
 package com.example.safehome.presentation.main.viewModel
 
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.safehome.data.api.SensorApi
@@ -29,6 +28,9 @@ class SensorViewModel @Inject constructor(
 ) : ViewModel() {
     private val _sensorsState = MutableStateFlow<List<SensorDto>>(emptyList())
     val sensorsState: StateFlow<List<SensorDto>> = _sensorsState.asStateFlow()
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
     private var homeId: String? = null
     private var refreshJob: Job? = null
     private var context: Context? = null
@@ -64,18 +66,18 @@ class SensorViewModel @Inject constructor(
                     if (_sensorsState.value != newSensors) {
                         _sensorsState.value = newSensors
                     }
+                    _errorMessage.value = null
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    val errorMessage = try {
-                        Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                    } catch (e: JsonSyntaxException) {
-                        "Unknown error: $e"
-                    }
+                    val errorMessage = parseErrorMessage(errorBody)
                     _sensorsState.value = emptyList()
-                    Timber.tag("SensorViewModel").e(errorMessage)
+                    _errorMessage.value = errorMessage
+                    Timber.tag("SensorViewModel").e(errorMessage ?: "Unknown error")
                 }
             } catch (e: Exception) {
-                Timber.tag("SensorViewModel").e("Network error: ${e.message}")
+                val errorMessage = "Network error: ${e.message}"
+                _errorMessage.value = errorMessage
+                Timber.tag("SensorViewModel").e(errorMessage)
             }
         }
     }
@@ -93,19 +95,17 @@ class SensorViewModel @Inject constructor(
 
                 if (response.isSuccessful) {
                     loadSensors()
+                    _errorMessage.value = null
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    val errorMessage = try {
-                        Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                    } catch (e: JsonSyntaxException) {
-                        "Unknown error: $e"
-                    }
-                    Timber.tag("SensorViewModel").e(errorMessage)
-                    context?.let { Toast.makeText(it, "Failed to add sensor: $errorMessage", Toast.LENGTH_SHORT).show() }
+                    val errorMessage = parseErrorMessage(errorBody)
+                    _errorMessage.value = errorMessage
+                    Timber.tag("SensorViewModel").e(errorMessage ?: "Unknown error")
                 }
             } catch (e: Exception) {
-                Timber.tag("SensorViewModel").e("Network error: ${e.message}")
-                context?.let { Toast.makeText(it, "Network error while adding sensor: ${e.message}", Toast.LENGTH_SHORT).show() }
+                val errorMessage = "Network error: ${e.message}"
+                _errorMessage.value = errorMessage
+                Timber.tag("SensorViewModel").e(errorMessage)
             }
         }
     }
@@ -116,19 +116,17 @@ class SensorViewModel @Inject constructor(
             val response = sensorApi.deleteSensor(token, sensorId)
             if (response.isSuccessful) {
                 loadSensors()
+                _errorMessage.value = null
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorMessage = try {
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                } catch (e: JsonSyntaxException) {
-                    "Failed to get sensor details: $e"
-                }
-                Timber.tag("TireViewModel").e(errorMessage)
-                context?.let { Toast.makeText(it, "Failed to delete sensor: $errorMessage", Toast.LENGTH_SHORT).show() }
+                val errorMessage = parseErrorMessage(errorBody)
+                _errorMessage.value = errorMessage
+                Timber.tag("SensorViewModel").e(errorMessage ?: "Unknown error")
             }
         } catch (e: Exception) {
-            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
-            context?.let { Toast.makeText(it, "Network error while deleting sensor: ${e.message}", Toast.LENGTH_SHORT).show() }
+            val errorMessage = "Network error: ${e.message}"
+            _errorMessage.value = errorMessage
+            Timber.tag("SensorViewModel").e(errorMessage)
         }
     }
 
@@ -138,19 +136,17 @@ class SensorViewModel @Inject constructor(
             val response = sensorApi.archiveSensor(token, sensorId)
             if (response.isSuccessful) {
                 loadSensors()
+                _errorMessage.value = null
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorMessage = try {
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                } catch (e: JsonSyntaxException) {
-                    "Failed to get sensor details: $e"
-                }
-                Timber.tag("TireViewModel").e(errorMessage)
-                context?.let { Toast.makeText(it, "Failed to archive sensor: $errorMessage", Toast.LENGTH_SHORT).show() }
+                val errorMessage = parseErrorMessage(errorBody)
+                _errorMessage.value = errorMessage
+                Timber.tag("SensorViewModel").e(errorMessage ?: "Unknown error")
             }
         } catch (e: Exception) {
-            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
-            context?.let { Toast.makeText(it, "Network error while archiving sensor: ${e.message}", Toast.LENGTH_SHORT).show() }
+            val errorMessage = "Network error: ${e.message}"
+            _errorMessage.value = errorMessage
+            Timber.tag("SensorViewModel").e(errorMessage)
         }
     }
 
@@ -160,19 +156,17 @@ class SensorViewModel @Inject constructor(
             val response = sensorApi.unArchiveSensor(token, sensorId)
             if (response.isSuccessful) {
                 loadSensors()
+                _errorMessage.value = null
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorMessage = try {
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                } catch (e: JsonSyntaxException) {
-                    "Failed to get sensor details: $e"
-                }
-                Timber.tag("TireViewModel").e(errorMessage)
-                context?.let { Toast.makeText(it, "Failed to unarchive sensor: $errorMessage", Toast.LENGTH_SHORT).show() }
+                val errorMessage = parseErrorMessage(errorBody)
+                _errorMessage.value = errorMessage
+                Timber.tag("SensorViewModel").e(errorMessage ?: "Unknown error")
             }
         } catch (e: Exception) {
-            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
-            context?.let { Toast.makeText(it, "Network error while unarchiving sensor: ${e.message}", Toast.LENGTH_SHORT).show() }
+            val errorMessage = "Network error: ${e.message}"
+            _errorMessage.value = errorMessage
+            Timber.tag("SensorViewModel").e(errorMessage)
         }
     }
 
@@ -187,22 +181,31 @@ class SensorViewModel @Inject constructor(
                     if (it.sensor_id == sensorId) it.copy(is_active = isActive) else it
                 }
                 _sensorsState.value = updatedSensors
+                _errorMessage.value = null
                 return true
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorMessage = try {
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                } catch (e: JsonSyntaxException) {
-                    "Failed to get sensor details: $e"
-                }
-                Timber.tag("TireViewModel").e(errorMessage)
-                context?.let { Toast.makeText(it, "Failed to update sensor: $errorMessage", Toast.LENGTH_SHORT).show() }
+                val errorMessage = parseErrorMessage(errorBody)
+                _errorMessage.value = errorMessage
+                Timber.tag("SensorViewModel").e(errorMessage ?: "Unknown error")
                 return false
             }
         } catch (e: Exception) {
-            Timber.tag("TireViewModel").e("Network error while setting active: ${e.message}")
-            context?.let { Toast.makeText(it, "Network error while updating sensor: ${e.message}", Toast.LENGTH_SHORT).show() }
+            val errorMessage = "Network error: ${e.message}"
+            _errorMessage.value = errorMessage
+            Timber.tag("SensorViewModel").e(errorMessage)
             return false
+        }
+    }
+
+    private fun parseErrorMessage(errorBody: String?): String? {
+        return try {
+            errorBody?.let {
+                val errorResponse = Gson().fromJson(it, ErrorResponse::class.java)
+                errorResponse.error // Беремо поле "error" із відповіді
+            }
+        } catch (e: JsonSyntaxException) {
+            "Unknown error: ${e.message}"
         }
     }
 

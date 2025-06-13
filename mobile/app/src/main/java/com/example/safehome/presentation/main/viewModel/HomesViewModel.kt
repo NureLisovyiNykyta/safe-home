@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import timber.log.Timber
 
-
 @HiltViewModel
 class HomesViewModel @Inject constructor(
     private var tokenRepository: TokenRepository,
@@ -27,6 +26,9 @@ class HomesViewModel @Inject constructor(
 ) : ViewModel() {
     private val _homesState = MutableStateFlow<List<HomeDto>>(emptyList())
     val homesState: StateFlow<List<HomeDto>> = _homesState.asStateFlow()
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
     private var refreshJob: Job? = null
 
     init {
@@ -50,19 +52,19 @@ class HomesViewModel @Inject constructor(
                 val response = homeApi.getHomes(token)
 
                 if (response.isSuccessful) {
-                    _homesState.value = response.body()?.homes!!
+                    _homesState.value = response.body()?.homes ?: emptyList()
+                    _errorMessage.value = null
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    val errorMessage = try {
-                        Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                    } catch (e: JsonSyntaxException) {
-                        "Unknown error: $e"
-                    }
+                    val errorMessage = parseErrorMessage(errorBody)
                     _homesState.value = emptyList()
-                    Timber.tag("HomeViewModel").e(errorMessage)
+                    _errorMessage.value = errorMessage
+                    Timber.tag("HomeViewModel").e(errorMessage ?: "Unknown error")
                 }
             } catch (e: Exception) {
-                Timber.tag("HomeViewModel").e("Network error: ${e.message}")
+                val errorMessage = "Network error: ${e.message}"
+                _errorMessage.value = errorMessage
+                Timber.tag("HomeViewModel").e(errorMessage)
             }
         }
     }
@@ -76,133 +78,129 @@ class HomesViewModel @Inject constructor(
 
                 if (response.isSuccessful) {
                     loadHomes()
+                    _errorMessage.value = null
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    val errorMessage = try {
-                        Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                    } catch (e: JsonSyntaxException) {
-                        "Unknown error: $e"
-                    }
-                    Timber.tag("HomeViewModel").e(errorMessage)
+                    val errorMessage = parseErrorMessage(errorBody)
+                    _errorMessage.value = errorMessage
+                    Timber.tag("HomeViewModel").e(errorMessage ?: "Unknown error")
                 }
             } catch (e: Exception) {
-                Timber.tag("HomeViewModel").e("Network error: ${e.message}")
+                val errorMessage = "Network error: ${e.message}"
+                _errorMessage.value = errorMessage
+                Timber.tag("HomeViewModel").e(errorMessage)
             }
         }
     }
 
-    suspend fun deleteHome(homeId: String){
+    suspend fun deleteHome(homeId: String) {
         try {
             val token = tokenRepository.getToken()
             val response = homeApi.deleteHome(token, homeId)
             if (response.isSuccessful) {
                 loadHomes()
+                _errorMessage.value = null
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home deleted successfully")
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                } catch (e: JsonSyntaxException) {
-                    "Failed to get home details: $e"
-                }
-                Timber.tag("TireViewModel").e(errorMessage)
-                null
+                val errorMessage = parseErrorMessage(errorBody)
+                _errorMessage.value = errorMessage
+                Timber.tag("HomeViewModel").e(errorMessage ?: "Unknown error")
             }
         } catch (e: Exception) {
-            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
-            null
+            val errorMessage = "Network error: ${e.message}"
+            _errorMessage.value = errorMessage
+            Timber.tag("HomeViewModel").e(errorMessage)
         }
     }
 
-    suspend fun archiveHome(homeId: String){
+    suspend fun archiveHome(homeId: String) {
         try {
             val token = tokenRepository.getToken()
             val response = homeApi.archiveHome(token, homeId)
             if (response.isSuccessful) {
                 loadHomes()
+                _errorMessage.value = null
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home archived successfully")
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                } catch (e: JsonSyntaxException) {
-                    "Failed to get home details: $e"
-                }
-                Timber.tag("TireViewModel").e(errorMessage)
-                null
+                val errorMessage = parseErrorMessage(errorBody)
+                _errorMessage.value = errorMessage
+                Timber.tag("HomeViewModel").e(errorMessage ?: "Unknown error")
             }
         } catch (e: Exception) {
-            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
-            null
+            val errorMessage = "Network error: ${e.message}"
+            _errorMessage.value = errorMessage
+            Timber.tag("HomeViewModel").e(errorMessage)
         }
     }
 
-    suspend fun unArchiveHome(homeId: String){
+    suspend fun unArchiveHome(homeId: String) {
         try {
             val token = tokenRepository.getToken()
             val response = homeApi.unArchiveHome(token, homeId)
             if (response.isSuccessful) {
                 loadHomes()
+                _errorMessage.value = null
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home unarchived successfully")
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                } catch (e: JsonSyntaxException) {
-                    "Failed to get home details: $e"
-                }
-                Timber.tag("TireViewModel").e(errorMessage)
-                null
+                val errorMessage = parseErrorMessage(errorBody)
+                _errorMessage.value = errorMessage
+                Timber.tag("HomeViewModel").e(errorMessage ?: "Unknown error")
             }
         } catch (e: Exception) {
-            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
-            null
+            val errorMessage = "Network error: ${e.message}"
+            _errorMessage.value = errorMessage
+            Timber.tag("HomeViewModel").e(errorMessage)
         }
     }
 
-    suspend fun armedHome(homeId: String){
+    suspend fun armedHome(homeId: String) {
         try {
             val token = tokenRepository.getToken()
             val response = homeApi.armedHome(token, homeId)
             if (response.isSuccessful) {
                 loadHomes()
+                _errorMessage.value = null
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home armed successfully")
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                } catch (e: JsonSyntaxException) {
-                    "Failed to get home details: $e"
-                }
-                Timber.tag("TireViewModel").e(errorMessage)
-                null
+                val errorMessage = parseErrorMessage(errorBody)
+                _errorMessage.value = errorMessage
+                Timber.tag("HomeViewModel").e(errorMessage ?: "Unknown error")
             }
         } catch (e: Exception) {
-            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
-            null
+            val errorMessage = "Network error: ${e.message}"
+            _errorMessage.value = errorMessage
+            Timber.tag("HomeViewModel").e(errorMessage)
         }
     }
 
-    suspend fun disarmedHome(homeId: String){
+    suspend fun disarmedHome(homeId: String) {
         try {
             val token = tokenRepository.getToken()
             val response = homeApi.disarmedHome(token, homeId)
             if (response.isSuccessful) {
                 loadHomes()
+                _errorMessage.value = null
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorMessage = try {
-                    Timber.tag("HomeViewModel").d("Home disarmed successfully")
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).message
-                } catch (e: JsonSyntaxException) {
-                    "Failed to get home details: $e"
-                }
-                Timber.tag("TireViewModel").e(errorMessage)
-                null
+                val errorMessage = parseErrorMessage(errorBody)
+                _errorMessage.value = errorMessage
+                Timber.tag("HomeViewModel").e(errorMessage ?: "Unknown error")
             }
         } catch (e: Exception) {
-            Timber.tag("TireViewModel").e("Network error while getting tire: ${e.message}")
-            null
+            val errorMessage = "Network error: ${e.message}"
+            _errorMessage.value = errorMessage
+            Timber.tag("HomeViewModel").e(errorMessage)
+        }
+    }
+
+    private fun parseErrorMessage(errorBody: String?): String? {
+        return try {
+            errorBody?.let {
+                val errorResponse = Gson().fromJson(it, ErrorResponse::class.java)
+                errorResponse.error // Беремо поле "error" із відповіді
+            }
+        } catch (e: JsonSyntaxException) {
+            "Unknown error: ${e.message}"
         }
     }
 
