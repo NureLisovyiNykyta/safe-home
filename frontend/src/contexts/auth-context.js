@@ -13,8 +13,6 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const allowedRoles = ['admin', 'super_admin'];
-
   const login = () => {
     setIsAuthenticated(true);
   };
@@ -45,12 +43,6 @@ export const AuthProvider = ({ children }) => {
         if (response.status === 200) {
           const user = response.data.user;
           setUserData(user);
-
-          if (!allowedRoles.includes(user.role)) {
-            await logout();
-            return;
-          }
-
           setIsAuthenticated(true);
         }
       } catch (error) {
@@ -71,9 +63,15 @@ export const AuthProvider = ({ children }) => {
     if (!isAuthenticated && location.pathname !== '/login' && location.pathname !== '/') {
       navigate('/login');
     } else if (isAuthenticated && location.pathname === '/login') {
-      navigate('/admin/customers');
+      if (userData?.role === 'user') {
+        navigate('/user/subscriptions');
+      } else {
+        navigate('/admin/customers');
+      }
+    } else if (isAuthenticated && userData?.role === 'user' && location.pathname.startsWith('/admin')) {
+      navigate('/user/subscriptions');
     }
-  }, [isAuthenticated, location.pathname, navigate, loading]);
+  }, [isAuthenticated, location.pathname, navigate, loading, userData]);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, userData, login, logout }}>
