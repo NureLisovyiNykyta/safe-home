@@ -1,6 +1,7 @@
 package com.example.safehome.presentation.main
 
 import android.Manifest
+import com.example.safehome.R
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.safehome.databinding.ActivityMainBinding
@@ -59,6 +61,21 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(0, systemBars.top, 0, 0)
             insets
         }
+
+        setupNavigation()
+
+        binding.notifyButton.setOnClickListener {
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.navigation_notification, true)
+                .setLaunchSingleTop(true)
+                .build()
+            navController.navigate(R.id.navigation_notification, null, navOptions)
+        }
+
+        requestNotificationPermission()
+    }
+
+    private fun setupNavigation() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(binding.fragmentContainerView.id) as NavHostFragment
         navController = navHostFragment.navController
@@ -76,14 +93,6 @@ class MainActivity : AppCompatActivity() {
                 true
             }
         }
-
-        requestNotificationPermission()
-
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            binding.backButton.visibility =
-//                if (destination.id == R.id.signInFragment) View.GONE
-//                else View.VISIBLE
-//        }
     }
 
     override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
@@ -113,6 +122,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
             data = Uri.fromParts("package", packageName, null)
         }
+
         startActivity(intent)
     }
 }

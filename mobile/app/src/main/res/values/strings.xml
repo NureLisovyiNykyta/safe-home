@@ -52,6 +52,11 @@
 
     <!-- NotificationFragment -->
     <string name="title_notification_fragment">Notification</string>
+    <string name="notification_title">My notification</string>
+    <string name="notification_body">Alarm!!!</string>
+    <string name="notification_date">17:00 June 13</string>
+    <string name="general">General</string>
+    <string name="security">Security</string>
 
     <!-- ProfileFragment -->
     <string name="title_profile_fragment">Profile</string>

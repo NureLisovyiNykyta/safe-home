@@ -2,6 +2,8 @@ package com.example.safehome.data.api
 
 import com.example.safehome.data.model.GetUserResponse
 import com.example.safehome.data.model.MessageResponse
+import com.example.safehome.data.model.GeneralNotificationResponse
+import com.example.safehome.data.model.SecurityNotificationResponse
 import com.example.safehome.data.model.UpdatePasswordRequest
 import retrofit2.Response
 import retrofit2.http.Body
@@ -18,6 +20,22 @@ interface UserApi {
     suspend fun getUser(
         @Header("Authorization") token: String?
     ): Response<GetUserResponse>
+
+    @GET("notifications")
+    @Headers(
+        "Content-Type: application/json"
+    )
+    suspend fun getGeneralNotifications(
+        @Header("Authorization") token: String?,
+    ): Response<GeneralNotificationResponse>
+
+    @GET("security-notifications")
+    @Headers(
+        "Content-Type: application/json"
+    )
+    suspend fun getSecurityNotifications(
+        @Header("Authorization") token: String?,
+    ): Response<SecurityNotificationResponse>
 
     @PUT("user/password")
     @Headers(
