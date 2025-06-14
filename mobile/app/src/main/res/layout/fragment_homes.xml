@@ -59,6 +59,7 @@
             style="@style/TextView"
             android:text="@string/homes_empty"
             android:textSize="23sp"
+            android:visibility="gone"
             android:layout_marginTop="10dp"
             android:layout_gravity="center" />
 
