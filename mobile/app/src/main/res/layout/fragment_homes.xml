@@ -54,6 +54,15 @@
             android:nestedScrollingEnabled="false"
             android:layout_gravity="bottom"/>
 
+        <TextView
+            android:id="@+id/emptyTextView"
+            style="@style/TextView"
+            android:text="@string/homes_empty"
+            android:textSize="30sp"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

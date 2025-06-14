@@ -51,6 +51,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     kapt(libs.hilt.compiler)
     testImplementation(libs.junit)
+    implementation (libs.androidx.browser)
     implementation (libs.androidx.room.runtime)
     implementation (libs.androidx.room.ktx)
     implementation (libs.androidx.security.crypto)

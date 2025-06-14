@@ -19,7 +19,9 @@ import com.example.safehome.presentation.main.viewModel.ProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.getValue
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -49,6 +51,26 @@ class ProfileFragment : Fragment() {
                         nameTextView.text = user?.user?.name
                         emailTextView.text = user?.user?.email
                         subscriptionTextView.text = user?.user?.subscription_plan_name?.replaceFirstChar { it.uppercaseChar() }
+
+                        subscriptionConstraintLayout.setOnClickListener {
+                            val url = "https://safe-home-frontend-agf4a0cghre0fuhy.northeurope-01.azurewebsites.net/login"
+                            val builder = androidx.browser.customtabs.CustomTabsIntent.Builder()
+                            val customTabsIntent = builder.build()
+
+                            try {
+                                customTabsIntent.launchUrl(requireContext(), url.toUri())
+                            } catch (e: android.content.ActivityNotFoundException) {
+                                Timber.tag("SubscriptionClick").e("Custom Tabs failed: ${e.message}")
+                                val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                                val packageManager = requireActivity().packageManager
+
+                                if (intent.resolveActivity(packageManager) != null) {
+                                    startActivity(intent)
+                                } else {
+                                    Timber.tag("SubscriptionClick").e("No app found to handle Intent")
+                                }
+                            }
+                        }
 
                         changePswdConstraintLayout.setOnClickListener {
                             findNavController().navigate(R.id.action_navigation_profile_to_changePasswordFragment)

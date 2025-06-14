@@ -7,9 +7,9 @@
         android:title="@string/title_homes_fragment" />
 
     <item
-        android:id="@+id/navigation_subscriptions"
-        android:icon="@drawable/ic_sub"
-        android:title="@string/title_subscriptions_fragment" />
+        android:id="@+id/navigation_notification"
+        android:icon="@drawable/ic_notify"
+        android:title="@string/title_notification_fragment" />
 
     <item
         android:id="@+id/navigation_profile"
