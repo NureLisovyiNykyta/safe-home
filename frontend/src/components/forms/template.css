@@ -204,7 +204,7 @@
   color: #333;
 }
 
-/* Для інших браузерів */
+/* For other browrers */
 .form-template .form .form-group input:autofill {
   background-color: transparent !important;
   color: #333 !important;

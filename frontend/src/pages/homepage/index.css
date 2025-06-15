@@ -111,11 +111,8 @@
 .homepage .content .main-content .intro .home-logo {
   border-radius: 1rem;
   width: 100%;
-  /* Занимает всю ширину контейнера */
   max-height: 50vh;
-  /* Ограничивает максимальную высоту */
   object-fit: cover;
-  /* Сохраняет пропорции, обрезая лишнее */
   place-self: end;
 }
 
