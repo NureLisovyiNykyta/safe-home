@@ -34,7 +34,7 @@ class ChangePasswordViewModel @Inject constructor(
             } else {
                 val errorBody = response.errorBody()?.string()
                 val errorMessage = try {
-                    Gson().fromJson(errorBody, ErrorResponse::class.java).error // Використовуємо error замість message
+                    Gson().fromJson(errorBody, ErrorResponse::class.java).error
                 } catch (e: JsonSyntaxException) {
                     Timber.tag("ChangePswdViewModel").e("Failed to parse error body: ${e.message}")
                     "Unknown error: ${e.message}"

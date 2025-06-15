@@ -202,7 +202,7 @@ class SensorViewModel @Inject constructor(
         return try {
             errorBody?.let {
                 val errorResponse = Gson().fromJson(it, ErrorResponse::class.java)
-                errorResponse.error // Беремо поле "error" із відповіді
+                errorResponse.error
             }
         } catch (e: JsonSyntaxException) {
             "Unknown error: ${e.message}"
