@@ -43,7 +43,6 @@
   cursor: pointer;
 }
 
-/* Стили для ползунка */
 .user-count-chart .action-panel input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;

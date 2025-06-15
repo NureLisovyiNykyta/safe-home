@@ -4,12 +4,12 @@ from flask import request
 
 def success_trigger(message: str = None, handler=None):
     """
-    Универсальный декоратор для обработки успешных ответов роута.
+    Universal decorator for processing successful answers route.
 
     Args:
-        message (str): Сообщение для обработки (может быть шаблоном с {kwargs}).
-        handler (callable): Функция-обработчик, вызываемая при успешном ответе.
-                           Принимает response_data, status_code, request, kwargs.
+        message (str): Message for processing (can be a template with {kwargs}).
+        handler (callable): A handler function called upon successful response.
+                           Takes response_data, status_code, request, kwargs.
     """
 
     def decorator(f):
