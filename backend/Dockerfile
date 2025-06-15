@@ -1,20 +1,20 @@
-# Используем официальный образ Python
+# We use the official Python image
 FROM python:3.11
 
-# Устанавливаем рабочую директорию
+# Install working director
 WORKDIR /app
 
-# Копируем файлы зависимостей
+# Copy dependency files
 COPY requirements.txt .
 
-# Устанавливаем зависимости
+# Establish dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем все файлы проекта
+# Copy all project files
 COPY . .
 
-# Открываем порт 5000
+# Open port 5000
 EXPOSE 5000
 
-# Запускаем приложение через Gunicorn
+# Launch the application via Gunicorn
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "run:flask_app"]
