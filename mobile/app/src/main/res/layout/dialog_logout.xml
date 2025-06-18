@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
-            android:text="@string/save"
+            android:text="@string/exit"
             android:textColor="#3A3A3A"
             android:backgroundTint="#CECECE"
             style="@style/TextView" />
