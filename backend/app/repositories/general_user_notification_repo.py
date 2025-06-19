@@ -4,7 +4,8 @@ from app import db
 class GeneralUserNotificationRepository:
     @staticmethod
     def get_all_by_user(user_id):
-        return GeneralUserNotification.query.filter_by(user_id=user_id).all()
+        return (GeneralUserNotification.query.filter_by(user_id=user_id).
+                order_by(GeneralUserNotification.created_at.desc()).all())
 
     @staticmethod
     def get_by_id(notification_id):

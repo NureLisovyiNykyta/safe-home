@@ -4,7 +4,8 @@ from app import db
 class SubscriptionRepository:
     @staticmethod
     def get_all_by_user(user_id):
-        return Subscription.query.filter_by(user_id=user_id).all()
+        return (Subscription.query.filter_by(user_id=user_id).
+                order_by(Subscription.start_date.desc()).all())
 
     @staticmethod
     def get_by_id(subscription_id):

@@ -4,7 +4,8 @@ from app import db
 class SubscriptionPlanRepository:
     @staticmethod
     def get_all():
-        return SubscriptionPlan.query.all()
+        return (SubscriptionPlan.query.
+                order_by(SubscriptionPlan.price.desc()).all())
 
     @staticmethod
     def get_by_id(plan_id):
