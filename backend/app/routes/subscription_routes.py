@@ -117,6 +117,15 @@ def cancel_current_subscription():
 @swag_from({
     'tags': ['Subscription'],
     'summary': 'Get all subscriptions for a specific user (admin only)',
+    'parameters': [
+        {
+            'name': 'user_id',
+            'in': 'path',
+            'required': True,
+            'type': 'string',
+            'description': 'User ID to receive user subscriptions'
+        }
+    ],
     'responses': {
         200: {
             'description': 'List of subscriptions for the user',
@@ -164,6 +173,15 @@ def get_user_subscriptions_admin(user_id):
 
 @subscription_bp.route('/subscriptions/current/cancel/<user_id>', methods=['PUT'])
 @swag_from({
+    'parameters': [
+        {
+            'name': 'user_id',
+            'in': 'path',
+            'required': True,
+            'type': 'string',
+            'description': 'User ID to cancel subscription for user'
+        }
+    ],
     'tags': ['Subscription'],
     'summary': 'Cancel the current subscription for a specific user (admin only)',
     'responses': {
