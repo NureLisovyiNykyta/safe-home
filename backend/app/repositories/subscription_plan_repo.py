@@ -5,7 +5,7 @@ class SubscriptionPlanRepository:
     @staticmethod
     def get_all():
         return (SubscriptionPlan.query.
-                order_by(SubscriptionPlan.price.desc()).all())
+                order_by(SubscriptionPlan.price.asc()).all())
 
     @staticmethod
     def get_by_id(plan_id):

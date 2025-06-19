@@ -151,6 +151,15 @@ def delete_user(user_id):
     'tags': ['User'],
     'summary': 'Get a user by ID (admin only)',
     'description': 'Get a user by their ID.',
+    'parameters': [
+        {
+            'name': 'user_id',
+            'in': 'path',
+            'required': True,
+            'type': 'string',
+            'description': 'User ID to receive user information'
+        }
+    ],
     'responses': {
         200: {
             'description': 'User data',
