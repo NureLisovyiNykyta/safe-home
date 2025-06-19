@@ -4,5 +4,5 @@ data class Home(
     val homeId: String,
     val name: String,
     val address: String?,
-    val status: String,
+    val isArchived: Boolean,
 )

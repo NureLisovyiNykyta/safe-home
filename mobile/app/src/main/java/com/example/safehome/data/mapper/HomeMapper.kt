@@ -13,7 +13,7 @@ class HomeMapper @Inject constructor() {
             homeId = dto.home_id,
             name = dto.name,
             address = dto.address,
-            status = "HomeMapper"
+            isArchived = dto.is_archived
         )
     }
 
@@ -22,7 +22,7 @@ class HomeMapper @Inject constructor() {
             homeId = entity.id,
             name = entity.name,
             address = entity.address,
-            status = "HomeMapper"
+            isArchived = entity.isArchived
         )
     }
 
