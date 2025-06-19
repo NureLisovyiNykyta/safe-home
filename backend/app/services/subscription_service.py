@@ -1,5 +1,7 @@
 import stripe
-from app.services.notification import SubscriptionEmailService
+from app.repositories import HomeRepository
+from app.services import HomeService
+from app.services.notification import SubscriptionEmailService, SubscriptionNotificationService
 from app.utils.error_handler import handle_errors, UnprocessableError, ValidationError
 from app.repositories.subscription_repo import SubscriptionRepository
 from app.repositories.user_repo import UserRepository
@@ -93,6 +95,20 @@ class SubscriptionService:
         }
 
         SubscriptionService.create_basic_subscription(user_id)
+
+        # Archive homes and sensors
+        user_homes = HomeRepository.get_all_by_user(current_subscription.user_id)
+        for home in user_homes:
+            if not home.is_archived:
+                HomeService.archive_home(home)
+
+        # Send notifications
+        user = current_subscription.user
+        if user.email_confirmed:
+            SubscriptionEmailService.send_subscription_canceled_email(user, current_subscription)
+
+        SubscriptionNotificationService.send_subscription_canceled_notification(user, current_subscription)
+
         return jsonify({"message": "Subscription cancelled successfully."}), 200
 
     @staticmethod
