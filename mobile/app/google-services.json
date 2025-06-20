@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "243847784651-ioll82lhlo6eeq5a1o5oscq0l49btqvg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.safehome",
+            "certificate_hash": "0159c0d2980294691ca55b76ad09a8899da7aebc"
+          }
+        },
+        {
           "client_id": "243847784651-rbt76rk8h8lp7spdeeuj481jthfocd4v.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -1,5 +1,6 @@
 package com.example.safehome.presentation.main.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -74,11 +76,31 @@ class SensorFragment : Fragment() {
                 homesViewModel.homesState.collect { homes ->
                     val home = homes.find { it.home_id == homeId }
                     home?.let {
-                        binding.homeNameTextView.text = it.name
-                        binding.homeAddressTextView.text = it.address
                         val initialStatus = it.default_mode_name
                         setupHomeSwitch(initialStatus)
                         updateStatusUI(initialStatus)
+
+                        binding.apply {
+                            homeNameTextView.text = it.name
+                            homeAddressTextView.text = it.address
+
+                            homeArmedSwitch.isVisible = !it.is_archived
+                            homeImageView.backgroundTintList = ColorStateList.valueOf(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    if (it.is_archived) R.color.grey else R.color.onPrimaryVariant
+                                )
+                            )
+                            ImageViewCompat.setImageTintList(
+                                homeImageView,
+                                ColorStateList.valueOf(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        if (it.is_archived) R.color.white else R.color.black
+                                    )
+                                )
+                            )
+                        }
                     }
                 }
             }

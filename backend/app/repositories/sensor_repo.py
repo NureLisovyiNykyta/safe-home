@@ -27,6 +27,10 @@ class SensorRepository:
         return Sensor.query.filter_by(sensor_id=sensor_id, user_id=user_id, is_archived=is_archived).first()
 
     @staticmethod
+    def get_by_user_short_id_archived(user_id, short_id, is_archived):
+        return Sensor.query.filter_by(short_id=short_id, user_id=user_id, is_archived=is_archived).first()
+
+    @staticmethod
     def get_active_by_user(user_id):
         return Sensor.query.filter_by(user_id=user_id, is_archived=False).count()
 

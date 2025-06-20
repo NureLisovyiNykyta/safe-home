@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -16,6 +15,7 @@ import com.example.safehome.data.model.NotificationType
 import com.example.safehome.databinding.FragmentNotificationBinding
 import com.example.safehome.presentation.main.adapter.NotificationAdapter
 import com.example.safehome.presentation.main.viewModel.NotificationViewModel
+import androidx.fragment.app.viewModels
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -25,7 +25,7 @@ import kotlin.getValue
 class NotificationFragment : Fragment() {
     private var _binding: FragmentNotificationBinding? = null
     private val binding get() = _binding!!
-    private val notificationViewModel: NotificationViewModel by activityViewModels()
+    private val notificationViewModel: NotificationViewModel by viewModels()
     private lateinit var notificationAdapter: NotificationAdapter
 
     override fun onCreateView(
