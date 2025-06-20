@@ -11,6 +11,7 @@ import com.example.safehome.databinding.ItemSensorBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.example.safehome.R
 import com.google.android.material.button.MaterialButton
 import timber.log.Timber
@@ -69,6 +70,7 @@ class SensorAdapter(
 
                 previousActiveState = sensor.is_active
                 activitySwitch.isChecked = sensor.is_active
+                activitySwitch.isVisible = !sensor.is_archived
                 activitySwitch.isEnabled = true
 
                 activitySwitch.setOnCheckedChangeListener { _, isChecked ->

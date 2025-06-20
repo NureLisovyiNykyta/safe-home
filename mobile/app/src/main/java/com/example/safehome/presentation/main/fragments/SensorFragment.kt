@@ -1,5 +1,6 @@
 package com.example.safehome.presentation.main.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -79,6 +80,14 @@ class SensorFragment : Fragment() {
                         val initialStatus = it.default_mode_name
                         setupHomeSwitch(initialStatus)
                         updateStatusUI(initialStatus)
+                        binding.homeArmedSwitch.isVisible = !it.is_archived
+                        binding.homeImageView.backgroundTintList =
+                            ColorStateList.valueOf(
+                                if (home.is_archived)
+                                    ContextCompat.getColor(binding.root.context, R.color.grey)
+                                else
+                                    ContextCompat.getColor(binding.root.context, R.color.primary)
+                            )
                     }
                 }
             }
