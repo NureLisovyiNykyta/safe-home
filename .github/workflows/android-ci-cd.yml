@@ -33,18 +33,15 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
+      - name: Check build output
+        run: ls -la mobile/app/build/outputs/apk/release/
+        working-directory: mobile
+
       - name: Upload APK to Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release
           path: mobile/app/build/outputs/apk/release/app-release.apk
-
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_AA01221548AD432EAA355B96B1119463 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_09C46A3858AE4AD1A66CFAB1C88FB16A }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_903E2C7CB63145B4AE831A8FCCD88F0D }}
 
       - name: Upload to Azure Blob Storage
         uses: azure/CLI@v1
@@ -55,6 +52,6 @@ jobs:
               --container-name apkfiles \
               --name app-release.apk \
               --file mobile/app/build/outputs/apk/release/app-release.apk \
-              --auth-mode login \
-              --overwrite true
-        
+              --auth-mode key \
+              --account-key ${{ secrets.AZURE_STORAGE_KEY }} \
+              --overwrite true 
