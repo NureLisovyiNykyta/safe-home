@@ -62,10 +62,10 @@ class SensorAdapter(
                 statusTextView.text = status
 
                 propertiesImageView.setOnClickListener {
-                    showPropertiesSensorDialog(sensor.sensor_id, sensor.name, sensor.is_archived)
+                    showPropertiesSensorDialog(sensor)
                 }
                 root.setOnClickListener {
-                    showPropertiesSensorDialog(sensor.sensor_id, sensor.name, sensor.is_archived)
+                    showPropertiesSensorDialog(sensor)
                 }
 
                 previousActiveState = sensor.is_active
@@ -127,7 +127,7 @@ class SensorAdapter(
             }
         }
 
-        private fun showPropertiesSensorDialog(sensorId: String, name: String, isArchived: Boolean) {
+        private fun showPropertiesSensorDialog(sensor: SensorDto) {
             val dialogView = LayoutInflater.from(binding.root.context)
                 .inflate(R.layout.dialog_sensor_properties, null)
             val titleTextView = dialogView.findViewById<TextView>(R.id.titleTextView)
@@ -136,9 +136,9 @@ class SensorAdapter(
             val paringCode = dialogView.findViewById<TextView>(R.id.paringCodeTextView)
             val cancelButton = dialogView.findViewById<TextView>(R.id.cancelButton)
 
-            titleTextView.text = name
-            archiveButton.text = if (isArchived) "UnArchived" else "Archived"
-            paringCode.text = sensorId
+            titleTextView.text = sensor.name
+            archiveButton.text = if (sensor.is_archived) "UnArchived" else "Archived"
+            paringCode.text = sensor.short_id
 
             MaterialAlertDialogBuilder(binding.root.context, R.style.CustomDialogStyle)
                 .setView(dialogView)
@@ -146,11 +146,11 @@ class SensorAdapter(
                 .apply {
                     show()
                     archiveButton.setOnClickListener {
-                        onArchiveClick(sensorId, isArchived)
+                        onArchiveClick(sensor.sensor_id, sensor.is_archived)
                         dismiss()
                     }
                     deleteButton.setOnClickListener {
-                        onDeleteClick(sensorId)
+                        onDeleteClick(sensor.sensor_id)
                         dismiss()
                     }
                     cancelButton.setOnClickListener {
