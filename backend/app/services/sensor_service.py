@@ -148,6 +148,9 @@ class SensorService:
         if not sensor:
             raise UnprocessableError("Archived sensor not found for the user.")
 
+        if sensor.home.is_archived:
+            raise UnprocessableError("Home associated with this sensor is archived.")
+
         current_subscription = SubscriptionService.get_current_subscription(user_id)
         if not current_subscription:
             raise UnprocessableError("User does not have an active subscription.")
