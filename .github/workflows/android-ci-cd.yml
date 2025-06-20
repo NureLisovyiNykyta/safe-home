@@ -57,5 +57,4 @@ jobs:
               --file mobile/app/build/outputs/apk/release/app-release.apk \
               --auth-mode login \
               --overwrite true
-        working-directory: ${{ github.workspace }}
         
