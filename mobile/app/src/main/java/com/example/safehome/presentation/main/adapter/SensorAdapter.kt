@@ -138,7 +138,7 @@ class SensorAdapter(
 
             titleTextView.text = sensor.name
             archiveButton.text = if (sensor.is_archived) "UnArchived" else "Archived"
-            paringCode.text = sensor.short_id
+            paringCode.text = sensor.short_code
 
             MaterialAlertDialogBuilder(binding.root.context, R.style.CustomDialogStyle)
                 .setView(dialogView)
