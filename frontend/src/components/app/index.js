@@ -15,6 +15,7 @@ import { LoginForm } from '../forms/login';
 import Statistics from '../../pages/statistics';
 import Homepage from '../../pages/homepage';
 import { useLocation } from 'react-router-dom';
+import ManageSubscriptionPage from '../../pages/manage-subscription';
 
 const App = () => {
   const [cookies, setCookie] = useCookies(['language']);
@@ -33,9 +34,7 @@ const App = () => {
 
   return (
     <div className="app">
-      {isAuthenticated &&
-        location.pathname !== '/' &&
-        location.pathname !== '/login' &&
+      {isAuthenticated && location.pathname.startsWith('/admin/') &&
         <Navigation changeLanguage={changeLanguage} />}
       <Routes>
         <Route path='/' element={<Homepage />} />
@@ -47,6 +46,9 @@ const App = () => {
           <Route path='subscriptions' element={<Subscriptions />} />
           <Route path='audit-log' element={<AuditLog />} />
           <Route path='statistics/*' element={<Statistics />} />
+        </Route>
+        <Route path='/user/*'>
+          <Route path='subscriptions' element={<ManageSubscriptionPage />} />
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>

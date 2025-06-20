@@ -4,15 +4,18 @@ from app import db
 class SecurityUserNotificationRepository:
     @staticmethod
     def get_all_by_home(home_id):
-        return SecurityUserNotification.query.filter_by(home_id=home_id).all()
+        return (SecurityUserNotification.query.filter_by(home_id=home_id).
+                order_by(SecurityUserNotification.created_at.desc()).all())
 
     @staticmethod
     def get_all_by_user(user_id):
-        return SecurityUserNotification.query.filter_by(user_id=user_id).all()
+        return (SecurityUserNotification.query.filter_by(user_id=user_id).
+                order_by(SecurityUserNotification.created_at.desc()).all())
 
     @staticmethod
     def get_all_by_user_and_home(user_id, home_id):
-        return SecurityUserNotification.query.filter_by(user_id=user_id, home_id=home_id).all()
+        return (SecurityUserNotification.query.filter_by(user_id=user_id, home_id=home_id).
+                order_by(SecurityUserNotification.created_at.desc()).all())
 
     @staticmethod
     def get_by_id(notification_id):
