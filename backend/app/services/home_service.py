@@ -136,6 +136,9 @@ class HomeService:
 
         default_mode = DefaultSecurityModeService.get_security_mode("disarmed")
 
+        if not any(not sensor.is_archived for sensor in home.sensors):
+            raise UnprocessableError("The list of active sensors is empty.")
+
         HomeService._disarm_sensors(home)
         home.default_mode_id = default_mode.mode_id
         HomeRepository.update(home)
