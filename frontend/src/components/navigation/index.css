@@ -32,6 +32,7 @@
 .navigation .logo .desktop-logo,
 .desktop-text {
   display: block;
+  font-family: 'Kreon', serif;
 }
 
 .navigation .logo .mobile-title {
@@ -65,7 +66,6 @@
   justify-content: center;
   line-height: 100%;
   color: white;
-  font-weight: 650;
   font-size: 1.6rem;
   text-wrap: nowrap;
 }

@@ -114,6 +114,9 @@ class HomeService:
 
         default_mode = DefaultSecurityModeService.get_security_mode("armed")
 
+        if not any(not sensor.is_archived for sensor in home.sensors):
+            raise UnprocessableError("The list of active sensors is empty.")
+
         if any(not sensor.is_closed and not sensor.is_archived for sensor in home.sensors):
             return jsonify({"message": "Armed mode cannot be set! Close all your devices connected to sensors."}), 200
 
@@ -132,6 +135,9 @@ class HomeService:
             raise UnprocessableError("Home not found for the user.")
 
         default_mode = DefaultSecurityModeService.get_security_mode("disarmed")
+
+        if not any(not sensor.is_archived for sensor in home.sensors):
+            raise UnprocessableError("The list of active sensors is empty.")
 
         HomeService._disarm_sensors(home)
         home.default_mode_id = default_mode.mode_id
