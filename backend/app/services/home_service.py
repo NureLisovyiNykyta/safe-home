@@ -164,7 +164,6 @@ class HomeService:
         for sensor in home.sensors:
             if not sensor.is_archived:
                 sensor.is_active = False
-                sensor.is_closed = False
                 sensor.is_security_breached = False
 
     @staticmethod
