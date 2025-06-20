@@ -49,7 +49,11 @@ class HomeAdapter(
                         Timber.tag("SensorFragment").e("Drawable resource not found: $statusImageName")
                     }
 
-                    statusTextView.text = status.replaceFirstChar { it.uppercaseChar() }
+                    statusTextView.text =
+                        if (status == "alert")
+                            "Alarm"
+                        else
+                            status.replaceFirstChar { it.uppercaseChar() }
                 }
                 updateStatus(home.default_mode_name)
 
