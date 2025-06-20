@@ -13,7 +13,7 @@ import { useEffect, useRef } from 'react';
 
 const Homepage = () => {
   const elementsRef = useRef([]);
-  const mobileAppLink = "https://safehomemobilestorage.blob.core.windows.net/apkfiles/app-debug.apk";
+  const mobileAppLink = "https://safehomemobilestorage.blob.core.windows.net/apkfiles/app-release.apk";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
