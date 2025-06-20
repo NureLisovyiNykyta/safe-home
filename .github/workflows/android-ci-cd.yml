@@ -1,0 +1,59 @@
+name: Build and deploy Kotlin app to Azure Blob Storage
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'mobile/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set Up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+          cache: 'gradle'
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      - name: Build APK
+        run: ./gradlew assembleRelease
+        working-directory: mobile
+        env:
+          KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload APK to Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: mobile/app/build/outputs/apk/release/app-release.apk
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_AA01221548AD432EAA355B96B1119463 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_09C46A3858AE4AD1A66CFAB1C88FB16A }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_903E2C7CB63145B4AE831A8FCCD88F0D }}
+
+      - name: Upload to Azure Blob Storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob upload \
+              --account-name safehomemobilestorage \
+              --container-name apkfiles \
+              --name app-release.apk \
+              --file mobile/app/build/outputs/apk/release/app-release.apk \
+              --auth-mode login \
+              --overwrite true
+              
