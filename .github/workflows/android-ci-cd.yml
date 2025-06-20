@@ -21,7 +21,8 @@ jobs:
           cache: 'gradle'
 
       - name: Change wrapper permissions
-        run: chmod +x ./gradlew
+        run: chmod +x mobile/gradlew
+        working-directory: ${{ github.workspace }}
 
       - name: Build APK
         run: ./gradlew assembleRelease
@@ -56,4 +57,5 @@ jobs:
               --file mobile/app/build/outputs/apk/release/app-release.apk \
               --auth-mode login \
               --overwrite true
-              
+        working-directory: ${{ github.workspace }}
+        
