@@ -7,6 +7,7 @@ from app.services.notification import SecurityNotificationService
 from app.utils import Validator
 from app.models.sensor import Sensor
 from flask import jsonify
+import base36
 
 class SensorService:
     @staticmethod
@@ -16,6 +17,7 @@ class SensorService:
         sensors_list = [
             {
                 "sensor_id": str(sensor.sensor_id),
+                "short_code": sensor.short_code,
                 "name": sensor.name,
                 "type": sensor.type,
                 "is_closed": sensor.is_closed,
@@ -114,11 +116,12 @@ class SensorService:
     def set_sensor_status(user_id, body):
         Validator.validate_required_fields(body, ['sensor_id', 'is_closed'])
 
-        sensor_id = body['sensor_id']
+        short_code = body['sensor_id']
+        short_id = base36.loads(short_code)
 
         is_closed = Validator.validate_boolean(body['is_closed'], 'is_closed')
 
-        sensor = SensorRepository.get_by_user_and_id_archived(user_id, sensor_id, is_archived=False)
+        sensor = SensorRepository.get_by_user_short_id_archived(user_id, short_id, is_archived=False)
         if not sensor:
             raise UnprocessableError("Sensor not found for the specified user.")
 
