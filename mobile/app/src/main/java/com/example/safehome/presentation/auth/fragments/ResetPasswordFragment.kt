@@ -63,7 +63,7 @@ class ResetPasswordFragment : Fragment() {
                         is Result.Error -> {
                             val message = when (val error = result.errorType) {
                                 is ErrorType.ServerError -> {
-                                    if (error.code == 404) "User with this email not found"
+                                    if (error.code == 422) "User with this email not found"
                                     else error.message
                                 }
                                 is ErrorType.NetworkError -> error.message

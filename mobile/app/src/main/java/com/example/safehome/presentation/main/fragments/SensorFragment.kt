@@ -217,7 +217,11 @@ class SensorFragment : Fragment() {
                 Timber.tag("SensorFragment").e("Drawable resource not found: $statusImageName")
             }
 
-            statusTextView.text = status.replaceFirstChar { it.uppercaseChar() }
+            statusTextView.text =
+                if (status == "alert")
+                    "Alarm"
+                else
+                    status.replaceFirstChar { it.uppercaseChar() }
         }
     }
 
