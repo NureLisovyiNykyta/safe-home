@@ -32,6 +32,10 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
+      - name: Verify Keystore
+        run: ls -la mobile/release.jks
+        working-directory: ${{ github.workspace }}
+
       - name: Build APK
         run: ./gradlew assembleRelease
         working-directory: mobile
@@ -40,15 +44,24 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Check build output
-        run: ls -la mobile/app/build/outputs/apk/release/
-        working-directory: mobile
+      - name: Find APK File
+        id: find_apk
+        run: |
+          APK_PATH=$(find mobile/app/build/outputs/ -type f -name "app-release.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "Error: app-release.apk not found in mobile/app/build/outputs/"
+            exit 1
+          else
+            echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
+            echo "Found APK at: $APK_PATH"
+          fi
+        working-directory: ${{ github.workspace }}
 
       - name: Upload APK to Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: mobile/app/build/outputs/apk/release/app-release.apk
+          path: ${{ steps.find_apk.outputs.APK_PATH }}
 
       - name: Upload to Azure Blob Storage
         uses: azure/CLI@v1
@@ -58,7 +71,8 @@ jobs:
               --account-name safehomemobilestorage \
               --container-name apkfiles \
               --name app-release.apk \
-              --file mobile/app/build/outputs/apk/release/app-release.apk \
+              --file ${{ steps.find_apk.outputs.APK_PATH }} \
               --auth-mode key \
               --account-key ${{ secrets.AZURE_STORAGE_KEY }} \
               --overwrite true
+              
