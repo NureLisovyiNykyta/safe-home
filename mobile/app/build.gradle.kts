@@ -1,5 +1,3 @@
-import java.util.Base64
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -28,7 +26,7 @@ android {
     }
     signingConfigs {
         create("release") {
-            storeFile = file(System.getenv("KEYSTORE_FILE")?.let { Base64.getDecoder().decode(it).inputStream() } ?: file("release.jks"))
+            storeFile = file("release.jks")
             storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
             keyAlias = System.getenv("KEY_ALIAS") ?: ""
             keyPassword = System.getenv("KEY_PASSWORD") ?: ""
