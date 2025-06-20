@@ -6,13 +6,12 @@ import { BiDollarCircle } from "react-icons/bi";
 import { MdOutlineSensors } from "react-icons/md";
 import { FiHome } from "react-icons/fi";
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import api from '../../configs/api';
 import Modal from '../modal';
 
 const ManageSubscriptionForm = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
+  const { logout } = useAuth();  
   const [currentSubscription, setCurrentSubscription] = useState(null);
   const [plans, setPlans] = useState([]);
   const [confirmModal, setConfirmModal] = useState({ isOpen: false });
@@ -99,10 +98,10 @@ const ManageSubscriptionForm = () => {
   return (
     <div className="sub-form">
       <div className="header">
-        <div className='logo-container'>
+        <Link className='logo-container' to={'/'}>
           <img src={logo} alt="Logo" className="logo" />
           <h3>Safe home</h3>
-        </div>
+        </Link>
         <button className='logout-button' onClick={handleLogout}>
           Logout
         </button>
