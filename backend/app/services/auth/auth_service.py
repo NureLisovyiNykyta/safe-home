@@ -31,7 +31,7 @@ class AuthService:
 
         existing_user = UserRepository.get_by_email(email)
         if existing_user:
-            if existing_user.google_id:
+            if existing_user.google_id and not existing_user.password:
                 UserService.drop_email_verification(existing_user)
                 EmailConfirmService.send_email_confirmation(existing_user)
                 UserService.add_user_data(existing_user, data)

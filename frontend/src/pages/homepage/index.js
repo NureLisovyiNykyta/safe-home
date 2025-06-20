@@ -13,6 +13,7 @@ import { useEffect, useRef } from 'react';
 
 const Homepage = () => {
   const elementsRef = useRef([]);
+  const mobileAppLink = "https://safehomemobilestorage.blob.core.windows.net/apkfiles/app-release.apk";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -58,9 +59,9 @@ const Homepage = () => {
             <div className='left-column'>
               <h1>Safe Home: Comprehensive Home Security Management System</h1>
               <p>Safe Home integrates door opening sensors with a powerful backend, a user-friendly web interface, and a mobile application. Control your home's security in real-time and enjoy peace of mind and protection. Perfectly suited for any residence, from apartments to large mansions.</p>
-              <button className="download-mobile-app">
+              <a href={mobileAppLink} download={true} className="download-mobile-app">
                 Download mobile app
-              </button>
+              </a>
             </div>
             <div className='right-column'>
               <img src={homelogo} alt="Safe Home Logo" className="home-logo" />

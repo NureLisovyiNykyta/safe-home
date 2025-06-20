@@ -1,0 +1,78 @@
+name: Build and deploy Kotlin app to Azure Blob Storage
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'mobile/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set Up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Change wrapper permissions
+        run: chmod +x mobile/gradlew
+        working-directory: ${{ github.workspace }}
+
+      - name: Decode Keystore and Create File
+        run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > mobile/release.jks
+        working-directory: ${{ github.workspace }}
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Verify Keystore
+        run: ls -la mobile/release.jks
+        working-directory: ${{ github.workspace }}
+
+      - name: Build APK
+        run: ./gradlew assembleRelease
+        working-directory: mobile
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Find APK File
+        id: find_apk
+        run: |
+          APK_PATH=$(find mobile/app/build/outputs/ -type f -name "app-release.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "Error: app-release.apk not found in mobile/app/build/outputs/"
+            exit 1
+          else
+            echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
+            echo "Found APK at: $APK_PATH"
+          fi
+        working-directory: ${{ github.workspace }}
+
+      - name: Upload APK to Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: ${{ steps.find_apk.outputs.APK_PATH }}
+
+      - name: Upload to Azure Blob Storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob upload \
+              --account-name safehomemobilestorage \
+              --container-name apkfiles \
+              --name app-release.apk \
+              --file ${{ steps.find_apk.outputs.APK_PATH }} \
+              --auth-mode key \
+              --account-key ${{ secrets.AZURE_STORAGE_KEY }} \
+              --overwrite true
+              

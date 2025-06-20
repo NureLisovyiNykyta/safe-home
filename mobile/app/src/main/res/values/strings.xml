@@ -74,8 +74,7 @@
     <string name="title_change_password_fragment">Change Password</string>
     <string name="new_pswd">New password</string>
     <string name="current_pswd">Current password</string>
-    <string name="subscribe_type">Basic</string>
-
+    <string name="subscribe_type">Basic</string>    
 
 
     <!-- DialogAddHome -->
@@ -103,7 +102,6 @@
     <string name="delete">Delete</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="exit">Exit</string>
 
 </resources>
