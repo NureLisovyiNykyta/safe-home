@@ -14,7 +14,7 @@ kapt {
 
 android {
     namespace = "com.example.safehome"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.safehome"
