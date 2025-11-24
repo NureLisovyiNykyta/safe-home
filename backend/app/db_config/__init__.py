@@ -1,4 +1,5 @@
 from .seed import seed_data
+from .generate_test_data import generate
 import click
 from flask.cli import AppGroup
 

@@ -76,7 +76,7 @@ def create_app():
     from .models import GeneralUserNotification, SecurityUserNotification, Subscription, AdminAuditLog
     from .models import UserStats, SubscriptionPlanStats
 
-    from .db_config import init_seed_cli, seed_data
+    from .db_config import init_seed_cli, seed_data, generate
     init_seed_cli(app)
 
     if app.config['AUTO_DB_SETUP']:
@@ -85,6 +85,8 @@ def create_app():
             upgrade()  # Apply migrations
             force = app.config['SEED_FORCE']
             seed_data(app, force=force)
+            if app.config['GENERATE_TEST_DATA']:
+                generate()
 
     from .sockets import init_sockets
     init_sockets(socketio)

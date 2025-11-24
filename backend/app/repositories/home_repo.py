@@ -35,3 +35,7 @@ class HomeRepository:
     def delete(home):
         db.session.delete(home)
         db.session.commit()
+
+    @staticmethod
+    def get_last_created_home(user_id):
+        return Home.query.filter_by(user_id=user_id).order_by(Home.created_at.desc()).first()

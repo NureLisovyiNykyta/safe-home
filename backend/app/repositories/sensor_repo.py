@@ -51,3 +51,7 @@ class SensorRepository:
     def delete(sensor):
         db.session.delete(sensor)
         db.session.commit()
+
+    @staticmethod
+    def get_last_created_sensor(user_id):
+        return Sensor.query.filter_by(user_id=user_id).order_by(Sensor.created_at.desc()).first()

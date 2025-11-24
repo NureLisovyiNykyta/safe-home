@@ -16,6 +16,7 @@ class Config:
     AUTO_DB_SETUP = os.getenv('AUTO_DB_SETUP', 'True').lower() == 'true'
     SEED_FORCE = os.getenv('SEED_FORCE', 'False').lower() == 'true'
     DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
+    GENERATE_TEST_DATA = os.getenv('GENERATE_TEST_DATA', 'False').lower() == 'true'
 
     # Email configuration
     MAIL_SERVER = 'smtp.gmail.com'
