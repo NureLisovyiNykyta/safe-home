@@ -1,7 +1,7 @@
 # We use the official Python image
 FROM python:3.11
 
-# Install working director
+# Install working directory
 WORKDIR /app
 
 # Copy dependency files
