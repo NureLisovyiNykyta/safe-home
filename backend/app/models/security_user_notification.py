@@ -18,6 +18,7 @@ class SecurityUserNotification(db.Model):
     title = db.Column(db.String(255), nullable=False)
     body = db.Column(db.Text, nullable=False)
     importance = db.Column(db.Enum('low', 'medium', 'high', name='importance_enum'), nullable=False)
+    severity_level = db.Column(db.Integer, nullable=False, server_default="1")
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     type = db.Column(db.String(50), nullable=False)
     data = db.Column(db.JSON, nullable=True)

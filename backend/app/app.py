@@ -75,6 +75,7 @@ def create_app():
     from .models import User, Role, SubscriptionPlan, DefaultSecurityMode, Sensor, Home, MobileDevice
     from .models import GeneralUserNotification, SecurityUserNotification, Subscription, AdminAuditLog
     from .models import UserStats, SubscriptionPlanStats
+    from .models import SensorHealthLog
 
     from .db_config import init_seed_cli, seed_data, generate
     init_seed_cli(app)

@@ -11,3 +11,4 @@ from .security_user_notification import SecurityUserNotification
 from .admin_audit_log import AdminAuditLog
 from .subscription_plan_stats import SubscriptionPlanStats
 from .user_stats import UserStats
+from .sensor_health_log import SensorHealthLog
