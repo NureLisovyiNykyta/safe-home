@@ -57,7 +57,7 @@ flask seed init --force # Reset existing data and repopulate
 
 If AUTO_DB_SETUP=True, the application automatically sets up the database and seeds data on startup. Disable this in production by setting AUTO_DB_SETUP=False.
 
-### Running the Application
+### Running the Application program
 
 #### With Python
 ```bash
