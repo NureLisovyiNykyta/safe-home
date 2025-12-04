@@ -20,6 +20,7 @@ sensor_type_enum = sa.Enum(
     'motion',
     'camera',
     'smoke',
+    'window',
     name='sensor_type_enum'
 )
 
